@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<messages>
+    <message type="1" name="CgMockLogin"/>
+    <message type="2" name="GcMockLoginInfo"/>
+    <message type="3" name="CgMockCreateRole"/>
+</messages>
