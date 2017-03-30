@@ -7,23 +7,23 @@ import java.lang.reflect.Method;
 import io.jpower.sgf.utils.JavaUtils;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class Utils {
 
-    public static final Object[] EMPTY_OBJS = new Object[0];
+    static final Object[] EMPTY_OBJS = new Object[0];
 
-    public static final Class<?>[] EMPTY_CLASSES = new Class[0];
+    static final Class<?>[] EMPTY_CLASSES = new Class[0];
 
-    public static final byte[] EMPTY_BYTES = new byte[0];
+    static final byte[] EMPTY_BYTES = new byte[0];
 
-    public static final String GET_PREFIX = "get";
+    static final String GET_PREFIX = "get";
 
-    public static final String SET_PREFIX = "set";
+    static final String SET_PREFIX = "set";
 
-    public static final String IS_PREFIX = "is";
+    static final String IS_PREFIX = "is";
 
-    public static void checkFieldNumber(int fieldNumber) {
+    static void checkFieldNumber(int fieldNumber) {
         if (fieldNumber <= 0) {
             throw new SerializationException("fieldNumber <= 0: " + fieldNumber);
         }
@@ -33,14 +33,14 @@ class Utils {
         }
     }
 
-    public static String capitalize(String name) { // 来自java.beans.NameGenerator
+    static String capitalize(String name) { // 来自java.beans.NameGenerator
         if (name == null || name.length() == 0) {
             return name;
         }
         return name.substring(0, 1).toUpperCase(ENGLISH) + name.substring(1);
     }
 
-    public static Object invoke(Method method, Object obj, Object... params) {
+    static Object invoke(Method method, Object obj, Object... params) {
         try {
             return method.invoke(obj, params);
         } catch (Exception e) {

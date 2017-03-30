@@ -8,7 +8,7 @@ import java.util.Set;
  * key为long的Map
  *
  * @param <V>
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface LongMap<V> {
 

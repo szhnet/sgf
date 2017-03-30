@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * 两个处理条件：1.队列长度 2.时间间隔
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class AsyncQueuedWorker<T> implements Runnable {
 
@@ -104,7 +104,7 @@ public abstract class AsyncQueuedWorker<T> implements Runnable {
         exec.execute(new NamedRunable(name, this));
 
         if (log.isInfoEnabled()) {
-            log.info(name + " is started");
+            log.info("{} is started", name);
         }
     }
 
@@ -118,11 +118,11 @@ public abstract class AsyncQueuedWorker<T> implements Runnable {
         try {
             ExecutorUtils.terminate(shutdownWaitTime, TimeUnit.MILLISECONDS, exec);
         } catch (Exception e) {
-            log.error("Failed to stop " + name, e);
+            log.error("Failed to stop {}", name, e);
         }
 
         if (log.isInfoEnabled()) {
-            log.info(name + " is stopped");
+            log.info("{} is stopped", name);
         }
     }
 
@@ -181,7 +181,7 @@ public abstract class AsyncQueuedWorker<T> implements Runnable {
             } catch (InterruptedException e) {
                 interrupt = true;
             } catch (Throwable e) {
-                log.error(name + " throws exception", e);
+                log.error("{} throws exception", name, e);
             }
         }
 
@@ -208,11 +208,11 @@ public abstract class AsyncQueuedWorker<T> implements Runnable {
     protected abstract void handleTask(T task);
 
     protected void exceptionCaught(T task, Throwable e) {
-        log.error(name + " handle task throws exception", e);
+        log.error("{} handle task throws exception", name, e);
     }
 
     protected void reject(T task) {
-        log.error(name + " reject task: " + task);
+        log.error("{} reject task: {}", name, task);
     }
 
 }

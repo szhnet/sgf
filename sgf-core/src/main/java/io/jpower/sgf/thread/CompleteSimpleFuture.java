@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 用来表示一个已经完成的future
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class CompleteSimpleFuture<V> implements SimpleFuture<V> {
 

@@ -7,7 +7,7 @@ import java.util.concurrent.TimeoutException;
  * 用来表示一个执行失败的future
  *
  * @param <V>
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class FailedSimpleFuture<V> extends CompleteSimpleFuture<V> {
 

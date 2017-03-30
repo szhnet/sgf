@@ -10,7 +10,7 @@ package io.jpower.sgf.net.msg;
  * <li>第6部分，与NetMessage第5部分相同</li>
  * </ul>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class MultiSessionMessage extends NetMessage {
 

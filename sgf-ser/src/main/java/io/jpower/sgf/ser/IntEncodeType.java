@@ -3,7 +3,7 @@ package io.jpower.sgf.ser;
 /**
  * 整数的编码类型
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public enum IntEncodeType {
 
@@ -35,8 +35,8 @@ public enum IntEncodeType {
 
     private final int int64WireType;
 
-    private IntEncodeType(int int8WireType, int int16WireType, int int32WireType,
-                          int int64WireType) {
+    IntEncodeType(int int8WireType, int int16WireType, int int32WireType,
+                  int int64WireType) {
         this.int8WireType = int8WireType;
         this.int16WireType = int16WireType;
         this.int32WireType = int32WireType;

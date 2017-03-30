@@ -22,7 +22,7 @@ import java.util.Set;
  * </ul>
  *
  * @param <V> the type of mapped values
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class LongHashMap<V> extends AbstractLongMap<V>
         implements LongMap<V>, Cloneable, Serializable {
@@ -241,7 +241,7 @@ public class LongHashMap<V> extends AbstractLongMap<V>
      * explicitly maps the key to {@code null}. The {@link #containsKey
      * containsKey} operation may be used to distinguish these two cases.
      *
-     * @see #put(Object, Object)
+     * @see #put(long, Object)
      */
     public V get(long key) {
         Entry<V> entry = getEntry(key);

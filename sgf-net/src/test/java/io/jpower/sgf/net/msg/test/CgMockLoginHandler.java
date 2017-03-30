@@ -7,7 +7,7 @@ import io.jpower.sgf.net.msg.MessageHandler;
 /**
  * 用于辅助单元测试
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class CgMockLoginHandler implements MessageHandler<CgMockLogin, NetSession> {
 

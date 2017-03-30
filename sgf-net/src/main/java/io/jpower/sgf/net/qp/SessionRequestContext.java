@@ -3,7 +3,7 @@ package io.jpower.sgf.net.qp;
 import io.jpower.sgf.net.ShareChannelSession;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class SessionRequestContext {
 

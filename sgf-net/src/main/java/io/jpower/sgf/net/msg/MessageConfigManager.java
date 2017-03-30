@@ -8,7 +8,7 @@ import java.util.Collection;
  * <p>
  * 用来提供消息定义的相关数据
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface MessageConfigManager<T extends MessageConfig.MessageMeta> {
 

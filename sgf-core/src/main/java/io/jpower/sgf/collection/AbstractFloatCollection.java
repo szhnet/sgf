@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class AbstractFloatCollection implements FloatCollection {
 
@@ -108,7 +108,7 @@ public abstract class AbstractFloatCollection implements FloatCollection {
      * iterator.
      *
      * @param r  the array, replete with previously stored elements
-     * @param it the in-progress iterator over this collection
+     * @param itr the in-progress iterator over this collection
      * @return array containing the elements in the given array, plus any
      * further elements returned by the iterator, trimmed to size
      */
@@ -196,7 +196,7 @@ public abstract class AbstractFloatCollection implements FloatCollection {
      *
      * @throws ClassCastException   {@inheritDoc}
      * @throws NullPointerException {@inheritDoc}
-     * @see #contains(Object)
+     * @see #contains(float)
      */
     public boolean containsAll(Collection<Float> c) {
         for (Float e : c) {
@@ -244,7 +244,7 @@ public abstract class AbstractFloatCollection implements FloatCollection {
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IllegalStateException         {@inheritDoc}
-     * @see #add(Object)
+     * @see #add(float)
      */
     public boolean addAll(Collection<Float> c) {
         boolean modified = false;
@@ -297,8 +297,8 @@ public abstract class AbstractFloatCollection implements FloatCollection {
      * @throws UnsupportedOperationException {@inheritDoc}
      * @throws ClassCastException            {@inheritDoc}
      * @throws NullPointerException          {@inheritDoc}
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(float)
+     * @see #contains(float)
      */
     public boolean removeAll(Collection<Float> c) {
         boolean modified = false;
@@ -357,8 +357,8 @@ public abstract class AbstractFloatCollection implements FloatCollection {
      * @throws UnsupportedOperationException {@inheritDoc}
      * @throws ClassCastException            {@inheritDoc}
      * @throws NullPointerException          {@inheritDoc}
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(float)
+     * @see #contains(float)
      */
     public boolean retainAll(Collection<Float> c) {
         boolean modified = false;

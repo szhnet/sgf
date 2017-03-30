@@ -3,7 +3,7 @@ package io.jpower.sgf.net.msg;
 /**
  * 消息接口定义
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface IMessage {
 

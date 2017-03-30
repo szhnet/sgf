@@ -68,7 +68,7 @@ import io.jpower.sgf.utils.JavaUtils;
  * <a href="http://www.cse.wustl.edu/~cdgill/courses/cs6874/TimingWheels.ppt">
  * here</a>.
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class HashedWheelTimer {
 
@@ -211,7 +211,7 @@ public class HashedWheelTimer {
         while (startTime == 0) { // 用0表示未初始化
             try {
                 startTimeInitialized.await();
-            } catch (InterruptedException ignore) {
+            } catch (InterruptedException ignored) {
                 // Ignore - it will be ready very soon.
             }
         }
@@ -860,7 +860,7 @@ public class HashedWheelTimer {
         }
 
         /**
-         * Expire all {@link HashedWheelTimeout}s for the given {@code deadline}.
+         * Expire all {@link TimerFutureTask}s for the given {@code deadline}.
          */
         public void expireTasks(HashedWheelTimer timer, long deadline) {
             TimerFutureTask futureTask = head;

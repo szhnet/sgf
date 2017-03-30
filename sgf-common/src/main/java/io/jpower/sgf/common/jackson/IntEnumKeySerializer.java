@@ -14,7 +14,7 @@ import io.jpower.sgf.enumtype.IntEnum;
 /**
  * 用来使jackson2支持{@link IntEnum}作为Map的key反序列化
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class IntEnumKeySerializer extends StdScalarSerializer<IntEnum> {
 

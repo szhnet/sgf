@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * int set
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface IntSet extends IntCollection {
 
@@ -141,7 +141,7 @@ public interface IntSet extends IntCollection {
      *                              elements and this set does not permit null elements (
      *                              <a href="Collection.html#optional-restrictions">optional</a>
      *                              ), or if the specified collection is null
-     * @see #contains(Object)
+     * @see #contains(int)
      */
     boolean containsAll(Collection<Integer> c);
 
@@ -167,7 +167,7 @@ public interface IntSet extends IntCollection {
      *                                       the specified collection is null
      * @throws IllegalArgumentException      if some property of an element of the specified collection
      *                                       prevents it from being added to this set
-     * @see #add(Object)
+     * @see #add(int)
      */
     boolean addAll(Collection<Integer> c);
 
@@ -194,7 +194,7 @@ public interface IntSet extends IntCollection {
      *                                       collection does not permit null elements (
      *                                       <a href="Collection.html#optional-restrictions">optional</a>
      *                                       ), or if the specified collection is null
-     * @see #remove(Object)
+     * @see #remove(int)
      */
     boolean retainAll(Collection<Integer> c);
 
@@ -219,8 +219,8 @@ public interface IntSet extends IntCollection {
      *                                       collection does not permit null elements (
      *                                       <a href="Collection.html#optional-restrictions">optional</a>
      *                                       ), or if the specified collection is null
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(int)
+     * @see #contains(int)
      */
     boolean removeAll(Collection<Integer> c);
 

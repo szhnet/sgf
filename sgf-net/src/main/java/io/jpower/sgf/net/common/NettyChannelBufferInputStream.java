@@ -16,7 +16,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * <li>支持对内部buffer的替换</li>
  * </ul>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NettyChannelBufferInputStream extends InputStream implements DataInput {
 

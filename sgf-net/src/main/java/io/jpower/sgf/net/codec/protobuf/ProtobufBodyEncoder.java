@@ -12,7 +12,7 @@ import io.jpower.sgf.thread.Sharable;
  * <a href=https://developers.google.com/protocol-buffers/>Protocol
  * Buffers</a>消息体编码器
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 @Sharable
 public class ProtobufBodyEncoder implements MessageBodyEncoder {

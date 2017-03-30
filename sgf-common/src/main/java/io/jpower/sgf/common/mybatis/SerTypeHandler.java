@@ -13,7 +13,7 @@ import io.jpower.sgf.ser.Ser;
 /**
  * javaType: Ser Object <-> jdbcType: bytes
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class SerTypeHandler<T> extends BaseTypeHandler<T> {
 

@@ -1,7 +1,7 @@
 package io.jpower.sgf.ser;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class DeserContext {
 
@@ -11,17 +11,17 @@ class DeserContext {
 
     private int containerSizeLimit;
 
-    public DeserContext(CodedReader reader, int byteSizeLimit, int containerSizeLimit) {
+    DeserContext(CodedReader reader, int byteSizeLimit, int containerSizeLimit) {
         this.reader = reader;
         this.byteSizeLimit = byteSizeLimit;
         this.containerSizeLimit = containerSizeLimit;
     }
 
-    public CodedReader getReader() {
+    CodedReader getReader() {
         return reader;
     }
 
-    public int getByteSizeLimit() {
+    int getByteSizeLimit() {
         return byteSizeLimit;
     }
 
@@ -29,7 +29,7 @@ class DeserContext {
         this.byteSizeLimit = byteSizeLimit;
     }
 
-    public int getContainerSizeLimit() {
+    int getContainerSizeLimit() {
         return containerSizeLimit;
     }
 

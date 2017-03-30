@@ -11,7 +11,7 @@ import io.jpower.sgf.utils.JavaUtils;
  * future的默认实现
  *
  * @param <V>
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class DefaultSimpleFuture<V> implements SimpleFuture<V> {
 

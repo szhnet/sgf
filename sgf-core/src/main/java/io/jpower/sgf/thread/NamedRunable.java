@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 一个Runnable的包装器。执行时将线程的名字改为指定的名字，执行结束后再恢复。
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NamedRunable implements Runnable {
 

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.ConcurrentModificationException;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class LongHashSet extends AbstractLongSet
         implements LongSet, Cloneable, java.io.Serializable {

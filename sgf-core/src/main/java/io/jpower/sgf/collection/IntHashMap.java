@@ -21,8 +21,8 @@ import java.util.Set;
  * <li>修改自java.util.HashMap</li>
  * </ul>
  *
- * @param <K> the type of keys maintained by this map
- * @author zheng.sun
+ * @param <V> the type of keys maintained by this map
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class IntHashMap<V> extends AbstractIntMap<V> implements IntMap<V>, Cloneable, Serializable {
 
@@ -240,7 +240,7 @@ public class IntHashMap<V> extends AbstractIntMap<V> implements IntMap<V>, Clone
      * explicitly maps the key to {@code null}. The {@link #containsKey
      * containsKey} operation may be used to distinguish these two cases.
      *
-     * @see #put(Object, Object)
+     * @see #put(int, Object)
      */
     public V get(int key) {
         Entry<V> entry = getEntry(key);

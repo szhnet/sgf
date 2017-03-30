@@ -26,7 +26,7 @@ import io.jpower.sgf.net.NetSession;
 import io.jpower.sgf.net.ShareChannelMessageWrapper;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NetQpMessageEncoderTest {
 

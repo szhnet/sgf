@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import io.jpower.sgf.net.msg.MessageDispatcher;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class AbstractTopHandler extends SimpleChannelUpstreamHandler {
 

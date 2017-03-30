@@ -3,7 +3,7 @@ package io.jpower.sgf.collection;
 import java.util.NoSuchElementException;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface DoubleIterator {
 

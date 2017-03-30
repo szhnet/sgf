@@ -18,7 +18,7 @@ package io.jpower.sgf.net.msg;
  * <li>第6部分，消息体，具体格式可以自定义</li>
  * </ul>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NetMessage implements IMessage {
 

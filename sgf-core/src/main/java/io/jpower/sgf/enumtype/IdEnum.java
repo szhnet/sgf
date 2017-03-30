@@ -1,7 +1,7 @@
 package io.jpower.sgf.enumtype;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface IdEnum<T> {
 

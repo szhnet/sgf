@@ -6,7 +6,7 @@ import java.util.Set;
 
 /**
  * @param <K>
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class AbstractIntValueMap<K> implements IntValueMap<K> {
 

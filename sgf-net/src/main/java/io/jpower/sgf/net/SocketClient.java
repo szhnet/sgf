@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 对Netty {@link ClientBootstrap}的简单封装
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class SocketClient {
 

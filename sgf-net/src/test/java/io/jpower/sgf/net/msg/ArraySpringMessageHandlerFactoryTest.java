@@ -3,7 +3,7 @@ package io.jpower.sgf.net.msg;
 import org.springframework.context.ApplicationContext;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class ArraySpringMessageHandlerFactoryTest extends AbstractSpringMessageHandlerFactoryTest {
 

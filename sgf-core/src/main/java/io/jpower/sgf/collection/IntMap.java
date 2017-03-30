@@ -8,7 +8,7 @@ import java.util.Set;
  * Key为int的Map
  *
  * @param <V>
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface IntMap<V> {
     // Query Operations

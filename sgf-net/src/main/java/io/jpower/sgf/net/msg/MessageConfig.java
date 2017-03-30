@@ -18,7 +18,7 @@ import org.simpleframework.xml.Root;
  * &lt/messages&gt
  * </pre>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 @Root(name = "messages")
 public class MessageConfig {

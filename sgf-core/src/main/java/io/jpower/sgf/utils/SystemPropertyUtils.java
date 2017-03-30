@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class SystemPropertyUtils {
 
@@ -30,8 +30,8 @@ public class SystemPropertyUtils {
         try {
             value = System.getProperty(key);
         } catch (Exception e) {
-            log.warn("Unable to retrieve a system property '" + key
-                    + "'; default values will be used.", e);
+            log.warn("Unable to retrieve a system property '{}'; default values will be used.",
+                    key, e);
         }
 
         if (value == null) {
@@ -60,8 +60,8 @@ public class SystemPropertyUtils {
             return false;
         }
 
-        log.warn("Unable to parse the boolean system property '" + key + "':" + value + " - "
-                + "using the default value: " + def);
+        log.warn("Unable to parse the boolean system property '{}':{} - using the default value: {}",
+                key, value, def);
 
         return def;
     }
@@ -76,8 +76,8 @@ public class SystemPropertyUtils {
         try {
             return Integer.parseInt(value);
         } catch (Exception e) {
-            log.warn("Unable to parse the integer system property '" + key + "':" + value + " - "
-                    + "using the default value: " + def);
+            log.warn("Unable to parse the integer system property '{}':{} - using the default value: {}",
+                    key, value, def);
         }
 
         return def;
@@ -93,8 +93,8 @@ public class SystemPropertyUtils {
         try {
             return Long.parseLong(value);
         } catch (Exception e) {
-            log.warn("Unable to parse the long integer system property '" + key + "':" + value
-                    + " - " + "using the default value: " + def);
+            log.warn("Unable to parse the long integer system property '{}':{} - using the default value: {}",
+                    key, value, def);
         }
 
         return def;

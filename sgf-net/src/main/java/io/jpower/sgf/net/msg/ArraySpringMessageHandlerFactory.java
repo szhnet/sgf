@@ -5,7 +5,7 @@ import io.jpower.sgf.net.msg.MessageConfig.MessageMeta;
 /**
  * 内部用一个数组来保存handler
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class ArraySpringMessageHandlerFactory extends AbstractSpringMessageHandlerFactory {
 

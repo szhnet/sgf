@@ -16,7 +16,7 @@ import io.jpower.sgf.net.NetSession;
 import io.jpower.sgf.net.msg.MessageDispatcher;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class AbstractQpTopHandler extends SimpleChannelUpstreamHandler {
 

@@ -19,7 +19,7 @@ import io.jpower.sgf.net.msg.MessageConfig.MessageMeta;
 /**
  * {@link NetMessage}消息编码器
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NetMessageEncoder extends OneToOneEncoder {
 

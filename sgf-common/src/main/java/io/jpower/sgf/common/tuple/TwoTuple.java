@@ -5,7 +5,7 @@ package io.jpower.sgf.common.tuple;
  *
  * @param <A>
  * @param <B>
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class TwoTuple<A, B> {
 

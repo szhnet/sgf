@@ -14,7 +14,7 @@ import io.jpower.sgf.net.msg.ShareChannelMessage;
 /**
  * {@link NetMessage}消息解码器
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NetMessageDecoder extends FrameDecoder {
 

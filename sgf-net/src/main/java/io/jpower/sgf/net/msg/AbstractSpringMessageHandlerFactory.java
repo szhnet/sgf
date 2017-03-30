@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContextAware;
 /**
  * 使用Spring IOC来进行handler管理
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class AbstractSpringMessageHandlerFactory extends AbstractMessageHandlerFactory
         implements ApplicationContextAware {

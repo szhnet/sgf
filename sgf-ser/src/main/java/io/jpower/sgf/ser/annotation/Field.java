@@ -11,7 +11,7 @@ import io.jpower.sgf.ser.IntEncodeType;
 /**
  * 标记可序列化的类中的一个属性
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -47,7 +47,6 @@ public @interface Field {
 
     /**
      * 反序列化时，指定具体类型
-     * <p>
      * <p>
      * 比如目标字段是个list，可以指定反序列化时使用的具体list实现。
      *

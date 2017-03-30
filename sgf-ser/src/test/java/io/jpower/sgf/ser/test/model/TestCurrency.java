@@ -4,7 +4,7 @@ import io.jpower.sgf.enumtype.EnumUtils;
 import io.jpower.sgf.enumtype.IntEnum;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public enum TestCurrency implements IntEnum {
 

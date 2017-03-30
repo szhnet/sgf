@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * long set
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface LongSet extends LongCollection {
 
@@ -141,7 +141,7 @@ public interface LongSet extends LongCollection {
      *                              elements and this set does not permit null elements (
      *                              <a href="Collection.html#optional-restrictions">optional</a>
      *                              ), or if the specified collection is null
-     * @see #contains(Object)
+     * @see #contains(long)
      */
     boolean containsAll(Collection<Long> c);
 
@@ -167,7 +167,7 @@ public interface LongSet extends LongCollection {
      *                                       the specified collection is null
      * @throws IllegalArgumentException      if some property of an element of the specified collection
      *                                       prevents it from being added to this set
-     * @see #add(Object)
+     * @see #add(long)
      */
     boolean addAll(Collection<Long> c);
 
@@ -194,7 +194,7 @@ public interface LongSet extends LongCollection {
      *                                       collection does not permit null elements (
      *                                       <a href="Collection.html#optional-restrictions">optional</a>
      *                                       ), or if the specified collection is null
-     * @see #remove(Object)
+     * @see #remove(long)
      */
     boolean retainAll(Collection<Long> c);
 
@@ -219,8 +219,8 @@ public interface LongSet extends LongCollection {
      *                                       collection does not permit null elements (
      *                                       <a href="Collection.html#optional-restrictions">optional</a>
      *                                       ), or if the specified collection is null
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(long)
+     * @see #contains(long)
      */
     boolean removeAll(Collection<Long> c);
 

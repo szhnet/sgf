@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import io.jpower.sgf.net.msg.MessageConfig.MessageMeta;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class ShareChannelTransferInboundEncoder extends OneToOneEncoder {
 

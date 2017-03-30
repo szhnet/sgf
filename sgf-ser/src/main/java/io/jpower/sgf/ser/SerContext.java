@@ -1,17 +1,17 @@
 package io.jpower.sgf.ser;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class SerContext {
 
     private final CodedWriter writer;
 
-    public SerContext(CodedWriter writer) {
+    SerContext(CodedWriter writer) {
         this.writer = writer;
     }
 
-    public CodedWriter getWriter() {
+    CodedWriter getWriter() {
         return writer;
     }
 

@@ -9,7 +9,7 @@ import io.jpower.sgf.collection.IntMap;
 /**
  * 类的序列化相关信息
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class SerClass {
 
@@ -53,71 +53,71 @@ class SerClass {
      */
     private Method afterDeserMethod;
 
-    public SerClass(Class<?> clazz) {
+    SerClass(Class<?> clazz) {
         this.clazz = clazz;
     }
 
-    public Class<?> getClazz() {
+    Class<?> getClazz() {
         return clazz;
     }
 
-    public Constructor<?> getConstructor() {
+    Constructor<?> getConstructor() {
         return constructor;
     }
 
-    public void setConstructor(Constructor<?> constructor) {
+    void setConstructor(Constructor<?> constructor) {
         this.constructor = constructor;
     }
 
-    public List<SerField> getFields() {
+    List<SerField> getFields() {
         return fields;
     }
 
-    public void setFields(List<SerField> fields) {
+    void setFields(List<SerField> fields) {
         this.fields = fields;
     }
 
-    public SerField getField(int fieldNumber) {
+    SerField getField(int fieldNumber) {
         return fieldMap.get(fieldNumber);
     }
 
-    public IntMap<SerField> getFieldMap() {
+    IntMap<SerField> getFieldMap() {
         return fieldMap;
     }
 
-    public void setFieldMap(IntMap<SerField> fieldMap) {
+    void setFieldMap(IntMap<SerField> fieldMap) {
         this.fieldMap = fieldMap;
     }
 
-    public Method getBeforeSerMethod() {
+    Method getBeforeSerMethod() {
         return beforeSerMethod;
     }
 
-    public void setBeforeSerMethod(Method beforeSerMethod) {
+    void setBeforeSerMethod(Method beforeSerMethod) {
         this.beforeSerMethod = beforeSerMethod;
     }
 
-    public Method getAfterSerMethod() {
+    Method getAfterSerMethod() {
         return afterSerMethod;
     }
 
-    public void setAfterSerMethod(Method afterSerMethod) {
+    void setAfterSerMethod(Method afterSerMethod) {
         this.afterSerMethod = afterSerMethod;
     }
 
-    public Method getBeforeDeserMethod() {
+    Method getBeforeDeserMethod() {
         return beforeDeserMethod;
     }
 
-    public void setBeforeDeserMethod(Method beforeDeserMethod) {
+    void setBeforeDeserMethod(Method beforeDeserMethod) {
         this.beforeDeserMethod = beforeDeserMethod;
     }
 
-    public Method getAfterDeserMethod() {
+    Method getAfterDeserMethod() {
         return afterDeserMethod;
     }
 
-    public void setAfterDeserMethod(Method afterDeserMethod) {
+    void setAfterDeserMethod(Method afterDeserMethod) {
         this.afterDeserMethod = afterDeserMethod;
     }
 

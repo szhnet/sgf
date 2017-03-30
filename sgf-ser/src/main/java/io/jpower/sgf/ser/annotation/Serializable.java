@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * <li>类需要有无参构造方法</li>
  * </ul>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

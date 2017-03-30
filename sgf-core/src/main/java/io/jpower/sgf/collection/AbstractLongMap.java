@@ -6,7 +6,7 @@ import java.util.Set;
 
 /**
  * @param <V>
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class AbstractLongMap<V> implements LongMap<V> {
 

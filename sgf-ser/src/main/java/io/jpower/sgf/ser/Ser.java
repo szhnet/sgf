@@ -19,7 +19,7 @@ import io.jpower.sgf.utils.JavaUtils;
  * <li>线程安全的</li>
  * </ul>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class Ser {
 

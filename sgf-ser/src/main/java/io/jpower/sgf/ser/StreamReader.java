@@ -12,11 +12,11 @@ import io.jpower.sgf.utils.JavaUtils;
 /**
  * 包装了一个<code>InputStream</code>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public class StreamReader extends CodedReader {
+class StreamReader extends CodedReader {
 
-    public static final int DEFAULT_BUFFER_SIZE = 4096;
+    static final int DEFAULT_BUFFER_SIZE = 4096;
 
     private final InputStream input;
 
@@ -26,11 +26,11 @@ public class StreamReader extends CodedReader {
 
     private int limit;
 
-    public StreamReader(InputStream input) {
+    StreamReader(InputStream input) {
         this(input, DEFAULT_BUFFER_SIZE);
     }
 
-    public StreamReader(InputStream input, int bufferSize) {
+    StreamReader(InputStream input, int bufferSize) {
         if (bufferSize < 8) {
             throw new IllegalArgumentException("bufferSize < 8: " + bufferSize); // 代码中最多需要一次性加载8个字节，所以必须不能小于8
         }
@@ -43,7 +43,7 @@ public class StreamReader extends CodedReader {
     /* ########## 实现父类方法 ########## */
 
     @Override
-    public String readString(int size) {
+    String readString(int size) {
         if (size <= (limit - position) && size > 0) {
             // Fast path: We already have the bytes in a contiguous buffer, so
             // just copy directly from it.
@@ -68,7 +68,7 @@ public class StreamReader extends CodedReader {
     }
 
     @Override
-    public byte[] readBytes(int size) {
+    byte[] readBytes(int size) {
         if (size <= (limit - position) && size > 0) {
             // Fast path: We already have the bytes in a contiguous buffer, so
             // just copy directly from it.
@@ -82,7 +82,7 @@ public class StreamReader extends CodedReader {
     }
 
     @Override
-    public int readRawVarint32() {
+    int readRawVarint32() {
         // See implementation notes for readRawVarint64
         fastpath:
         {
@@ -121,7 +121,7 @@ public class StreamReader extends CodedReader {
     }
 
     @Override
-    public long readRawVarint64() {
+    long readRawVarint64() {
         // Implementation notes:
         //
         // Optimized for one-byte values, expected to be common.
@@ -182,7 +182,7 @@ public class StreamReader extends CodedReader {
     }
 
     @Override
-    public short readRawLittleEndian16() {
+    short readRawLittleEndian16() {
         int pos = position;
 
         // hand-inlined ensureAvailable(4);
@@ -197,7 +197,7 @@ public class StreamReader extends CodedReader {
     }
 
     @Override
-    public int readRawLittleEndian32() {
+    int readRawLittleEndian32() {
         int pos = position;
 
         // hand-inlined ensureAvailable(4);
@@ -213,7 +213,7 @@ public class StreamReader extends CodedReader {
     }
 
     @Override
-    public long readRawLittleEndian64() {
+    long readRawLittleEndian64() {
         int pos = position;
 
         // hand-inlined ensureAvailable(8);
@@ -234,7 +234,7 @@ public class StreamReader extends CodedReader {
     }
 
     @Override
-    public byte readRawByte() {
+    byte readRawByte() {
         if (position == limit) {
             refillBuffer(1);
         }
@@ -242,7 +242,7 @@ public class StreamReader extends CodedReader {
     }
 
     @Override
-    public void readRawBytes(byte[] value, int offset, int len) {
+    void readRawBytes(byte[] value, int offset, int len) {
         if (len <= (limit - position) && len > 0) {
             // Fast path: We already have the bytes in a contiguous buffer, so
             // just copy directly from it.
@@ -255,7 +255,7 @@ public class StreamReader extends CodedReader {
     }
 
     @Override
-    public void skipRawVarint() {
+    void skipRawVarint() {
         if (limit - position >= 10) {
             final byte[] buffer = this.buffer;
             int pos = position;
@@ -270,7 +270,7 @@ public class StreamReader extends CodedReader {
     }
 
     @Override
-    public void skipRawBytes(int size) {
+    void skipRawBytes(int size) {
         if (size <= (limit - position) && size >= 0) {
             // We have all the bytes we need already.
             position += size;

@@ -5,7 +5,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 /**
  * 消息体编码器
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface MessageBodyEncoder {
 

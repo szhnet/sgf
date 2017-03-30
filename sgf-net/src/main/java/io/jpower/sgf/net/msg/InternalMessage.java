@@ -5,7 +5,7 @@ import io.jpower.sgf.utils.JavaUtils;
 /**
  * 内部消息
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class InternalMessage implements IMessage {
 

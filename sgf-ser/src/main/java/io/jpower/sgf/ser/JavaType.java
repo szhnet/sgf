@@ -1,7 +1,7 @@
 package io.jpower.sgf.ser;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 enum JavaType {
 
@@ -51,7 +51,7 @@ enum JavaType {
 
     SER_OBJECT,;
 
-    private JavaType() {
+    JavaType() {
 
     }
 

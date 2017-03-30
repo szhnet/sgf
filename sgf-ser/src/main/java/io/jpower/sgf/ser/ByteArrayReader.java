@@ -7,7 +7,7 @@ import io.jpower.sgf.utils.JavaUtils;
 /**
  * 包装了一个字节数组
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class ByteArrayReader extends CodedReader {
 
@@ -17,13 +17,13 @@ class ByteArrayReader extends CodedReader {
 
     private int limit;
 
-    public ByteArrayReader(byte buf[]) {
+    ByteArrayReader(byte buf[]) {
         this.buf = buf;
         this.pos = 0;
         this.limit = buf.length;
     }
 
-    public ByteArrayReader(byte buf[], int offset, int length) {
+    ByteArrayReader(byte buf[], int offset, int length) {
         this.buf = buf;
         this.pos = offset;
         this.limit = Math.min(offset + length, buf.length);
@@ -32,7 +32,7 @@ class ByteArrayReader extends CodedReader {
     /* ########## 实现父类方法 ########## */
 
     @Override
-    public String readString(int size) {
+    String readString(int size) {
         checkSize(size);
 
         final String result;
@@ -47,23 +47,23 @@ class ByteArrayReader extends CodedReader {
     }
 
     @Override
-    public byte readRawByte() {
+    byte readRawByte() {
         return read();
     }
 
     @Override
-    public void readRawBytes(byte[] value, int offset, int len) {
+    void readRawBytes(byte[] value, int offset, int len) {
         read(value, offset, len);
     }
 
     @Override
-    public void skipRawBytes(int size) {
+    void skipRawBytes(int size) {
         skip(size);
     }
 
     /* ########## 自己的方法 ########## */
 
-    public byte read() {
+    byte read() {
         if (pos >= limit) {
             throw new IndexOutOfBoundsException("Not enough readable bytes.");
         }
@@ -71,7 +71,7 @@ class ByteArrayReader extends CodedReader {
         return buf[pos++];
     }
 
-    public void read(byte b[], int off, int len) {
+    void read(byte b[], int off, int len) {
         if (b == null) {
             throw new NullPointerException();
         } else if (off < 0 || len < 0 || len > b.length - off) {
@@ -86,17 +86,17 @@ class ByteArrayReader extends CodedReader {
         pos += len;
     }
 
-    public void skip(int len) {
+    void skip(int len) {
         checkSize(len);
 
         pos += len;
     }
 
-    public int available() {
+    int available() {
         return limit - pos;
     }
 
-    public void checkSize(int size) {
+    void checkSize(int size) {
         if (size < 0) {
             throw new SerializationException("Negative size: " + size);
         }

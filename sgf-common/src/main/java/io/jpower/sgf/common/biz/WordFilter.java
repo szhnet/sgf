@@ -5,7 +5,7 @@ import io.jpower.sgf.collection.IntHashMap;
 /**
  * 用来过滤关键词
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class WordFilter {
 

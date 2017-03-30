@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * TGW包头格式为形如：tgw_l7_forward\r\nHost:app12345.qzoneapp.com:80\r\n\r\n
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class TgwHandler extends FrameDecoder {
 

@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * <code>CgLogin</code>，那么该消息对应的handler的Class名称为<code>CgLoginHandler</code></li>
  * </ul>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class AbstractMessageHandlerFactory implements MessageHandlerFactory {
 

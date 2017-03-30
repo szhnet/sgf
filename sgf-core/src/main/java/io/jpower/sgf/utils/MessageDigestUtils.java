@@ -13,7 +13,7 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * 消息摘要工具
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class MessageDigestUtils {
 
@@ -61,7 +61,7 @@ public class MessageDigestUtils {
         try {
             md = MessageDigest.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw JavaUtils.sneakyThrow(e);
         }
         md.update(data);
         return toBase16(md.digest());
@@ -82,7 +82,7 @@ public class MessageDigestUtils {
         try {
             md = MessageDigest.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw JavaUtils.sneakyThrow(e);
         }
 
         byte[] buf = new byte[1024];
@@ -92,7 +92,7 @@ public class MessageDigestUtils {
                 md.update(buf, 0, numRead);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw JavaUtils.sneakyThrow(e);
         }
         return toBase16(md.digest());
     }
@@ -117,10 +117,8 @@ public class MessageDigestUtils {
             mac = Mac.getInstance(algorithm);
             SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(CHARSET), algorithm);
             mac.init(secretKey);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            throw JavaUtils.sneakyThrow(e);
         }
         return toBase16(mac.doFinal(data));
     }
@@ -131,10 +129,8 @@ public class MessageDigestUtils {
             mac = Mac.getInstance(algorithm);
             SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(CHARSET), algorithm);
             mac.init(secretKey);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            throw JavaUtils.sneakyThrow(e);
         }
 
         byte[] buf = new byte[1024];
@@ -144,7 +140,7 @@ public class MessageDigestUtils {
                 mac.update(buf, 0, numRead);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw JavaUtils.sneakyThrow(e);
         }
         return toBase16(mac.doFinal());
     }

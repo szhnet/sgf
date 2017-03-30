@@ -19,7 +19,7 @@ import net.jpountz.util.SafeUtils;
  * <p>
  * 数据以外的部分都将使用Varint进行编码。
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class Lz4BlockOutputStream extends FilterOutputStream {
 
@@ -169,7 +169,7 @@ public class Lz4BlockOutputStream extends FilterOutputStream {
         out.flush();
     }
 
-    public void writeVarint(int value) throws IOException {
+    private void writeVarint(int value) throws IOException {
         while (true) {
             if ((value & ~0x7F) == 0) {
                 out.write(value);

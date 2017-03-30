@@ -1,7 +1,7 @@
 package io.jpower.sgf.net;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NetConfig {
 

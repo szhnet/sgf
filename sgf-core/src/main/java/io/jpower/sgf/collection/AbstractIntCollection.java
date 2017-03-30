@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class AbstractIntCollection implements IntCollection {
 
@@ -108,7 +108,7 @@ public abstract class AbstractIntCollection implements IntCollection {
      * iterator.
      *
      * @param r  the array, replete with previously stored elements
-     * @param it the in-progress iterator over this collection
+     * @param itr the in-progress iterator over this collection
      * @return array containing the elements in the given array, plus any
      * further elements returned by the iterator, trimmed to size
      */
@@ -196,7 +196,7 @@ public abstract class AbstractIntCollection implements IntCollection {
      *
      * @throws ClassCastException   {@inheritDoc}
      * @throws NullPointerException {@inheritDoc}
-     * @see #contains(Object)
+     * @see #contains(int)
      */
     public boolean containsAll(Collection<Integer> c) {
         for (Integer e : c) {
@@ -244,7 +244,7 @@ public abstract class AbstractIntCollection implements IntCollection {
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IllegalStateException         {@inheritDoc}
-     * @see #add(Object)
+     * @see #add(int)
      */
     public boolean addAll(Collection<Integer> c) {
         boolean modified = false;
@@ -297,8 +297,8 @@ public abstract class AbstractIntCollection implements IntCollection {
      * @throws UnsupportedOperationException {@inheritDoc}
      * @throws ClassCastException            {@inheritDoc}
      * @throws NullPointerException          {@inheritDoc}
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(int)
+     * @see #contains(int)
      */
     public boolean removeAll(Collection<Integer> c) {
         boolean modified = false;
@@ -357,8 +357,8 @@ public abstract class AbstractIntCollection implements IntCollection {
      * @throws UnsupportedOperationException {@inheritDoc}
      * @throws ClassCastException            {@inheritDoc}
      * @throws NullPointerException          {@inheritDoc}
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(int)
+     * @see #contains(int)
      */
     public boolean retainAll(Collection<Integer> c) {
         boolean modified = false;

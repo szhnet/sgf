@@ -1,7 +1,7 @@
 package io.jpower.sgf.collection;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class Helper {
 

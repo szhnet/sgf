@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import io.jpower.sgf.net.msg.ShareChannelMessage;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class ShareChannelTransferInboundDecoder extends FrameDecoder {
 

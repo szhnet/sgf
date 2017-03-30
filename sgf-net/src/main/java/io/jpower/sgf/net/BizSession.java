@@ -8,7 +8,7 @@ package io.jpower.sgf.net;
  * <li>更好的日志输出</li>
  * </ul>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface BizSession {
 

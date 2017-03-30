@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 用来处理Flash pollicy请求
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class FlashPolicyHandler extends FrameDecoder {
 

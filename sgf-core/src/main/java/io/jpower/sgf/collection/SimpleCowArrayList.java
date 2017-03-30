@@ -22,7 +22,7 @@ import java.util.RandomAccess;
  * <li>当增加和删除操作时，会对内部的数组进行复制。<strong>注意</strong>，修改操作不会。</li>
  * </ul>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class SimpleCowArrayList<E> implements List<E>, RandomAccess, Cloneable, Serializable {
 

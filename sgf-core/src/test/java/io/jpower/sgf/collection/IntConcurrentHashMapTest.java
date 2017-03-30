@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.junit.Test;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class IntConcurrentHashMapTest {
 

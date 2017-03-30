@@ -8,11 +8,11 @@ import io.jpower.sgf.utils.JavaUtils;
 /**
  * 包装了一个<code>InputStream</code>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public class StreamWriter extends CodedWriter {
+class StreamWriter extends CodedWriter {
 
-    public static final int DEFAULT_BUFFER_SIZE = 4096;
+    static final int DEFAULT_BUFFER_SIZE = 4096;
 
     private final OutputStream output;
 
@@ -24,11 +24,11 @@ public class StreamWriter extends CodedWriter {
 
     private int totalBytesWritten = 0;
 
-    public StreamWriter(OutputStream output) {
+    StreamWriter(OutputStream output) {
         this(output, DEFAULT_BUFFER_SIZE);
     }
 
-    public StreamWriter(OutputStream output, int bufferSize) {
+    StreamWriter(OutputStream output, int bufferSize) {
         if (bufferSize <= 0) {
             throw new IllegalArgumentException("bufferSize <= 0: " + bufferSize);
         }
@@ -41,7 +41,7 @@ public class StreamWriter extends CodedWriter {
     /* ########## 实现父类方法 ########## */
 
     @Override
-    public void writeRawByte(byte value) {
+    void writeRawByte(byte value) {
         if (position == limit) {
             flush();
         }
@@ -51,7 +51,7 @@ public class StreamWriter extends CodedWriter {
     }
 
     @Override
-    public void writeRawBytes(byte[] value, int offset, int length) {
+    void writeRawBytes(byte[] value, int offset, int length) {
         if (limit - position >= length) {
             // We have room in the current buffer.
             System.arraycopy(value, offset, buffer, position, length);
@@ -92,7 +92,7 @@ public class StreamWriter extends CodedWriter {
      * Flushes the stream and forces any buffered bytes to be written. This does
      * not flush the underlying OutputStream.
      */
-    public void flush() {
+    void flush() {
         try {
             output.write(buffer, 0, position);
         } catch (IOException e) {
@@ -106,7 +106,7 @@ public class StreamWriter extends CodedWriter {
      * returned value is not guaranteed to be accurate if exceptions have been
      * found in the middle of writing.
      */
-    public int getTotalBytesWritten() {
+    int getTotalBytesWritten() {
         return totalBytesWritten;
     }
 

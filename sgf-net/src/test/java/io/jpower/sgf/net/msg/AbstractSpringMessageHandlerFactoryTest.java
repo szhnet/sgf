@@ -11,7 +11,7 @@ import io.jpower.sgf.net.msg.test.CgMockLoginHandler;
 /**
  * SpringMessageHandler的单元测试基类
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class AbstractSpringMessageHandlerFactoryTest {
 

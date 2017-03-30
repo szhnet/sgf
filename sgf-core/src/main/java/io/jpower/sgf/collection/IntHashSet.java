@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.ConcurrentModificationException;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class IntHashSet extends AbstractIntSet implements IntSet, Cloneable, java.io.Serializable {
 

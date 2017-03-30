@@ -24,7 +24,7 @@ import io.jpower.sgf.net.msg.GcMockLoginInfo;
 import io.jpower.sgf.net.msg.MessageConfigManager;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NetMessageEncoderTest {
 

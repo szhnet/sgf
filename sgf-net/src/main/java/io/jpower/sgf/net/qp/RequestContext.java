@@ -6,7 +6,7 @@ import io.jpower.sgf.thread.SimpleFuture;
 /**
  * @param <Q>
  * @param <P>
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class RequestContext<Q, P> {
 

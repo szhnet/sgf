@@ -37,7 +37,7 @@ import io.jpower.sgf.collection.LongValueHashMap;
 import io.jpower.sgf.collection.LongValueMap;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class SerReader {
 
@@ -45,7 +45,7 @@ class SerReader {
 
     private ConcurrentMap<Class<? extends IntEnum>, Method> intEnumFindByIdMethodCache = new ConcurrentHashMap<>();
 
-    public <T> T read(DeserContext ctx, Class<T> clazz) {
+    <T> T read(DeserContext ctx, Class<T> clazz) {
         SerClass serClass = SerClassParser.ins().parse(clazz);
         @SuppressWarnings("unchecked")
         T obj = (T) readSerObject(ctx, serClass);
@@ -554,7 +554,7 @@ class SerReader {
         checkContainerSize(ctx, size, serField);
 
         if (subWireType == subType.getWireType()) {
-            Set<Object> value = createSet(serField.getDeSerClazz());
+            Set<Object> value = createSet(serField.getDeSerClazz(), serField.getType());
             for (int i = 0; i < size; i++) {
                 Object e = readSubValue(ctx, serField, subType);
                 value.add(e);
@@ -1513,7 +1513,7 @@ class SerReader {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private <T> Set<T> createSet(Class<?> clazz) {
+    private <T> Set<T> createSet(Class<?> clazz, FieldType fieldType) {
         if (clazz == null || clazz == void.class || clazz == Void.class) {
             return new HashSet<>();
         }
@@ -1523,8 +1523,10 @@ class SerReader {
         }
 
         if (EnumSet.class.isAssignableFrom(clazz)) {
-            Class<? extends Enum> enumClazz = (Class<? extends Enum>) clazz;
-            return EnumSet.noneOf(enumClazz);
+            FieldType subType = fieldType.getSubTypes().get(0);
+            Class<? extends Enum> enumClazz = (Class<? extends Enum>) subType.getRawType();
+            EnumSet enumSet = EnumSet.noneOf(enumClazz);
+            return enumSet;
         }
 
         try {

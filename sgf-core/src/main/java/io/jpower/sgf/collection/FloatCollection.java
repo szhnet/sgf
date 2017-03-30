@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * float collection
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface FloatCollection {
     // Query Operations
@@ -148,7 +148,7 @@ public interface FloatCollection {
      *                              elements and this collection does not permit null elements
      *                              (<a href="#optional-restrictions">optional</a>), or if the
      *                              specified collection is null.
-     * @see #contains(Object)
+     * @see #contains(float)
      */
     boolean containsAll(Collection<Float> c);
 
@@ -177,7 +177,7 @@ public interface FloatCollection {
      *                                       prevents it from being added to this collection
      * @throws IllegalStateException         if not all the elements can be added at this time due to
      *                                       insertion restrictions
-     * @see #add(Object)
+     * @see #add(float)
      */
     boolean addAll(Collection<Float> c);
 
@@ -203,8 +203,8 @@ public interface FloatCollection {
      *                                       specified collection does not support null elements
      *                                       (<a href="#optional-restrictions">optional</a>), or if the
      *                                       specified collection is null
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(float)
+     * @see #contains(float)
      */
     boolean removeAll(Collection<Float> c);
 
@@ -230,8 +230,8 @@ public interface FloatCollection {
      *                                       specified collection does not permit null elements
      *                                       (<a href="#optional-restrictions">optional</a>), or if the
      *                                       specified collection is null
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(float)
+     * @see #contains(float)
      */
     boolean retainAll(Collection<Float> c);
 
@@ -280,8 +280,6 @@ public interface FloatCollection {
      * @param o object to be compared for equality with this collection
      * @return <tt>true</tt> if the specified object is equal to this collection
      * @see Object#equals(Object)
-     * @see Set#equals(Object)
-     * @see List#equals(Object)
      */
     boolean equals(Object o);
 

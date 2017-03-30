@@ -17,7 +17,7 @@ import io.jpower.sgf.enumtype.IntEnum;
 /**
  * 用来使jackson2支持{@link IntEnum}的反序列化
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class IntEnumDeserializer<T extends IntEnum> extends StdScalarDeserializer<T> {
 
@@ -50,7 +50,7 @@ public class IntEnumDeserializer<T extends IntEnum> extends StdScalarDeserialize
     private Method findFindByIdMethod(Class<?> c) {
         try {
             return c.getMethod("findById", int.class);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             // ignore
         }
         return null;

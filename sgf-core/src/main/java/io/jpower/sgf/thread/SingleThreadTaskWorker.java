@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * 用单线程来执行某些任务
  *
  * @param <T>
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class SingleThreadTaskWorker<T> implements Runnable {
 
@@ -71,7 +71,7 @@ public abstract class SingleThreadTaskWorker<T> implements Runnable {
         exec.execute(new NamedRunable(name, this));
 
         if (log.isInfoEnabled()) {
-            log.info(name + " is started");
+            log.info("{} is started", name);
         }
     }
 
@@ -89,7 +89,7 @@ public abstract class SingleThreadTaskWorker<T> implements Runnable {
         }
 
         if (log.isInfoEnabled()) {
-            log.info(name + " is stopped");
+            log.info("{} is stopped", name);
         }
     }
 
@@ -119,13 +119,13 @@ public abstract class SingleThreadTaskWorker<T> implements Runnable {
                     try {
                         execute(task);
                     } catch (Throwable e) {
-                        log.error(name + " throws exception", e);
+                        log.error("{} throws exception", name, e);
                     }
                 }
             } catch (InterruptedException e) {
-                interrupt = false;
+                interrupt = true;
             } catch (Throwable e) {
-                log.error(name + " throws exception", e);
+                log.error("{} throws exception", name, e);
             }
         }
 

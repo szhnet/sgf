@@ -13,7 +13,7 @@ import io.jpower.sgf.utils.JavaUtils;
  * protobuf</a>的编码</li>
  * </ul>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 abstract class CodedReader {
 
@@ -22,84 +22,84 @@ abstract class CodedReader {
     /**
      * Read an {@code int32} field value from the stream.
      */
-    public int readInt32() {
+    int readInt32() {
         return readRawVarint32();
     }
 
     /**
      * Read an {@code int64} field value from the stream.
      */
-    public long readInt64() {
+    long readInt64() {
         return readRawVarint64();
     }
 
     /**
      * Read an {@code sint32} field value from the stream.
      */
-    public int readSInt32() {
+    int readSInt32() {
         return decodeZigZag32(readRawVarint32());
     }
 
     /**
      * Read an {@code sint64} field value from the stream.
      */
-    public long readSInt64() {
+    long readSInt64() {
         return decodeZigZag64(readRawVarint64());
     }
 
     /**
      * Read a {@code fixed8} field value from the stream.
      */
-    public byte readFixed8() {
+    byte readFixed8() {
         return readRawLittleEndian8();
     }
 
     /**
      * Read a {@code fixed16} field value from the stream.
      */
-    public short readFixed16() {
+    short readFixed16() {
         return readRawLittleEndian16();
     }
 
     /**
      * Read a {@code fixed32} field value from the stream.
      */
-    public int readFixed32() {
+    int readFixed32() {
         return readRawLittleEndian32();
     }
 
     /**
      * Read a {@code fixed64} field value from the stream.
      */
-    public long readFixed64() {
+    long readFixed64() {
         return readRawLittleEndian64();
     }
 
     /**
      * Read a {@code float} field value from the stream.
      */
-    public float readFloat() {
+    float readFloat() {
         return Float.intBitsToFloat(readRawLittleEndian32());
     }
 
     /**
      * Read a {@code double} field value from the stream.
      */
-    public double readDouble() {
+    double readDouble() {
         return Double.longBitsToDouble(readRawLittleEndian64());
     }
 
     /**
      * Read a {@code bool} field value from the stream.
      */
-    public boolean readBool() {
+    boolean readBool() {
         return readRawVarint64() != 0;
     }
 
     /**
      * Read a {@code string} field value from the stream.
      */
-    public String readString(int size) {
+    String readString(int size) {
         if (size < 0) {
             throw SerializationException.negativeSize(size);
         }
@@ -116,7 +116,7 @@ abstract class CodedReader {
         }
     }
 
-    public byte[] readBytes(int size) {
+    byte[] readBytes(int size) {
         if (size == 0) {
             return Utils.EMPTY_BYTES;
         }
@@ -126,25 +126,25 @@ abstract class CodedReader {
         return buf;
     }
 
-    public int readTag() {
+    int readTag() {
         return readRawVarint32();
     }
 
-    public int readWireType() {
+    int readWireType() {
         return readRawVarint32();
     }
 
     /* ########## read raw value ########## */
 
-    public abstract byte readRawByte();
+    abstract byte readRawByte();
 
-    public void readRawBytes(final byte[] value) {
+    void readRawBytes(final byte[] value) {
         readRawBytes(value, 0, value.length);
     }
 
-    public abstract void readRawBytes(final byte[] value, int offset, int len);
+    abstract void readRawBytes(final byte[] value, int offset, int len);
 
-    public int readRawVarint32() {
+    int readRawVarint32() {
         int result = 0;
         int shift = 0;
         for (; shift < 29; shift += 7) {
@@ -165,7 +165,7 @@ abstract class CodedReader {
         throw SerializationException.malformedVarint();
     }
 
-    public long readRawVarint64() {
+    long readRawVarint64() {
         long result = 0;
         for (int shift = 0; shift < 64; shift += 7) {
             final byte b = readRawByte();
@@ -180,21 +180,21 @@ abstract class CodedReader {
     /**
      * Read a 8-bit little-endian integer from the stream.
      */
-    public byte readRawLittleEndian8() {
+    byte readRawLittleEndian8() {
         return readRawByte();
     }
 
     /**
      * Read a 16-bit little-endian integer from the stream.
      */
-    public short readRawLittleEndian16() {
+    short readRawLittleEndian16() {
         return (short) (((readRawByte() & 0xff)) | ((readRawByte() & 0xff) << 8));
     }
 
     /**
      * Read a 32-bit little-endian integer from the stream.
      */
-    public int readRawLittleEndian32() {
+    int readRawLittleEndian32() {
         return (((readRawByte() & 0xff)) |
                 ((readRawByte() & 0xff) << 8) |
                 ((readRawByte() & 0xff) << 16) |
@@ -204,7 +204,7 @@ abstract class CodedReader {
     /**
      * Read a 64-bit little-endian integer from the stream.
      */
-    public long readRawLittleEndian64() {
+    long readRawLittleEndian64() {
         return ((((long) readRawByte() & 0xffL)) |
                 (((long) readRawByte() & 0xffL) << 8) |
                 (((long) readRawByte() & 0xffL) << 16) |
@@ -215,7 +215,7 @@ abstract class CodedReader {
                 (((long) readRawByte() & 0xffL) << 56));
     }
 
-    public void skipRawVarint() {
+    void skipRawVarint() {
         for (int i = 0; i < 10; i++) { // varint最多10个字节
             if (readRawByte() >= 0) {
                 return;
@@ -224,7 +224,7 @@ abstract class CodedReader {
         throw SerializationException.malformedVarint();
     }
 
-    public void skipRawBytes(final int size) {
+    void skipRawBytes(final int size) {
         if (size < 0) {
             throw SerializationException.negativeSize(size);
         }
@@ -245,7 +245,7 @@ abstract class CodedReader {
      *          Java has no explicit unsigned support.
      * @return A signed 32-bit integer.
      */
-    public static int decodeZigZag32(final int n) {
+    static int decodeZigZag32(final int n) {
         return (n >>> 1) ^ -(n & 1);
     }
 
@@ -259,7 +259,7 @@ abstract class CodedReader {
      *          Java has no explicit unsigned support.
      * @return A signed 64-bit integer.
      */
-    public static long decodeZigZag64(final long n) {
+    static long decodeZigZag64(final long n) {
         return (n >>> 1) ^ -(n & 1);
     }
 

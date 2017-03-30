@@ -7,7 +7,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 @RunWith(Suite.class)
 @SuiteClasses({ArraySpringMessageHandlerFactoryTest.class, DefaultMessageConfigManagerTest.class})

@@ -1,7 +1,7 @@
 package io.jpower.sgf.net.msg;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface MessageDispatcher {
 

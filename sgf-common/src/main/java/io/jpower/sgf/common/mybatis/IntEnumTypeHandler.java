@@ -15,8 +15,8 @@ import io.jpower.sgf.enumtype.IntEnum;
 /**
  * javaType: IntEnum <-> jdbcType: int
  *
- * @param <E>
- * @author zheng.sun
+ * @param <T>
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class IntEnumTypeHandler<T extends IntEnum> extends BaseTypeHandler<T> {
 
@@ -48,7 +48,7 @@ public class IntEnumTypeHandler<T extends IntEnum> extends BaseTypeHandler<T> {
     private Method findFindByIdMethod(Class<?> c) {
         try {
             return c.getMethod("findById", int.class);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             // ignore
         }
         return null;

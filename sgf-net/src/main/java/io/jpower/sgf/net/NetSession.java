@@ -14,7 +14,7 @@ import io.jpower.sgf.net.qp.Response;
 import io.jpower.sgf.thread.FailedSimpleFuture;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NetSession {
 

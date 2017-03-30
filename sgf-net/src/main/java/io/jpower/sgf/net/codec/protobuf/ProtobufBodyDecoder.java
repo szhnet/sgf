@@ -19,7 +19,7 @@ import io.jpower.sgf.net.msg.MessageConfig.MessageMeta;
  * <a href=https://developers.google.com/protocol-buffers/>Protocol
  * Buffers</a>消息体解码器
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 @Sharable
 public class ProtobufBodyDecoder implements MessageBodyDecoder {

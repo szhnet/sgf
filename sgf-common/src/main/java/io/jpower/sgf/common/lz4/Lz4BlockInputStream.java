@@ -22,7 +22,7 @@ import net.jpountz.util.SafeUtils;
  * <p>
  * 数据以外的部分都将使用Varint进行编码。
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class Lz4BlockInputStream extends FilterInputStream {
 

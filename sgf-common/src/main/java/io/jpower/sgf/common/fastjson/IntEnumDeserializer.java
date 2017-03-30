@@ -15,9 +15,11 @@ import io.jpower.sgf.enumtype.IntEnum;
 /**
  * 用来使fastjson支持{@link IntEnum}的反序列化
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class IntEnumDeserializer implements ObjectDeserializer {
+
+    private final Class<?> intEnumClass;
 
     private final Method findByIdMethod;
 
@@ -27,6 +29,7 @@ public class IntEnumDeserializer implements ObjectDeserializer {
         if (!intEnumClass.isEnum()) {
             throw new JSONException("The class is not Enum: " + intEnumClass);
         }
+        this.intEnumClass = intEnumClass;
 
         // 优先使用findById方法
         this.findByIdMethod = findFindByIdMethod(intEnumClass);
@@ -43,7 +46,7 @@ public class IntEnumDeserializer implements ObjectDeserializer {
     private Method findFindByIdMethod(Class<?> c) {
         try {
             return c.getMethod("findById", int.class);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             // ignore
         }
         return null;
@@ -99,7 +102,7 @@ public class IntEnumDeserializer implements ObjectDeserializer {
             e = (T) intEnums[id];
         }
         if (e == null) {
-            throw new JSONException("parse IntEnum " + findByIdMethod.getDeclaringClass()
+            throw new JSONException("parse IntEnum " + intEnumClass
                     + " error, index : " + id);
         }
         return e;

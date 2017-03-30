@@ -13,7 +13,7 @@ import org.jboss.netty.util.TimerTask;
 import io.jpower.sgf.net.NetSession;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class QpMonitor {
 

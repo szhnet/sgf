@@ -13,24 +13,24 @@ import io.jpower.sgf.utils.JavaUtils;
  * protobuf</a>的编码</li>
  * </ul>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 abstract class CodedWriter {
 
-    public CodedWriter() {
+    CodedWriter() {
 
     }
 
     /* ########## write type value ########## */
 
-    public void writeStop() {
+    void writeStop() {
         writeTag(0, WireFormat.WIRETYPE_VARINT); // fieldNumber == 0
     }
 
     /**
      * Write an {@code int32} field, including tag, to the stream.
      */
-    public void writeInt32(final int fieldNumber, final int value) {
+    void writeInt32(final int fieldNumber, final int value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_VARINT);
         writeInt32NoTag(value);
     }
@@ -38,7 +38,7 @@ abstract class CodedWriter {
     /**
      * Write an {@code int64} field, including tag, to the stream.
      */
-    public void writeInt64(final int fieldNumber, final long value) {
+    void writeInt64(final int fieldNumber, final long value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_VARINT);
         writeInt64NoTag(value);
     }
@@ -46,7 +46,7 @@ abstract class CodedWriter {
     /**
      * Write an {@code sint32} field, including tag, to the stream.
      */
-    public void writeSInt32(final int fieldNumber, final int value) {
+    void writeSInt32(final int fieldNumber, final int value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_VARINT);
         writeSInt32NoTag(value);
     }
@@ -54,7 +54,7 @@ abstract class CodedWriter {
     /**
      * Write an {@code sint64} field, including tag, to the stream.
      */
-    public void writeSInt64(final int fieldNumber, final long value) {
+    void writeSInt64(final int fieldNumber, final long value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_VARINT);
         writeSInt64NoTag(value);
     }
@@ -62,7 +62,7 @@ abstract class CodedWriter {
     /**
      * Write a {@code fixed8} field, including tag, to the stream.
      */
-    public void writeFixed8(final int fieldNumber, final int value) {
+    void writeFixed8(final int fieldNumber, final int value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_FIXED8);
         writeFixed8NoTag(value);
     }
@@ -70,7 +70,7 @@ abstract class CodedWriter {
     /**
      * Write a {@code fixed16} field, including tag, to the stream.
      */
-    public void writeFixed16(final int fieldNumber, final int value) {
+    void writeFixed16(final int fieldNumber, final int value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_FIXED16);
         writeFixed16NoTag(value);
     }
@@ -78,7 +78,7 @@ abstract class CodedWriter {
     /**
      * Write a {@code fixed32} field, including tag, to the stream.
      */
-    public void writeFixed32(final int fieldNumber, final int value) {
+    void writeFixed32(final int fieldNumber, final int value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_FIXED32);
         writeFixed32NoTag(value);
     }
@@ -86,7 +86,7 @@ abstract class CodedWriter {
     /**
      * Write a {@code fixed64} field, including tag, to the stream.
      */
-    public void writeFixed64(final int fieldNumber, final long value) {
+    void writeFixed64(final int fieldNumber, final long value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_FIXED64);
         writeFixed64NoTag(value);
     }
@@ -94,7 +94,7 @@ abstract class CodedWriter {
     /**
      * Write a {@code float} field, including tag, to the stream.
      */
-    public void writeFloat(final int fieldNumber, final float value) {
+    void writeFloat(final int fieldNumber, final float value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_FIXED32);
         writeFloatNoTag(value);
     }
@@ -102,7 +102,7 @@ abstract class CodedWriter {
     /**
      * Write a {@code double} field, including tag, to the stream.
      */
-    public void writeDouble(final int fieldNumber, final double value) {
+    void writeDouble(final int fieldNumber, final double value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_FIXED64);
         writeDoubleNoTag(value);
     }
@@ -110,7 +110,7 @@ abstract class CodedWriter {
     /**
      * Write a {@code bool} field, including tag, to the stream.
      */
-    public void writeBool(final int fieldNumber, final boolean value) {
+    void writeBool(final int fieldNumber, final boolean value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_VARINT);
         writeBoolNoTag(value);
     }
@@ -118,7 +118,7 @@ abstract class CodedWriter {
     /**
      * Write a {@code bytes} field, including tag, to the stream.
      */
-    public void writeBytes(final int fieldNumber, final byte[] value) {
+    void writeBytes(final int fieldNumber, final byte[] value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_BYTES);
         writeBytesNoTag(value);
     }
@@ -126,7 +126,7 @@ abstract class CodedWriter {
     /**
      * Write a {@code string} field, including tag, to the stream.
      */
-    public void writeString(final int fieldNumber, final String value) {
+    void writeString(final int fieldNumber, final String value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_BYTES);
         writeStringNoTag(value);
     }
@@ -136,7 +136,7 @@ abstract class CodedWriter {
     /**
      * Write an {@code int32} field to the stream.
      */
-    public void writeInt32NoTag(final int value) {
+    void writeInt32NoTag(final int value) {
         if (value >= 0) {
             writeRawVarint32(value);
         } else {
@@ -148,77 +148,77 @@ abstract class CodedWriter {
     /**
      * Write an {@code int64} field to the stream.
      */
-    public void writeInt64NoTag(final long value) {
+    void writeInt64NoTag(final long value) {
         writeRawVarint64(value);
     }
 
     /**
      * Write an {@code sint32} field to the stream.
      */
-    public void writeSInt32NoTag(final int value) {
+    void writeSInt32NoTag(final int value) {
         writeRawVarint32(encodeZigZag32(value));
     }
 
     /**
      * Write an {@code sint64} field to the stream.
      */
-    public void writeSInt64NoTag(final long value) {
+    void writeSInt64NoTag(final long value) {
         writeRawVarint64(encodeZigZag64(value));
     }
 
     /**
      * Write a {@code fixed8} field to the stream.
      */
-    public void writeFixed8NoTag(final int value) {
+    void writeFixed8NoTag(final int value) {
         writeRawLittleEndian8(value);
     }
 
     /**
      * Write a {@code fixed16} field to the stream.
      */
-    public void writeFixed16NoTag(final int value) {
+    void writeFixed16NoTag(final int value) {
         writeRawLittleEndian16(value);
     }
 
     /**
      * Write a {@code fixed32} field to the stream.
      */
-    public void writeFixed32NoTag(final int value) {
+    void writeFixed32NoTag(final int value) {
         writeRawLittleEndian32(value);
     }
 
     /**
      * Write a {@code fixed64} field to the stream.
      */
-    public void writeFixed64NoTag(final long value) {
+    void writeFixed64NoTag(final long value) {
         writeRawLittleEndian64(value);
     }
 
     /**
      * Write a {@code float} field to the stream.
      */
-    public void writeFloatNoTag(final float value) {
+    void writeFloatNoTag(final float value) {
         writeRawLittleEndian32(Float.floatToRawIntBits(value));
     }
 
     /**
      * Write a {@code double} field to the stream.
      */
-    public void writeDoubleNoTag(final double value) {
+    void writeDoubleNoTag(final double value) {
         writeRawLittleEndian64(Double.doubleToRawLongBits(value));
     }
 
     /**
      * Write a {@code bool} field to the stream.
      */
-    public void writeBoolNoTag(final boolean value) {
+    void writeBoolNoTag(final boolean value) {
         writeRawByte(value ? 1 : 0);
     }
 
     /**
      * Write a {@code bytes} field to the stream.
      */
-    public void writeBytesNoTag(final byte[] value) {
+    void writeBytesNoTag(final byte[] value) {
         writeRawVarint32(value.length);
         writeRawBytes(value);
     }
@@ -226,7 +226,7 @@ abstract class CodedWriter {
     /**
      * Write a {@code string} field to the stream.
      */
-    public void writeStringNoTag(final String value) {
+    void writeStringNoTag(final String value) {
         // Unfortunately there does not appear to be any way to tell Java to
         // encode
         // UTF-8 directly into our buffer, so we have to let it create its own
@@ -242,11 +242,11 @@ abstract class CodedWriter {
         writeRawBytes(bytes);
     }
 
-    public void writeTag(final int fieldNumber, final int wireType) {
+    void writeTag(final int fieldNumber, final int wireType) {
         writeRawVarint32(WireFormat.makeTag(fieldNumber, wireType));
     }
 
-    public void writeWireType(final int wireType) {
+    void writeWireType(final int wireType) {
         writeRawVarint32(wireType);
     }
 
@@ -255,29 +255,29 @@ abstract class CodedWriter {
     /**
      * Write a single byte, represented by an integer value.
      */
-    public void writeRawByte(final int value) {
+    void writeRawByte(final int value) {
         writeRawByte((byte) value);
     }
 
     /**
      * Write a single byte.
      */
-    public abstract void writeRawByte(final byte value);
+    abstract void writeRawByte(final byte value);
 
     /**
      * Write an array of bytes.
      */
-    public void writeRawBytes(final byte[] value) {
+    void writeRawBytes(final byte[] value) {
         writeRawBytes(value, 0, value.length);
     }
 
-    public abstract void writeRawBytes(final byte[] value, int offset, int len);
+    abstract void writeRawBytes(final byte[] value, int offset, int len);
 
     /**
      * Encode and write a varint. {@code value} is treated as unsigned, so it
      * won't be sign-extended if negative.
      */
-    public void writeRawVarint32(int value) {
+    void writeRawVarint32(int value) {
         while (true) {
             if ((value & ~0x7F) == 0) {
                 writeRawByte(value);
@@ -292,7 +292,7 @@ abstract class CodedWriter {
     /**
      * Encode and write a varint.
      */
-    public void writeRawVarint64(long value) {
+    void writeRawVarint64(long value) {
         while (true) {
             if ((value & ~0x7FL) == 0) {
                 writeRawByte((int) value);
@@ -307,14 +307,14 @@ abstract class CodedWriter {
     /**
      * Write a little-endian 8-bit integer.
      */
-    public void writeRawLittleEndian8(final int value) {
+    void writeRawLittleEndian8(final int value) {
         writeRawByte((value) & 0xFF);
     }
 
     /**
      * Write a little-endian 16-bit integer.
      */
-    public void writeRawLittleEndian16(final int value) {
+    void writeRawLittleEndian16(final int value) {
         writeRawByte((value) & 0xFF);
         writeRawByte((value >> 8) & 0xFF);
     }
@@ -322,7 +322,7 @@ abstract class CodedWriter {
     /**
      * Write a little-endian 32-bit integer.
      */
-    public void writeRawLittleEndian32(final int value) {
+    void writeRawLittleEndian32(final int value) {
         writeRawByte((value) & 0xFF);
         writeRawByte((value >> 8) & 0xFF);
         writeRawByte((value >> 16) & 0xFF);
@@ -332,7 +332,7 @@ abstract class CodedWriter {
     /**
      * Write a little-endian 64-bit integer.
      */
-    public void writeRawLittleEndian64(final long value) {
+    void writeRawLittleEndian64(final long value) {
         writeRawByte((int) (value) & 0xFF);
         writeRawByte((int) (value >> 8) & 0xFF);
         writeRawByte((int) (value >> 16) & 0xFF);
@@ -355,7 +355,7 @@ abstract class CodedWriter {
      * @return An unsigned 32-bit integer, stored in a signed int because Java
      * has no explicit unsigned support.
      */
-    public static int encodeZigZag32(final int n) {
+    static int encodeZigZag32(final int n) {
         // Note: the right-shift must be arithmetic
         return (n << 1) ^ (n >> 31);
     }
@@ -370,7 +370,7 @@ abstract class CodedWriter {
      * @return An unsigned 64-bit integer, stored in a signed int because Java
      * has no explicit unsigned support.
      */
-    public static long encodeZigZag64(final long n) {
+    static long encodeZigZag64(final long n) {
         // Note: the right-shift must be arithmetic
         return (n << 1) ^ (n >> 63);
     }

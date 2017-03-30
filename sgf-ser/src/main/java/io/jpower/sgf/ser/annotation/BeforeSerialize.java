@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * <li>需要方法是public，无参数的。</li>
  * </ul>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

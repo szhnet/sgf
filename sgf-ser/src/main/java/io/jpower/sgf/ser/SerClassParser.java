@@ -35,7 +35,7 @@ import io.jpower.sgf.ser.annotation.Serializable;
 /**
  * 用来分析有{@link Serializable}注解的类
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class SerClassParser {
 
@@ -49,11 +49,11 @@ class SerClassParser {
 
     }
 
-    public static SerClassParser ins() {
+    static SerClassParser ins() {
         return INS;
     }
 
-    public SerClass parse(Class<?> clazz) {
+    SerClass parse(Class<?> clazz) {
         SerClass serClass = cache.get(clazz);
         if (serClass != null) {
             return serClass;
@@ -127,7 +127,7 @@ class SerClassParser {
             serFields.add(f);
         }
         // 排个序，fieldNumber小的排前面
-        Collections.sort(serFields, new Comparator<SerField>() {
+        serFields.sort(new Comparator<SerField>() {
 
             @Override
             public int compare(SerField o1, SerField o2) {
@@ -187,14 +187,14 @@ class SerClassParser {
         Method getter = null;
         try {
             getter = clazz.getMethod(Utils.GET_PREFIX + baseName, Utils.EMPTY_CLASSES);
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException ignored) {
 
         }
         if (getter == null) {
             if (fieldClass == boolean.class || fieldClass == Boolean.class) {
                 try {
                     getter = clazz.getMethod(Utils.IS_PREFIX + baseName, Utils.EMPTY_CLASSES);
-                } catch (NoSuchMethodException e) {
+                } catch (NoSuchMethodException ignored) {
 
                 }
             }
@@ -208,7 +208,7 @@ class SerClassParser {
         Method setter = null;
         try {
             setter = clazz.getMethod(Utils.SET_PREFIX + baseName, fieldClass);
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException ignored) {
 
         }
         if (setter != null && checkMethodModifier(setter.getModifiers())) {

@@ -18,7 +18,7 @@ import io.jpower.sgf.enumtype.IntEnum;
 /**
  * 用来使jackson2支持{@link IntEnum}的序列化
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class IntEnumSerializer extends StdScalarSerializer<IntEnum> {
 

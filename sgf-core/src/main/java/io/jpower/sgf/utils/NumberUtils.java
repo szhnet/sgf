@@ -1,7 +1,7 @@
 package io.jpower.sgf.utils;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NumberUtils {
 

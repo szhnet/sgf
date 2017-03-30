@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * 包装了一个字节数组
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class ByteArrayWriter extends CodedWriter {
 
@@ -20,11 +20,11 @@ class ByteArrayWriter extends CodedWriter {
 
     private int count;
 
-    public ByteArrayWriter() {
+    ByteArrayWriter() {
         this(128);
     }
 
-    public ByteArrayWriter(int initialCapacity) {
+    ByteArrayWriter(int initialCapacity) {
         if (initialCapacity < 0) {
             throw new IllegalArgumentException("Negative initialCapacity: " + initialCapacity);
         }
@@ -33,11 +33,11 @@ class ByteArrayWriter extends CodedWriter {
 
     /* ########## 实现父类方法 ########## */
 
-    public void writeRawByte(final byte value) {
+    void writeRawByte(final byte value) {
         write(value);
     }
 
-    public void writeRawBytes(final byte[] value, int offset, int length) {
+    void writeRawBytes(final byte[] value, int offset, int length) {
         write(value, offset, length);
     }
 
@@ -69,14 +69,14 @@ class ByteArrayWriter extends CodedWriter {
         return (minCapacity > MAX_ARRAY_SIZE) ? Integer.MAX_VALUE : MAX_ARRAY_SIZE;
     }
 
-    public void write(byte b) {
+    void write(byte b) {
         int newCount = count + 1;
         ensureCapacity(newCount);
         buf[count] = b;
         count = newCount;
     }
 
-    public void write(byte b[], int offset, int length) {
+    void write(byte b[], int offset, int length) {
         if ((offset < 0) || (offset > b.length) || (length < 0)
                 || ((offset + length) - b.length > 0)) {
             throw new IndexOutOfBoundsException();
@@ -87,19 +87,19 @@ class ByteArrayWriter extends CodedWriter {
         count = newCount;
     }
 
-    public void reset() {
+    void reset() {
         count = 0;
     }
 
-    public int size() {
+    int size() {
         return count;
     }
 
-    public byte[] buf() {
+    byte[] buf() {
         return buf;
     }
 
-    public byte[] toByteArray() {
+    byte[] toByteArray() {
         return Arrays.copyOf(buf, count);
     }
 

@@ -26,7 +26,7 @@ import io.jpower.sgf.utils.JavaUtils;
  * <li>如果不符合实际需求，另行独自实现MessageConfigManager即可</li>
  * </ul>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class DefaultMessageConfigManager extends AbstractMessageConfigManager<MessageConfig.MessageMeta>
         implements MessageConfigManager<MessageConfig.MessageMeta> {

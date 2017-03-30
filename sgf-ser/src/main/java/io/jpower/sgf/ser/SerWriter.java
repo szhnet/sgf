@@ -20,11 +20,11 @@ import io.jpower.sgf.enumtype.IntEnum;
 import io.jpower.sgf.utils.JavaUtils;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class SerWriter {
 
-    public void write(SerContext ctx, Object obj) {
+    void write(SerContext ctx, Object obj) {
         Class<?> clazz = obj.getClass();
         SerClass serClass = SerClassParser.ins().parse(clazz);
         writeSerObject(ctx, obj, serClass);

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * 字段类型
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class FieldType {
 
@@ -34,18 +34,18 @@ class FieldType {
      */
     private List<FieldType> subTypes;
 
-    public FieldType(Class<?> clazz, JavaType javaType, int wireType) {
+    FieldType(Class<?> clazz, JavaType javaType, int wireType) {
         this(clazz, javaType, false, wireType);
     }
 
-    public FieldType(Class<?> clazz, JavaType javaType, boolean primitive, int wireType) {
+    FieldType(Class<?> clazz, JavaType javaType, boolean primitive, int wireType) {
         this.rawType = clazz;
         this.javaType = javaType;
         this.primitive = primitive;
         this.wireType = wireType;
     }
 
-    public Class<?> getRawType() {
+    Class<?> getRawType() {
         return rawType;
     }
 
@@ -53,7 +53,7 @@ class FieldType {
         this.rawType = rawType;
     }
 
-    public JavaType getJavaType() {
+    JavaType getJavaType() {
         return javaType;
     }
 
@@ -61,27 +61,27 @@ class FieldType {
         this.javaType = javaType;
     }
 
-    public boolean isPrimitive() {
+    boolean isPrimitive() {
         return primitive;
     }
 
-    public void setPrimitive(boolean primitive) {
+    void setPrimitive(boolean primitive) {
         this.primitive = primitive;
     }
 
-    public int getWireType() {
+    int getWireType() {
         return wireType;
     }
 
-    public void setWireType(int wireType) {
+    void setWireType(int wireType) {
         this.wireType = wireType;
     }
 
-    public List<FieldType> getSubTypes() {
+    List<FieldType> getSubTypes() {
         return subTypes;
     }
 
-    public void setSubTypes(List<FieldType> subTypes) {
+    void setSubTypes(List<FieldType> subTypes) {
         this.subTypes = subTypes;
     }
 

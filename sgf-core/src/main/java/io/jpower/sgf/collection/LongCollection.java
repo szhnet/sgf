@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * long collection
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface LongCollection {
     // Query Operations
@@ -148,7 +148,7 @@ public interface LongCollection {
      *                              elements and this collection does not permit null elements
      *                              (<a href="#optional-restrictions">optional</a>), or if the
      *                              specified collection is null.
-     * @see #contains(Object)
+     * @see #contains(long)
      */
     boolean containsAll(Collection<Long> c);
 
@@ -177,7 +177,7 @@ public interface LongCollection {
      *                                       prevents it from being added to this collection
      * @throws IllegalStateException         if not all the elements can be added at this time due to
      *                                       insertion restrictions
-     * @see #add(Object)
+     * @see #add(long)
      */
     boolean addAll(Collection<Long> c);
 
@@ -203,8 +203,8 @@ public interface LongCollection {
      *                                       specified collection does not support null elements
      *                                       (<a href="#optional-restrictions">optional</a>), or if the
      *                                       specified collection is null
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(long)
+     * @see #contains(long)
      */
     boolean removeAll(Collection<Long> c);
 
@@ -230,8 +230,8 @@ public interface LongCollection {
      *                                       specified collection does not permit null elements
      *                                       (<a href="#optional-restrictions">optional</a>), or if the
      *                                       specified collection is null
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(long)
+     * @see #contains(long)
      */
     boolean retainAll(Collection<Long> c);
 
@@ -280,8 +280,6 @@ public interface LongCollection {
      * @param o object to be compared for equality with this collection
      * @return <tt>true</tt> if the specified object is equal to this collection
      * @see Object#equals(Object)
-     * @see Set#equals(Object)
-     * @see List#equals(Object)
      */
     boolean equals(Object o);
 

@@ -14,7 +14,7 @@ import java.util.Set;
 import org.junit.Test;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class IntHashMapTest {
 

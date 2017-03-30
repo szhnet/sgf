@@ -1,20 +1,22 @@
 package io.jpower.sgf.thread;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
+import io.jpower.sgf.utils.JavaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.jpower.sgf.utils.JavaUtils;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public abstract class SingleThreadWorker implements Runnable {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    private static final int DEFAULT_SHUTDOWN_WAIT_TIME = 5000;
 
     private static final int STATE_INIT = 0;
 
@@ -22,32 +24,37 @@ public abstract class SingleThreadWorker implements Runnable {
 
     private static final int STATE_STOP = 2;
 
-    private ExecutorService exec = Executors.newSingleThreadExecutor();
+    private ExecutorService exec;
 
     private volatile int state = STATE_INIT;
 
     private String name;
 
-    private int shutdownWaitTime = 5000;
+    private int shutdownWaitTime;
 
     private volatile Thread workerThread;
 
     protected SingleThreadWorker() {
-        this.name = JavaUtils.getSimpleName(getClass());
+        this(null, DEFAULT_SHUTDOWN_WAIT_TIME, null);
     }
 
     protected SingleThreadWorker(String name) {
-        this.name = name;
+        this(name, DEFAULT_SHUTDOWN_WAIT_TIME, null);
     }
 
     protected SingleThreadWorker(int shutdownWaitTime) {
-        this.name = JavaUtils.getSimpleName(getClass());
-        this.shutdownWaitTime = shutdownWaitTime;
+        this(null, DEFAULT_SHUTDOWN_WAIT_TIME, null);
     }
 
-    protected SingleThreadWorker(String name, int shutdownWaitTime) {
-        this.name = name;
+    protected SingleThreadWorker(ThreadFactory threadFactory) {
+        this(null, DEFAULT_SHUTDOWN_WAIT_TIME, null);
+    }
+
+    protected SingleThreadWorker(String name, int shutdownWaitTime, ThreadFactory threadFactory) {
+        this.name = name != null ? name : JavaUtils.getSimpleName(getClass());
         this.shutdownWaitTime = shutdownWaitTime;
+        this.exec = threadFactory != null ? Executors.newSingleThreadExecutor(threadFactory)
+                : Executors.newSingleThreadExecutor();
     }
 
     public void start() {
@@ -61,7 +68,7 @@ public abstract class SingleThreadWorker implements Runnable {
         exec.execute(new NamedRunable(name, this));
 
         if (log.isInfoEnabled()) {
-            log.info(name + " is started");
+            log.info("{} is started", name);
         }
     }
 
@@ -78,7 +85,7 @@ public abstract class SingleThreadWorker implements Runnable {
         }
 
         if (log.isInfoEnabled()) {
-            log.info(name + " is stopped");
+            log.info("{} is stopped", name);
         }
     }
 
@@ -96,7 +103,7 @@ public abstract class SingleThreadWorker implements Runnable {
             } catch (InterruptedException ie) {
                 // re-check state
             } catch (Throwable e) {
-                log.error(name + " throws exception", e);
+                log.error("{} throws exception", name, e);
             }
         }
         afterMainLoop();

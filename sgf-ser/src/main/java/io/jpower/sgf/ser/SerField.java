@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 /**
  * 字段的序列化相关信息
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class SerField {
 
@@ -50,67 +50,67 @@ class SerField {
      */
     private Class<?> deSerClazz;
 
-    public SerField(Field field) {
+    SerField(Field field) {
         this.field = field;
     }
 
-    public Field getField() {
+    Field getField() {
         return field;
     }
 
-    public int getNumber() {
+    int getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    void setNumber(int number) {
         this.number = number;
     }
 
-    public FieldType getType() {
+    FieldType getType() {
         return type;
     }
 
-    public void setType(FieldType type) {
+    void setType(FieldType type) {
         this.type = type;
     }
 
-    public Method getGetter() {
+    Method getGetter() {
         return getter;
     }
 
-    public void setGetter(Method getter) {
+    void setGetter(Method getter) {
         this.getter = getter;
     }
 
-    public Method getSetter() {
+    Method getSetter() {
         return setter;
     }
 
-    public void setSetter(Method setter) {
+    void setSetter(Method setter) {
         this.setter = setter;
     }
 
-    public boolean isIntern() {
+    boolean isIntern() {
         return intern;
     }
 
-    public void setIntern(boolean intern) {
+    void setIntern(boolean intern) {
         this.intern = intern;
     }
 
-    public IntEncodeType getIntEncodeType() {
+    IntEncodeType getIntEncodeType() {
         return intEncodeType;
     }
 
-    public void setIntEncodeType(IntEncodeType intEncodeType) {
+    void setIntEncodeType(IntEncodeType intEncodeType) {
         this.intEncodeType = intEncodeType;
     }
 
-    public Class<?> getDeSerClazz() {
+    Class<?> getDeSerClazz() {
         return deSerClazz;
     }
 
-    public void setDeSerClazz(Class<?> deSerClazz) {
+    void setDeSerClazz(Class<?> deSerClazz) {
         this.deSerClazz = deSerClazz;
     }
 

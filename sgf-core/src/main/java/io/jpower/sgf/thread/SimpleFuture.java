@@ -10,7 +10,7 @@ import java.util.concurrent.TimeoutException;
  * <li>类似jdk中的Future，netty中的ChannelFuture</li>
  * </ul>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface SimpleFuture<V> {
 

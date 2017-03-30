@@ -10,7 +10,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * <p>
  * 用来使用netty搭配thrift进行编解码
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NettyChannelBufferReadTransport extends TTransport {
 

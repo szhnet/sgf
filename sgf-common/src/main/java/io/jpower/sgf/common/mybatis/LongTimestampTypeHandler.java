@@ -12,7 +12,7 @@ import org.apache.ibatis.type.JdbcType;
 /**
  * javaType: Long <-> jdbcType: Timestamp
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class LongTimestampTypeHandler extends BaseTypeHandler<Long> {
 

@@ -1,7 +1,7 @@
 package io.jpower.sgf.common.lz4;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class Lz4Constants {
 

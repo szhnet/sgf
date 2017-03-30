@@ -4,7 +4,7 @@ import io.jpower.sgf.net.msg.MultiSessionMessage;
 import io.jpower.sgf.net.msg.NetMessage;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NetMessageHelper {
 

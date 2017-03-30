@@ -10,7 +10,7 @@ import io.jpower.sgf.collection.IntMap;
 import io.jpower.sgf.utils.JavaUtils;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class EnumUtils {
 
@@ -103,7 +103,7 @@ public class EnumUtils {
     public static <T extends Enum<T>> T valueOfIgnoreCase(Class<T> enumType, String name) {
         try {
             return Enum.valueOf(enumType, name);
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
             // no match
         }
 

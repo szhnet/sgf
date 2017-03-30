@@ -5,7 +5,7 @@ import java.util.UUID;
 /**
  * UUID工具
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class UuidUtils {
 

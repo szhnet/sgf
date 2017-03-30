@@ -3,7 +3,7 @@ package io.jpower.sgf.net;
 import java.io.IOException;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class ClosedSessionException extends IOException {
 

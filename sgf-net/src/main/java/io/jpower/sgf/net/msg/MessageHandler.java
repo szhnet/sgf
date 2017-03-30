@@ -3,7 +3,7 @@ package io.jpower.sgf.net.msg;
 /**
  * 消息处理器
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface MessageHandler<T, S> {
 

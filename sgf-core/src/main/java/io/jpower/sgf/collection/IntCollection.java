@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * int collection
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface IntCollection {
     // Query Operations
@@ -148,7 +148,7 @@ public interface IntCollection {
      *                              elements and this collection does not permit null elements
      *                              (<a href="#optional-restrictions">optional</a>), or if the
      *                              specified collection is null.
-     * @see #contains(Object)
+     * @see #contains(int)
      */
     boolean containsAll(Collection<Integer> c);
 
@@ -177,7 +177,7 @@ public interface IntCollection {
      *                                       prevents it from being added to this collection
      * @throws IllegalStateException         if not all the elements can be added at this time due to
      *                                       insertion restrictions
-     * @see #add(Object)
+     * @see #add(int)
      */
     boolean addAll(Collection<Integer> c);
 
@@ -203,8 +203,8 @@ public interface IntCollection {
      *                                       specified collection does not support null elements
      *                                       (<a href="#optional-restrictions">optional</a>), or if the
      *                                       specified collection is null
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(int)
+     * @see #contains(int)
      */
     boolean removeAll(Collection<Integer> c);
 
@@ -230,8 +230,8 @@ public interface IntCollection {
      *                                       specified collection does not permit null elements
      *                                       (<a href="#optional-restrictions">optional</a>), or if the
      *                                       specified collection is null
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(int)
+     * @see #contains(int)
      */
     boolean retainAll(Collection<Integer> c);
 
@@ -280,8 +280,6 @@ public interface IntCollection {
      * @param o object to be compared for equality with this collection
      * @return <tt>true</tt> if the specified object is equal to this collection
      * @see Object#equals(Object)
-     * @see Set#equals(Object)
-     * @see List#equals(Object)
      */
     boolean equals(Object o);
 

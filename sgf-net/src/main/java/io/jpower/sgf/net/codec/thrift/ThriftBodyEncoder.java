@@ -15,7 +15,7 @@ import io.jpower.sgf.thread.Sharable;
  * <p>
  * <li>默认使用{@link TCompactProtocol}协议格式</li>
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 @Sharable
 public class ThriftBodyEncoder implements MessageBodyEncoder {

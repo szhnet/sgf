@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * double collection
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public interface DoubleCollection {
     // Query Operations
@@ -148,7 +148,7 @@ public interface DoubleCollection {
      *                              elements and this collection does not permit null elements
      *                              (<a href="#optional-restrictions">optional</a>), or if the
      *                              specified collection is null.
-     * @see #contains(Object)
+     * @see #contains(double)
      */
     boolean containsAll(Collection<Double> c);
 
@@ -177,7 +177,7 @@ public interface DoubleCollection {
      *                                       prevents it from being added to this collection
      * @throws IllegalStateException         if not all the elements can be added at this time due to
      *                                       insertion restrictions
-     * @see #add(Object)
+     * @see #add(double)
      */
     boolean addAll(Collection<Double> c);
 
@@ -203,8 +203,8 @@ public interface DoubleCollection {
      *                                       specified collection does not support null elements
      *                                       (<a href="#optional-restrictions">optional</a>), or if the
      *                                       specified collection is null
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(double)
+     * @see #contains(double)
      */
     boolean removeAll(Collection<Double> c);
 
@@ -230,8 +230,8 @@ public interface DoubleCollection {
      *                                       specified collection does not permit null elements
      *                                       (<a href="#optional-restrictions">optional</a>), or if the
      *                                       specified collection is null
-     * @see #remove(Object)
-     * @see #contains(Object)
+     * @see #remove(double)
+     * @see #contains(double)
      */
     boolean retainAll(Collection<Double> c);
 
@@ -280,8 +280,6 @@ public interface DoubleCollection {
      * @param o object to be compared for equality with this collection
      * @return <tt>true</tt> if the specified object is equal to this collection
      * @see Object#equals(Object)
-     * @see Set#equals(Object)
-     * @see List#equals(Object)
      */
     boolean equals(Object o);
 

@@ -24,7 +24,7 @@ import io.jpower.sgf.net.msg.CgMockLogin;
 import io.jpower.sgf.net.msg.ShareChannelMessage;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NetMessageDecoderTest {
 

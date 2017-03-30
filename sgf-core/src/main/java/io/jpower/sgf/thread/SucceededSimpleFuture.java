@@ -7,7 +7,7 @@ import java.util.concurrent.TimeoutException;
  * 用来表示一个执行操作成功的future
  *
  * @param <V>
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class SucceededSimpleFuture<V> extends CompleteSimpleFuture<V> {
 

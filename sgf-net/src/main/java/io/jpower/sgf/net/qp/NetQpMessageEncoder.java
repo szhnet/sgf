@@ -23,7 +23,7 @@ import io.jpower.sgf.net.codec.MessageBodyEncoder;
 import io.jpower.sgf.net.msg.MessageConfig.MessageMeta;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class NetQpMessageEncoder extends OneToOneEncoder {
 

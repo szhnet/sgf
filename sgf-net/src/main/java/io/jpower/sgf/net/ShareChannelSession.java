@@ -8,7 +8,7 @@ import io.jpower.sgf.net.qp.SessionRequestContext;
 import io.jpower.sgf.thread.FailedSimpleFuture;
 
 /**
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class ShareChannelSession extends NetSession {
 

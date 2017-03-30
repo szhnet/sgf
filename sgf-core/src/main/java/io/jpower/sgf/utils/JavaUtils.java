@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * java语言和jdk类库层面的一些便捷方法
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class JavaUtils {
 
@@ -52,7 +52,7 @@ public class JavaUtils {
      * <p>
      * <pre>
      * try {
-     *     throw new Exception(&quot;hehe&quot;);
+     *     ... // can throw Checked Exception
      * } catch (Exception e) {
      *     throw new RuntimeException(e);
      * }
@@ -62,7 +62,7 @@ public class JavaUtils {
      * <p>
      * <pre>
      * try {
-     *     throw new Exception(&quot;hehe&quot;);
+     *     ... // can throw Checked Exception
      * } catch (Exception e) {
      *     throw sneakyThrow(e);
      * }
@@ -72,10 +72,11 @@ public class JavaUtils {
      * @return
      */
     public static RuntimeException sneakyThrow(Throwable t) {
-        if (t == null)
+        if (t == null) {
             throw new NullPointerException("t");
+        }
         JavaUtils.<RuntimeException>sneakyThrow0(t);
-        return null;
+        return new RuntimeException(t);
     }
 
     @SuppressWarnings("unchecked")

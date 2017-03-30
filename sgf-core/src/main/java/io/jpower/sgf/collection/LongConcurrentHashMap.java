@@ -23,7 +23,7 @@ import io.jpower.sgf.utils.JavaUtils;
  * </ul>
  *
  * @param <V> the type of mapped values
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 @SuppressWarnings("restriction")
 public class LongConcurrentHashMap<V> extends AbstractLongMap<V>
