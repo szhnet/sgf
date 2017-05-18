@@ -1,4 +1,4 @@
-package io.jpower.sgf.common;
+package io.jpower.sgf.common.compile;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
@@ -9,7 +9,7 @@ import io.jpower.sgf.utils.JavaUtils;
 /**
  * 执行java代码
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class DynamicJavaRunner {
 
@@ -104,20 +104,20 @@ public class DynamicJavaRunner {
             Method runMethod = null;
             try {
                 runMethod = clazz.getMethod("run");
-            } catch (Exception e) {
+            } catch (Exception ignored) {
                 // not found
             }
             if (runMethod == null) {
                 try {
                     runMethod = clazz.getMethod("call");
-                } catch (Exception e1) {
+                } catch (Exception ignored) {
                     // not found
                 }
             }
             if (runMethod == null) {
                 try {
                     runMethod = clazz.getMethod("execute");
-                } catch (Exception e1) {
+                } catch (Exception ignored) {
                     // not found
                 }
             }

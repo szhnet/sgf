@@ -1,4 +1,4 @@
-package io.jpower.sgf.common;
+package io.jpower.sgf.common.config;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,10 +22,9 @@ import io.jpower.sgf.utils.JavaUtils;
 /**
  * 用来加载配置文件
  * <p>
- * <p>
  * 可以从文件系统路径加载或者从classpath加载
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class ConfigLoader {
 
@@ -160,7 +159,7 @@ public class ConfigLoader {
             if (in != null) {
                 try {
                     in.close();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
 
                 }
             }
@@ -225,7 +224,7 @@ public class ConfigLoader {
         if (obj != null) {
             try {
                 obj.close();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
         }

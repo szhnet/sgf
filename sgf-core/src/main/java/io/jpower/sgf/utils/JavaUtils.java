@@ -1,28 +1,66 @@
 package io.jpower.sgf.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.misc.Unsafe;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 
 /**
  * java语言和jdk类库层面的一些便捷方法
- *
+ *1
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class JavaUtils {
+
+    private static final Logger log = LoggerFactory.getLogger(JavaUtils.class);
 
     public static final Object[] EMPTY_OBJS = new Object[0];
 
     public static final Class<?>[] EMPTY_CLASSES = new Class[0];
 
-    private static final boolean IS_WINDOWS;
+    private static final boolean IS_WINDOWS = isWindows0();
+
+    private static final Unsafe unsafe;
 
     static {
-        String os = SystemPropertyUtils.get("os.name", "").toLowerCase();
-        // windows
-        IS_WINDOWS = os.contains("win");
+        // attempt to access field Unsafe#theUnsafe
+        final Object maybeUnsafe = AccessController.doPrivileged(new PrivilegedAction<Object>() {
+            @Override
+            public Object run() {
+                try {
+                    final Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
+                    unsafeField.setAccessible(true);
+                    // the unsafe instance
+                    return unsafeField.get(null);
+                } catch (Exception e) {
+                    return e;
+                }
+            }
+        });
+
+        if (maybeUnsafe instanceof Exception) {
+            unsafe = null;
+            log.debug("sun.misc.Unsafe.theUnsafe: unavailable", (Exception) maybeUnsafe);
+        } else {
+            unsafe = (Unsafe) maybeUnsafe;
+            log.debug("sun.misc.Unsafe.theUnsafe: available");
+        }
+    }
+
+    private static boolean isWindows0() {
+        boolean windows = SystemPropertyUtils.get("os.name", "").toLowerCase(Locale.US).contains("win");
+        if (windows) {
+            log.debug("Platform: Windows");
+        }
+        return windows;
     }
 
     /**
@@ -76,6 +114,7 @@ public class JavaUtils {
             throw new NullPointerException("t");
         }
         JavaUtils.<RuntimeException>sneakyThrow0(t);
+        // Shouldn't reach here.
         return new RuntimeException(t);
     }
 
@@ -123,16 +162,8 @@ public class JavaUtils {
      *
      * @return
      */
-    @SuppressWarnings("restriction")
-    public static sun.misc.Unsafe getUnsafe() {
-        try {
-            Field f = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");
-            f.setAccessible(true);
-            sun.misc.Unsafe unsafe = (sun.misc.Unsafe) f.get(null);
-            return unsafe;
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw sneakyThrow(e);
-        }
+    public static Unsafe getUnsafe() {
+        return unsafe;
     }
 
     public static boolean bool(Collection<?> c) {

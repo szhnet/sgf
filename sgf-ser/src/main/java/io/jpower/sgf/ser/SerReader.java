@@ -95,7 +95,7 @@ class SerReader {
             try {
                 readField(ctx, obj, serField);
             } catch (Exception e) {
-                throw new SerializationException("Read field error. Field=" + serField, e);
+                throw new SerializationException("Error while reading the field. Field=" + serField, e);
             }
         }
 

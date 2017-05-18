@@ -1,4 +1,4 @@
-package io.jpower.sgf.common;
+package io.jpower.sgf.common.compile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -8,6 +8,8 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,15 +35,15 @@ import javax.tools.ToolProvider;
 /**
  * 可以在运行时编译java代码
  *
- * @author zheng.sun
+ * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 public class DynamicJavaCompiler {
 
-    private ClassLoader parentClassLoader;
+    private final ClassLoader parentClassLoader;
 
-    private String classPath;
+    private final String classPath;
 
-    private String lineSeparator = System.getProperty("line.separator");
+    private final String lineSeparator = System.getProperty("line.separator");
 
     public DynamicJavaCompiler() {
         this.parentClassLoader = DynamicJavaCompiler.class.getClassLoader();
@@ -99,8 +101,13 @@ public class DynamicJavaCompiler {
             if (result) {
                 Map<String, byte[]> classBytes = fileManager.pollClassBytes(); // 拿到编译后的字节
                 fileManager.flush();
-                DynaClassLoader dynaClassLoader = new DynaClassLoader(this.parentClassLoader,
-                        classBytes);
+                DynaClassLoader dynaClassLoader = AccessController.doPrivileged(new PrivilegedAction<DynaClassLoader>() {
+                    @Override
+                    public DynaClassLoader run() {
+                        return new DynaClassLoader(parentClassLoader,
+                                classBytes);
+                    }
+                });
 
                 Class<?> clazz = null;
                 try {
@@ -114,10 +121,6 @@ public class DynamicJavaCompiler {
                 String diagInfo = collectDiagnostic(diagListener.getDiagnostics());
                 throw new RuntimeException("compile error" + lineSeparator + diagInfo);
             }
-            /*
-             * StringWriter sw = new StringWriter(); e.printStackTrace(new
-             * PrintWriter(sw)); rst.errorInfo = sw.getBuffer().toString();
-             */
         } catch (IOException e) {
             throw JavaUtils.sneakyThrow(e);
         } finally {
@@ -137,10 +140,10 @@ public class DynamicJavaCompiler {
         }
         StringBuilder sb = new StringBuilder();
         for (Diagnostic<? extends JavaFileObject> d : diagnostics) {
-            sb.append("Message: " + d.getMessage(Locale.getDefault())).append(lineSeparator);
-            sb.append("Source: " + d.getSource()).append(lineSeparator);
-            sb.append("LineNumber: " + d.getLineNumber()).append(lineSeparator);
-            sb.append("ColumnNumber: " + d.getColumnNumber()).append(lineSeparator);
+            sb.append("Message: ").append(d.getMessage(Locale.getDefault())).append(lineSeparator);
+            sb.append("Source: ").append(d.getSource()).append(lineSeparator);
+            sb.append("LineNumber: ").append(d.getLineNumber()).append(lineSeparator);
+            sb.append("ColumnNumber: ").append(d.getColumnNumber()).append(lineSeparator);
             sb.append(lineSeparator);
         }
         return sb.toString();
@@ -151,11 +154,11 @@ public class DynamicJavaCompiler {
      */
     private static class MemClassFileObject extends SimpleJavaFileObject {
 
-        protected final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-        protected MemClassFileObject(String name, JavaFileObject.Kind kind) {
-            super(URI.create("string:///" + name.replace('.', '/') + Kind.SOURCE.extension),
-                    Kind.SOURCE);
+        MemClassFileObject(String name, JavaFileObject.Kind kind) {
+            super(URI.create("string:///" + name.replace('.', '/') + kind.extension),
+                    kind);
         }
 
         @Override
@@ -163,7 +166,7 @@ public class DynamicJavaCompiler {
             return bos;
         }
 
-        public byte[] getBytes() {
+        byte[] getBytes() {
             return bos.toByteArray();
         }
 
@@ -179,7 +182,7 @@ public class DynamicJavaCompiler {
          */
         private Map<String, MemClassFileObject> fileMap = new HashMap<>();
 
-        protected MemClassFileManager(JavaFileManager fileManager) {
+        MemClassFileManager(JavaFileManager fileManager) {
             super(fileManager);
         }
 
@@ -196,7 +199,7 @@ public class DynamicJavaCompiler {
          *
          * @return
          */
-        public Map<String, byte[]> pollClassBytes() {
+        Map<String, byte[]> pollClassBytes() {
             if (fileMap.isEmpty()) {
                 return Collections.emptyMap();
             } else {
@@ -217,7 +220,7 @@ public class DynamicJavaCompiler {
 
         private String content = null;
 
-        public StringSourceJavaObject(String name, String content) {
+        StringSourceJavaObject(String name, String content) {
             super(URI.create("string:///" + name.replace('.', '/') + Kind.SOURCE.extension),
                     Kind.SOURCE);
             this.content = content;
@@ -232,7 +235,7 @@ public class DynamicJavaCompiler {
 
         private Map<String, byte[]> classBytes = null;
 
-        public DynaClassLoader(ClassLoader parent, Map<String, byte[]> classBytes) {
+        DynaClassLoader(ClassLoader parent, Map<String, byte[]> classBytes) {
             super(parent);
             this.classBytes = classBytes;
         }
