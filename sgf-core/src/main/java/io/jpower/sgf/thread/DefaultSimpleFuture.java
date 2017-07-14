@@ -1,11 +1,12 @@
 package io.jpower.sgf.thread;
 
+import io.jpower.sgf.utils.JavaUtils;
+
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
-
-import io.jpower.sgf.utils.JavaUtils;
 
 /**
  * future的默认实现
@@ -13,7 +14,7 @@ import io.jpower.sgf.utils.JavaUtils;
  * @param <V>
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public class DefaultSimpleFuture<V> implements SimpleFuture<V> {
+public class DefaultSimpleFuture<V> extends AbstractSimpleFuture<V> {
 
     private Sync sync;
 
@@ -27,8 +28,21 @@ public class DefaultSimpleFuture<V> implements SimpleFuture<V> {
     }
 
     @Override
-    public boolean setSuccess(V result) {
-        return sync.innerSet(result);
+    public SimpleFuture<V> setSuccess(V result) {
+        if (setSuccess0(result)) {
+            notifyListeners();
+            return this;
+        }
+        throw new IllegalStateException("complete already: " + this);
+    }
+
+    @Override
+    public boolean trySuccess(V result) {
+        if (setSuccess0(result)) {
+            notifyListeners();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -37,7 +51,28 @@ public class DefaultSimpleFuture<V> implements SimpleFuture<V> {
     }
 
     @Override
-    public boolean setFailure(Throwable cause) {
+    public SimpleFuture<V> setFailure(Throwable cause) {
+        if (setFailure0(cause)) {
+            notifyListeners();
+            return this;
+        }
+        throw new IllegalStateException("complete already: " + this, cause);
+    }
+
+    @Override
+    public boolean tryFailure(Throwable cause) {
+        if (setFailure0(cause)) {
+            notifyListeners();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean setSuccess0(V result) {
+        return sync.innerSet(result);
+    }
+
+    private boolean setFailure0(Throwable cause) {
         return sync.innerSetException(cause);
     }
 
@@ -48,7 +83,11 @@ public class DefaultSimpleFuture<V> implements SimpleFuture<V> {
 
     @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
-        return sync.innerCancel();
+        if (sync.innerCancel()) {
+            notifyListeners();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -154,7 +193,7 @@ public class DefaultSimpleFuture<V> implements SimpleFuture<V> {
                 throw new CancellationException();
             }
             if (exception != null) {
-                throw JavaUtils.sneakyThrow(exception);
+                throw JavaUtils.sneakyThrow(new ExecutionException(exception));
             }
             return result;
         }
@@ -165,7 +204,7 @@ public class DefaultSimpleFuture<V> implements SimpleFuture<V> {
                 throw new CancellationException();
             }
             if (exception != null) {
-                throw JavaUtils.sneakyThrow(exception);
+                throw JavaUtils.sneakyThrow(new ExecutionException(exception));
             }
             return result;
         }
@@ -178,7 +217,7 @@ public class DefaultSimpleFuture<V> implements SimpleFuture<V> {
                 throw new CancellationException();
             }
             if (exception != null) {
-                throw JavaUtils.sneakyThrow(exception);
+                throw JavaUtils.sneakyThrow(new ExecutionException(exception));
             }
             return result;
         }

@@ -1,22 +1,18 @@
 package io.jpower.sgf.thread;
 
+import io.jpower.sgf.utils.JavaUtils;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
-import io.jpower.sgf.utils.JavaUtils;
-
 /**
- * 修改自{@link org.jboss.netty.util.HashedWheelTimer}
+ * 修改自<code>org.jboss.netty.util.HashedWheelTimer</code>
  * <ul>
  * <li>支持<code>scheduleAtFixedRate</code>和<code>scheduleWithFixedDelay</code>
  * </li>
@@ -483,7 +479,7 @@ public class HashedWheelTimer {
 
     }
 
-    private static class TimerFutureTask implements SimpleFuture<Void> {
+    private static class TimerFutureTask extends AbstractSimpleFuture<Void> {
 
         private final HashedWheelTimer timer;
 
@@ -533,7 +529,12 @@ public class HashedWheelTimer {
         }
 
         @Override
-        public boolean setSuccess(Void value) {
+        public SimpleFuture<Void> setSuccess(Void result) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean trySuccess(Void result) {
             throw new UnsupportedOperationException();
         }
 
@@ -543,7 +544,12 @@ public class HashedWheelTimer {
         }
 
         @Override
-        public boolean setFailure(Throwable cause) {
+        public SimpleFuture<Void> setFailure(Throwable cause) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean tryFailure(Throwable cause) {
             throw new UnsupportedOperationException();
         }
 

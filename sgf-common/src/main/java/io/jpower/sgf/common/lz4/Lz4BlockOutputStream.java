@@ -14,7 +14,7 @@ import net.jpountz.util.SafeUtils;
  * <p>
  * 格式： Compress method + Decompressed length + Compressed length + Compressed data
  * <p>
- * 如果Compress method为<code>Lz4Constants.COMPRESS_METHOD_NONE</code>，那么将没有Compressed
+ * 如果Compress method为<code>Lz4Consts.COMPRESS_METHOD_NONE</code>，那么将没有Compressed
  * length字段， 因为此时Decompressed length与Compressed length相等。
  * <p>
  * 数据以外的部分都将使用Varint进行编码。
@@ -41,13 +41,13 @@ public class Lz4BlockOutputStream extends FilterOutputStream {
                                 boolean syncFlush) {
         super(out);
 
-        if (blockSize < Lz4Constants.MIN_BLOCK_SIZE) {
+        if (blockSize < Lz4Consts.MIN_BLOCK_SIZE) {
             throw new IllegalArgumentException(
-                    "blockSize must be >= " + Lz4Constants.MIN_BLOCK_SIZE + ", got " + blockSize);
+                    "blockSize must be >= " + Lz4Consts.MIN_BLOCK_SIZE + ", got " + blockSize);
         }
-        if (blockSize > Lz4Constants.MAX_BLOCK_SIZE) {
+        if (blockSize > Lz4Consts.MAX_BLOCK_SIZE) {
             throw new IllegalArgumentException(
-                    "blockSize must be <= " + Lz4Constants.MAX_BLOCK_SIZE + ", got " + blockSize);
+                    "blockSize must be <= " + Lz4Consts.MAX_BLOCK_SIZE + ", got " + blockSize);
         }
         this.blockSize = blockSize;
         this.compressor = compressor;
@@ -144,15 +144,15 @@ public class Lz4BlockOutputStream extends FilterOutputStream {
                 0);
         final int compressMethod;
         if (compressedLength >= currentBlockLength) {
-            compressMethod = Lz4Constants.COMPRESS_METHOD_NONE;
+            compressMethod = Lz4Consts.COMPRESS_METHOD_NONE;
             compressedLength = currentBlockLength;
         } else {
-            compressMethod = Lz4Constants.COMPRESS_METHOD_LZ4;
+            compressMethod = Lz4Consts.COMPRESS_METHOD_LZ4;
         }
 
         writeVarint(compressMethod); // compressMethod
         writeVarint(currentBlockLength); // decompressed length
-        if (compressMethod == Lz4Constants.COMPRESS_METHOD_LZ4) {
+        if (compressMethod == Lz4Consts.COMPRESS_METHOD_LZ4) {
             writeVarint(compressedLength); // compressed length
             out.write(compressedBuffer, 0, compressedLength); // compressed data
         } else {

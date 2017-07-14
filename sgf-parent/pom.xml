@@ -4,7 +4,7 @@
 
     <groupId>io.jpower.sgf</groupId>
     <artifactId>sgf-parent</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Simple Game Framework Parent</name>
@@ -12,7 +12,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sgf.version>1.2.0-SNAPSHOT</sgf.version>
+        <sgf.version>2.0.0-SNAPSHOT</sgf.version>
         <spring.version>4.3.0.RELEASE</spring.version>
         <jackson2.version>2.7.7</jackson2.version>
     </properties>

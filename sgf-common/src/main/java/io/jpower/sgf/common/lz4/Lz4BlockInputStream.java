@@ -17,7 +17,7 @@ import net.jpountz.util.SafeUtils;
  * 格式： Compress method + Decompressed length + Compressed length + Compressed
  * data
  * <p>
- * 如果Compress method为<code>Lz4Constants.COMPRESS_METHOD_NONE</code>，那么将没有Compressed
+ * 如果Compress method为<code>Lz4Consts.COMPRESS_METHOD_NONE</code>，那么将没有Compressed
  * length字段， 因为此时Decompressed length与Compressed length相等。
  * <p>
  * 数据以外的部分都将使用Varint进行编码。
@@ -123,30 +123,30 @@ public class Lz4BlockInputStream extends FilterInputStream {
         if (reachEOF) {
             return;
         }
-        if (compressMethod != Lz4Constants.COMPRESS_METHOD_NONE
-                && compressMethod != Lz4Constants.COMPRESS_METHOD_LZ4) {
+        if (compressMethod != Lz4Consts.COMPRESS_METHOD_NONE
+                && compressMethod != Lz4Consts.COMPRESS_METHOD_LZ4) {
             throw new IOException("Stream is corrupted");
         }
 
         decompressedLength = readVarint(); // decompressed length
-        if (decompressedLength > Lz4Constants.MAX_BLOCK_SIZE) {
+        if (decompressedLength > Lz4Consts.MAX_BLOCK_SIZE) {
             throw new IllegalArgumentException("blockSize is too large. " + decompressedLength
-                    + " > " + Lz4Constants.MAX_BLOCK_SIZE);
+                    + " > " + Lz4Consts.MAX_BLOCK_SIZE);
         }
         final int compressedLen;
-        if (compressMethod == Lz4Constants.COMPRESS_METHOD_LZ4) {
+        if (compressMethod == Lz4Consts.COMPRESS_METHOD_LZ4) {
             compressedLen = readVarint(); // compressed length
         } else {
             compressedLen = decompressedLength;
         }
-        if (compressedLen > Lz4Constants.MAX_BLOCK_SIZE) {
+        if (compressedLen > Lz4Consts.MAX_BLOCK_SIZE) {
             throw new IllegalArgumentException("compressedLength is too large. " + compressedLen
-                    + " > " + Lz4Constants.MAX_BLOCK_SIZE);
+                    + " > " + Lz4Consts.MAX_BLOCK_SIZE);
         }
         if (decompressedLength < 0 || compressedLen < 0
                 || (decompressedLength == 0 && compressedLen != 0)
                 || (decompressedLength != 0 && compressedLen == 0)
-                || (compressMethod == Lz4Constants.COMPRESS_METHOD_NONE
+                || (compressMethod == Lz4Consts.COMPRESS_METHOD_NONE
                 && decompressedLength != compressedLen)) {
             throw new IOException("Stream is corrupted");
         }
@@ -156,10 +156,10 @@ public class Lz4BlockInputStream extends FilterInputStream {
 
         // compressed data
         switch (compressMethod) {
-            case Lz4Constants.COMPRESS_METHOD_NONE:
+            case Lz4Consts.COMPRESS_METHOD_NONE:
                 readFully(buffer, decompressedLength);
                 break;
-            case Lz4Constants.COMPRESS_METHOD_LZ4:
+            case Lz4Consts.COMPRESS_METHOD_LZ4:
                 if (compressedBuffer.length < compressedLen) {
                     compressedBuffer = new byte[Math.max(compressedLen,
                             compressedBuffer.length * 3 / 2)];

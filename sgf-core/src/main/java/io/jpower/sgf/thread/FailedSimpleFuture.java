@@ -1,5 +1,8 @@
 package io.jpower.sgf.thread;
 
+import io.jpower.sgf.utils.JavaUtils;
+
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -37,12 +40,12 @@ public class FailedSimpleFuture<V> extends CompleteSimpleFuture<V> {
         if (Thread.interrupted()) {
             throw new InterruptedException();
         }
-        return null;
+        throw JavaUtils.sneakyThrow(new ExecutionException(cause));
     }
 
     @Override
     public V getUninterruptibly() {
-        return null;
+        throw JavaUtils.sneakyThrow(new ExecutionException(cause));
     }
 
     @Override
@@ -50,7 +53,7 @@ public class FailedSimpleFuture<V> extends CompleteSimpleFuture<V> {
         if (Thread.interrupted()) {
             throw new InterruptedException();
         }
-        return null;
+        throw JavaUtils.sneakyThrow(new ExecutionException(cause));
     }
 
     @Override
@@ -58,7 +61,7 @@ public class FailedSimpleFuture<V> extends CompleteSimpleFuture<V> {
         if (Thread.interrupted()) {
             throw new InterruptedException();
         }
-        return null;
+        throw JavaUtils.sneakyThrow(new ExecutionException(cause));
     }
 
 }

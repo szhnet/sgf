@@ -1,5 +1,8 @@
 package io.jpower.sgf.thread;
 
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -12,7 +15,43 @@ import java.util.concurrent.TimeoutException;
  *
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public interface SimpleFuture<V> {
+public interface SimpleFuture<V> extends Future<V> {
+
+    /**
+     * 添加指定的listener到此future，当此future{@linkplain #isDone() 完成}时，listener将被通知。
+     * 如果此future已经完成，future将被立即通知。
+     *
+     * @param listener
+     * @return
+     */
+    SimpleFuture<V> addListener(SimpleFutureListener<? extends SimpleFuture<? super V>> listener);
+
+    /**
+     * 添加指定的listeners到此future，当此future{@linkplain #isDone() 完成}时，listeners将被通知。
+     * 如果此future已经完成，future将被立即通知。
+     *
+     * @param listeners
+     * @return
+     */
+    SimpleFuture<V> addListeners(SimpleFutureListener<? extends SimpleFuture<? super V>>... listeners);
+
+    /**
+     * 从此future移除指定的listener，当此future{@linkplain #isDone() 完成}时，listener将不再被通知。
+     * 如果指定的listener没有与此future关联，那么此方法将不做任何事。
+     *
+     * @param listener
+     * @return
+     */
+    SimpleFuture<V> removeListener(SimpleFutureListener<? extends SimpleFuture<? super V>> listener);
+
+    /**
+     * 从此future移除指定的每一个listener，当此future{@linkplain #isDone() 完成}时，listeners将不再被通知。
+     * 如果指定的listeners没有与此future关联，那么此方法将不做任何事。
+     *
+     * @param listeners
+     * @return
+     */
+    SimpleFuture<V> removeListeners(SimpleFutureListener<? extends SimpleFuture<? super V>>... listeners);
 
     /**
      * 是否执行成功
@@ -22,12 +61,22 @@ public interface SimpleFuture<V> {
     boolean isSuccess();
 
     /**
-     * 设置操作结果
+     * 设置操作结果，并通知所有listener
      *
-     * @param value
+     * <p>如果future已经完成，将抛出异常{@link IllegalStateException}.
+     *
+     * @param result
      * @return
      */
-    boolean setSuccess(V value);
+    SimpleFuture<V> setSuccess(V result);
+
+    /**
+     * 设置操作结果，并通知所有listener
+     *
+     * @param result
+     * @return
+     */
+    boolean trySuccess(V result);
 
     /**
      * 返回异常
@@ -39,10 +88,20 @@ public interface SimpleFuture<V> {
     /**
      * 设置操作异常
      *
+     * <p>如果future已经完成，将抛出异常{@link IllegalStateException}.
+     *
      * @param cause
      * @return
      */
-    boolean setFailure(Throwable cause);
+    SimpleFuture<V> setFailure(Throwable cause);
+
+    /**
+     * 设置操作异常
+     *
+     * @param cause
+     * @return
+     */
+    boolean tryFailure(Throwable cause);
 
     /**
      * 是否取消操作
@@ -80,8 +139,8 @@ public interface SimpleFuture<V> {
      * 获得结果
      * <p>
      * <li>该方法会等待任务完成，如果设置了结果将返回设置的结果</li>
-     * <li>设置异常此方法将抛出异常</li>
-     * <li>取消将抛出 {@link java.util.concurrent.CancellationException}</li>
+     * <li>取消将抛出 {@link CancellationException}</li>
+     * <li>任务出错将抛出 {@link ExecutionException}</li>
      * <li>如果线程被interrupt将抛出{@link InterruptedException}</li>
      *
      * @return
@@ -94,7 +153,8 @@ public interface SimpleFuture<V> {
      * <p>
      * <li>该方法会等待任务完成，如果设置了结果将返回设置的结果</li>
      * <li>设置异常此方法将抛出异常</li>
-     * <li>取消将抛出 {@link java.util.concurrent.CancellationException}</li>
+     * <li>取消将抛出 {@link CancellationException}</li>
+     * <li>任务出错将抛出 {@link ExecutionException}</li>
      * <li>如果线程被interrupt将不会抛出{@link InterruptedException}</li>
      *
      * @return
@@ -106,7 +166,8 @@ public interface SimpleFuture<V> {
      * <p>
      * <li>该方法会等待任务完成，如果设置了结果将返回设置的结果</li>
      * <li>设置异常此方法将抛出异常</li>
-     * <li>取消将抛出 {@link java.util.concurrent.CancellationException}</li>
+     * <li>取消将抛出 {@link CancellationException}</li>
+     * <li>任务出错将抛出 {@link ExecutionException}</li>
      * <li>该方法可以设置等待时间，如果等待时间到将抛出{@link TimeoutException}</li>
      * <li>如果线程被interrupt将不会抛出{@link InterruptedException}</li>
      *
@@ -123,7 +184,7 @@ public interface SimpleFuture<V> {
      * <p>
      * <li>该方法会等待任务完成，如果设置了结果将返回设置的结果</li>
      * <li>设置异常此方法将抛出异常</li>
-     * <li>取消将抛出 {@link java.util.concurrent.CancellationException}</li>
+     * <li>取消将抛出 {@link CancellationException}</li>
      * <li>该方法可以设置等待时间，如果等待时间到将抛出{@link TimeoutException}</li>
      * <li>如果线程被interrupt将不会抛出{@link InterruptedException}</li>
      *

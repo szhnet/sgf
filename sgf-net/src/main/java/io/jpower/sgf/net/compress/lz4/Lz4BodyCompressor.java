@@ -2,6 +2,7 @@ package io.jpower.sgf.net.compress.lz4;
 
 import java.nio.ByteBuffer;
 
+import io.jpower.sgf.net.common.NettyUtils;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
@@ -17,7 +18,7 @@ import net.jpountz.lz4.LZ4Factory;
  * 格式： Compress method + Decompressed length + Compressed length + Compressed
  * data
  * <p>
- * 如果Compress method为<code>Lz4Constants.COMPRESS_METHOD_NONE</code>，
+ * 如果Compress method为<code>Lz4Consts.COMPRESS_METHOD_NONE</code>，
  * 那么将没有Compressed length字段， 因为此时Decompressed length与Compressed length相等。
  * <p>
  * 数据以外的部分都将使用Varint进行编码。
@@ -37,13 +38,13 @@ public class Lz4BodyCompressor implements MessageBodyCompressor {
     private final LZ4Compressor compressor;
 
     public Lz4BodyCompressor(int blockSize, LZ4Compressor compressor) {
-        if (blockSize < Lz4Constants.MIN_BLOCK_SIZE) {
+        if (blockSize < Lz4Consts.MIN_BLOCK_SIZE) {
             throw new IllegalArgumentException(
-                    "blockSize must be >= " + Lz4Constants.MIN_BLOCK_SIZE + ", got " + blockSize);
+                    "blockSize must be >= " + Lz4Consts.MIN_BLOCK_SIZE + ", got " + blockSize);
         }
-        if (blockSize > Lz4Constants.MAX_BLOCK_SIZE) {
+        if (blockSize > Lz4Consts.MAX_BLOCK_SIZE) {
             throw new IllegalArgumentException(
-                    "blockSize must be <= " + Lz4Constants.MAX_BLOCK_SIZE + ", got " + blockSize);
+                    "blockSize must be <= " + Lz4Consts.MAX_BLOCK_SIZE + ", got " + blockSize);
         }
         this.blockSize = blockSize;
         this.compressor = compressor;
@@ -92,33 +93,21 @@ public class Lz4BodyCompressor implements MessageBodyCompressor {
                 0, compressedByteBuffer.capacity());
         final int compressMethod;
         if (compressedLength >= srcLen) {
-            compressMethod = Lz4Constants.COMPRESS_METHOD_NONE;
+            compressMethod = Lz4Consts.COMPRESS_METHOD_NONE;
             compressedLength = srcLen;
         } else {
-            compressMethod = Lz4Constants.COMPRESS_METHOD_LZ4;
+            compressMethod = Lz4Consts.COMPRESS_METHOD_LZ4;
         }
 
-        writeVarint(outBuffer, compressMethod); // compressMethod
-        writeVarint(outBuffer, srcLen); // decompressed length
-        if (compressMethod == Lz4Constants.COMPRESS_METHOD_LZ4) {
-            writeVarint(outBuffer, compressedLength); // compressed length
+        NettyUtils.writeVarint32(outBuffer, compressMethod); // compressMethod
+        NettyUtils.writeVarint32(outBuffer, srcLen); // decompressed length
+        if (compressMethod == Lz4Consts.COMPRESS_METHOD_LZ4) {
+            NettyUtils.writeVarint32(outBuffer, compressedLength); // compressed length
             compressedByteBuffer.limit(compressedLength);
             outBuffer.writeBytes(compressedByteBuffer); // compressed data
         } else {
             byteBuffer.position(offset).limit(offset + srcLen);
             outBuffer.writeBytes(byteBuffer); // compressed data
-        }
-    }
-
-    public void writeVarint(ChannelBuffer channelBuffer, int value) {
-        while (true) {
-            if ((value & ~0x7F) == 0) {
-                channelBuffer.writeByte(value);
-                return;
-            } else {
-                channelBuffer.writeByte((value & 0x7F) | 0x80);
-                value >>>= 7;
-            }
         }
     }
 

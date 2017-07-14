@@ -1,9 +1,9 @@
-package io.jpower.sgf.common.lz4;
+package io.jpower.sgf.net.compress.lz4;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-class Lz4Constants {
+class Lz4Consts {
 
     public static final int MIN_BLOCK_SIZE = 64;
 
