@@ -1,40 +1,18 @@
 package io.jpower.sgf.ser;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
+import io.jpower.sgf.collection.*;
+import io.jpower.sgf.enumtype.EnumUtils;
 import io.jpower.sgf.enumtype.IntEnum;
 import io.jpower.sgf.utils.JavaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.jpower.sgf.collection.DoubleValueHashMap;
-import io.jpower.sgf.collection.DoubleValueMap;
-import io.jpower.sgf.collection.FloatValueHashMap;
-import io.jpower.sgf.collection.FloatValueMap;
-import io.jpower.sgf.collection.IntHashMap;
-import io.jpower.sgf.collection.IntHashSet;
-import io.jpower.sgf.collection.IntMap;
-import io.jpower.sgf.collection.IntSet;
-import io.jpower.sgf.collection.IntValueHashMap;
-import io.jpower.sgf.collection.IntValueMap;
-import io.jpower.sgf.collection.LongHashMap;
-import io.jpower.sgf.collection.LongHashSet;
-import io.jpower.sgf.collection.LongMap;
-import io.jpower.sgf.collection.LongSet;
-import io.jpower.sgf.collection.LongValueHashMap;
-import io.jpower.sgf.collection.LongValueMap;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
@@ -151,6 +129,12 @@ class SerReader {
                 IntEnum intEnumValue = readIntEnum(ctx, serField);
                 if (intEnumValue != null) {
                     setValue(obj, serField, intEnumValue);
+                }
+                break;
+            case ENUM:
+                Enum<?> enumValue = readEnum(ctx, serField);
+                if (enumValue != null) {
+                    setValue(obj, serField, enumValue);
                 }
                 break;
 
@@ -503,6 +487,16 @@ class SerReader {
         return value;
     }
 
+    private Enum<?> readEnum(DeserContext ctx, SerField serField) {
+        CodedReader reader = ctx.getReader();
+        FieldType fieldType = serField.getType();
+        int id = readInt32(reader, serField); // read id
+
+        @SuppressWarnings("unchecked")
+        Enum<?> value = parseEnum((Class<? extends Enum<?>>) fieldType.getRawType(), id);
+        return value;
+    }
+
     private byte[] readBytes(DeserContext ctx, SerField serField) {
         return readBytes0(ctx, serField);
     }
@@ -650,7 +644,8 @@ class SerReader {
         } else {
             if (log.isWarnEnabled()) {
                 log.warn(
-                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}, Field={}",
+                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}," +
+                                " Field={}",
                         keyWireType, valueWireType, keyType.getWireType(), valueType.getWireType(),
                         serField);
             }
@@ -685,7 +680,8 @@ class SerReader {
         } else {
             if (log.isWarnEnabled()) {
                 log.warn(
-                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}, Field={}",
+                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}," +
+                                " Field={}",
                         keyWireType, valueWireType, WireFormat.WIRETYPE_VARINT,
                         valueType.getWireType(), serField);
             }
@@ -720,7 +716,8 @@ class SerReader {
         } else {
             if (log.isWarnEnabled()) {
                 log.warn(
-                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}, Field={}",
+                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}," +
+                                " Field={}",
                         keyWireType, valueWireType, WireFormat.WIRETYPE_VARINT,
                         valueType.getWireType(), serField);
             }
@@ -755,7 +752,8 @@ class SerReader {
         } else {
             if (log.isWarnEnabled()) {
                 log.warn(
-                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}, Field={}",
+                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}," +
+                                " Field={}",
                         keyWireType, valueWireType, keyType.getWireType(),
                         WireFormat.WIRETYPE_VARINT, serField);
             }
@@ -790,7 +788,8 @@ class SerReader {
         } else {
             if (log.isWarnEnabled()) {
                 log.warn(
-                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}, Field={}",
+                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}," +
+                                " Field={}",
                         keyWireType, valueWireType, keyType.getWireType(),
                         WireFormat.WIRETYPE_VARINT, serField);
             }
@@ -825,7 +824,8 @@ class SerReader {
         } else {
             if (log.isWarnEnabled()) {
                 log.warn(
-                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}, Field={}",
+                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}," +
+                                " Field={}",
                         keyWireType, valueWireType, keyType.getWireType(),
                         WireFormat.WIRETYPE_FIXED32, serField);
             }
@@ -860,7 +860,8 @@ class SerReader {
         } else {
             if (log.isWarnEnabled()) {
                 log.warn(
-                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}, Field={}",
+                        "WireType mismatch. Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}," +
+                                " Field={}",
                         keyWireType, valueWireType, keyType.getWireType(),
                         WireFormat.WIRETYPE_FIXED64, serField);
             }
@@ -984,6 +985,10 @@ class SerReader {
                 value = readIntEnum(ctx, serField, type);
                 break;
 
+            case ENUM:
+                value = readEnum(ctx, serField, type);
+                break;
+
             case BYTES:
                 value = readBytes(ctx, serField, type);
                 break;
@@ -1080,6 +1085,15 @@ class SerReader {
 
         @SuppressWarnings("unchecked")
         IntEnum value = parseIntNum((Class<? extends IntEnum>) type.getRawType(), id);
+        return value;
+    }
+
+    private Enum<?> readEnum(DeserContext ctx, SerField serField, FieldType type) {
+        CodedReader reader = ctx.getReader();
+        int id = reader.readInt32(); // read id
+
+        @SuppressWarnings("unchecked")
+        Enum<?> value = parseEnum((Class<? extends Enum<?>>) type.getRawType(), id);
         return value;
     }
 
@@ -1223,7 +1237,8 @@ class SerReader {
         } else {
             if (log.isWarnEnabled()) {
                 log.warn(
-                        "WireType mismatch. Field={}, Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}",
+                        "WireType mismatch. Field={}, Data keyType={}, Data valueType={}, Field keyType={}, Field " +
+                                "valueType={}",
                         serField, keyWireType, valueWireType, keyType.getWireType(),
                         valueType.getWireType());
             }
@@ -1258,7 +1273,8 @@ class SerReader {
             // 不匹配，跳过
             if (log.isWarnEnabled()) {
                 log.warn(
-                        "WireType mismatch. Field={}, Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}",
+                        "WireType mismatch. Field={}, Data keyType={}, Data valueType={}, Field keyType={}, Field " +
+                                "valueType={}",
                         serField, keyWireType, valueWireType, WireFormat.WIRETYPE_VARINT,
                         valueType.getWireType());
             }
@@ -1291,7 +1307,8 @@ class SerReader {
         } else {
             if (log.isWarnEnabled()) {
                 log.warn(
-                        "WireType mismatch. Field={}, Data keyType={}, Data valueType={}, Field keyType={}, Field valueType={}",
+                        "WireType mismatch. Field={}, Data keyType={}, Data valueType={}, Field keyType={}, Field " +
+                                "valueType={}",
                         serField, keyWireType, valueWireType, WireFormat.WIRETYPE_VARINT,
                         valueType.getWireType());
             }
@@ -1456,6 +1473,11 @@ class SerReader {
         }
 
         return (IntEnum) value;
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Enum<?> parseEnum(Class<? extends Enum<?>> clazz, int id) {
+        return EnumUtils.valueOf((Class) clazz, id);
     }
 
     private byte[] readBytes0(DeserContext ctx, SerField serField) {

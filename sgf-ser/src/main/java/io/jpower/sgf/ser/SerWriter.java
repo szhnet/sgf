@@ -1,23 +1,15 @@
 package io.jpower.sgf.ser;
 
+import io.jpower.sgf.collection.*;
+import io.jpower.sgf.enumtype.EnumUtils;
+import io.jpower.sgf.enumtype.IntEnum;
+import io.jpower.sgf.utils.JavaUtils;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import io.jpower.sgf.collection.DoubleValueMap;
-import io.jpower.sgf.collection.FloatValueMap;
-import io.jpower.sgf.collection.IntIterator;
-import io.jpower.sgf.collection.IntMap;
-import io.jpower.sgf.collection.IntSet;
-import io.jpower.sgf.collection.IntValueMap;
-import io.jpower.sgf.collection.LongIterator;
-import io.jpower.sgf.collection.LongMap;
-import io.jpower.sgf.collection.LongSet;
-import io.jpower.sgf.collection.LongValueMap;
-import io.jpower.sgf.enumtype.IntEnum;
-import io.jpower.sgf.utils.JavaUtils;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
@@ -103,6 +95,10 @@ class SerWriter {
 
             case INT_ENUM:
                 writeIntEnum(ctx, serField, (IntEnum) value);
+                break;
+
+            case ENUM:
+                writeEnum(ctx, serField, (Enum<?>) value);
                 break;
 
             case BYTES:
@@ -412,6 +408,11 @@ class SerWriter {
     private void writeIntEnum(SerContext ctx, SerField serField, IntEnum value) {
         CodedWriter writer = ctx.getWriter();
         writeInt32(writer, serField, value.getId()); // write id
+    }
+
+    private void writeEnum(SerContext ctx, SerField serField, Enum<?> value) {
+        CodedWriter writer = ctx.getWriter();
+        writeInt32(writer, serField, EnumUtils.tag(value)); // write id
     }
 
     private void writeBytes(SerContext ctx, SerField serField, byte[] value) {
@@ -725,6 +726,10 @@ class SerWriter {
                 writeIntEnum(ctx, type, (IntEnum) value);
                 break;
 
+            case ENUM:
+                writeEnum(ctx, type, (Enum<?>) value);
+                break;
+
             case BYTES:
                 writeBytes(ctx, type, (byte[]) value);
                 break;
@@ -827,6 +832,12 @@ class SerWriter {
         CodedWriter writer = ctx.getWriter();
         writer.writeInt32NoTag(value.getId()); // write id
     }
+
+    private void writeEnum(SerContext ctx, FieldType type, Enum<?> value) {
+        CodedWriter writer = ctx.getWriter();
+        writer.writeInt32NoTag(EnumUtils.tag(value)); // write id
+    }
+
 
     private void writeBytes(SerContext ctx, FieldType type, byte[] value) {
         CodedWriter writer = ctx.getWriter();

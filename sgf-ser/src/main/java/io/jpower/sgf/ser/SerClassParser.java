@@ -273,6 +273,10 @@ class SerClassParser {
             fieldType = new FieldType(fieldClass, JavaType.INT_ENUM,
                     serField.getIntEncodeType().getInt32WireType());
 
+        } else if (Enum.class.isAssignableFrom(fieldClass)) {
+            fieldType = new FieldType(fieldClass, JavaType.ENUM,
+                    serField.getIntEncodeType().getInt32WireType());
+
         } else if (fieldClass == byte[].class) {
             fieldType = new FieldType(fieldClass, JavaType.BYTES, WireFormat.WIRETYPE_BYTES);
 
@@ -403,6 +407,9 @@ class SerClassParser {
 
         } else if (IntEnum.class.isAssignableFrom(fieldClass)) {
             fieldType = new FieldType(fieldClass, JavaType.INT_ENUM, WireFormat.WIRETYPE_VARINT);
+
+        } else if (Enum.class.isAssignableFrom(fieldClass)) {
+            fieldType = new FieldType(fieldClass, JavaType.ENUM, WireFormat.WIRETYPE_VARINT);
 
         } else if (fieldClass == byte[].class) {
             fieldType = new FieldType(fieldClass, JavaType.BYTES, WireFormat.WIRETYPE_BYTES);

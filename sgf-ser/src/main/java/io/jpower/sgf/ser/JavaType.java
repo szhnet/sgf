@@ -23,6 +23,8 @@ enum JavaType {
 
     INT_ENUM,
 
+    ENUM,
+
     BYTES,
 
     STRING,

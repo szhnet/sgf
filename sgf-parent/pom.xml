@@ -13,8 +13,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sgf.version>2.0.0-SNAPSHOT</sgf.version>
-        <spring.version>4.3.0.RELEASE</spring.version>
-        <jackson2.version>2.7.7</jackson2.version>
+        <spring.version>4.3.9.RELEASE</spring.version>
+        <jackson2.version>2.8.9</jackson2.version>
     </properties>
 
     <dependencyManagement>
@@ -42,17 +42,17 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.21</version>
+                <version>1.7.25</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
-                <version>1.7.21</version>
+                <version>1.7.25</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-nop</artifactId>
-                <version>1.7.21</version>
+                <version>1.7.25</version>
             </dependency>
             <dependency>
                 <groupId>org.simpleframework</groupId>
@@ -62,7 +62,7 @@
             <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
-                <version>0.9.10</version>
+                <version>0.9.11</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
