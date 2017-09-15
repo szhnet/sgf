@@ -9,6 +9,16 @@ final class WireFormat {
 
     }
 
+    static final int FIXED_8_SIZE = 1;
+
+    static final int FIXED_16_SIZE = 2;
+
+    static final int FIXED_32_SIZE = 4;
+
+    static final int FIXED_64_SIZE = 8;
+
+    static final int MAX_VARINT_SIZE = 10;
+
     /**
      * byte, char, short, int, long, bool, IntEnum
      */

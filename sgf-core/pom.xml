@@ -9,8 +9,10 @@
 
     <artifactId>sgf-core</artifactId>
 
-    <name>Simple Game Framework Core</name>
-    <description>Simple Game Framework Core</description>
+    <name>sgf-core</name>
+    <description>
+        sgf-core
+    </description>
 
     <dependencies>
         <dependency>

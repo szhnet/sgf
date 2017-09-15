@@ -14,6 +14,10 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import static io.jpower.sgf.ser.WireFormat.FIXED_16_SIZE;
+import static io.jpower.sgf.ser.WireFormat.FIXED_32_SIZE;
+import static io.jpower.sgf.ser.WireFormat.FIXED_64_SIZE;
+
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
@@ -1383,17 +1387,17 @@ class SerReader {
 
     private void skipFixed16(DeserContext ctx) {
         CodedReader reader = ctx.getReader();
-        reader.skipRawBytes(2);
+        reader.skipRawBytes(FIXED_16_SIZE);
     }
 
     private void skipFixed32(DeserContext ctx) {
         CodedReader reader = ctx.getReader();
-        reader.skipRawBytes(4);
+        reader.skipRawBytes(FIXED_32_SIZE);
     }
 
     private void skipFixed64(DeserContext ctx) {
         CodedReader reader = ctx.getReader();
-        reader.skipRawBytes(8);
+        reader.skipRawBytes(FIXED_64_SIZE);
     }
 
     private void skipBytes(DeserContext ctx) {

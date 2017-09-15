@@ -9,9 +9,10 @@
 
     <artifactId>sgf-net</artifactId>
 
-    <name>Simple Game Framework Net</name>
-    <description>Simple Game Framework Net</description>
-
+    <name>sgf-net</name>
+    <description>
+        sgf-net
+    </description>
 
     <dependencies>
         <dependency>

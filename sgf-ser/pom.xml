@@ -9,9 +9,10 @@
 
     <artifactId>sgf-ser</artifactId>
 
-    <name>Simple Game Framework Serialization</name>
-    <description>Simple Game Framework Serialization</description>
-
+    <name>sgf-ser</name>
+    <description>
+        sgf-ser
+    </description>
 
     <dependencies>
         <dependency>

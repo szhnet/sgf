@@ -9,6 +9,9 @@
 
     <artifactId>sgf-descriptors</artifactId>
 
-    <name>Simple Game Framework Descriptors</name>
-    <description>Maven assembly descriptors</description>
+    <name>sgf-descriptors</name>
+    <description>
+        sgf-descriptors
+    </description>
+
 </project>

@@ -232,12 +232,7 @@ abstract class CodedWriter {
         // UTF-8 directly into our buffer, so we have to let it create its own
         // byte
         // array and then copy.
-        byte[] bytes;
-        try {
-            bytes = value.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw JavaUtils.sneakyThrow(e);
-        }
+        byte[] bytes = value.getBytes(Utils.CHARSET);
         writeRawVarint32(bytes.length);
         writeRawBytes(bytes);
     }

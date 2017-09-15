@@ -1,13 +1,19 @@
-# Eclipse #
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Eclipse
 bin/
 .settings/
 .classpath
 .project
 .externalToolBuilders
 
-# idea #
+# idea
 .idea/
 *.iml
 
-# Maven #
+# Maven
 target/

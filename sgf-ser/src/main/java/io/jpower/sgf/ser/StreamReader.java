@@ -1,13 +1,14 @@
 package io.jpower.sgf.ser;
 
+import io.jpower.sgf.utils.JavaUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.jpower.sgf.utils.JavaUtils;
+import static io.jpower.sgf.ser.WireFormat.*;
 
 /**
  * 包装了一个<code>InputStream</code>
@@ -44,27 +45,25 @@ class StreamReader extends CodedReader {
 
     @Override
     String readString(int size) {
-        if (size <= (limit - position) && size > 0) {
+        if (size > 0 && size <= (limit - position)) {
             // Fast path: We already have the bytes in a contiguous buffer, so
             // just copy directly from it.
-            String result;
-            try {
-                result = new String(buffer, position, size, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                throw JavaUtils.sneakyThrow(e);
-            }
+            String result = new String(buffer, position, size, Utils.CHARSET);
             position += size;
             return result;
-        } else if (size == 0) {
-            return "";
-        } else {
-            // Slow path: Build a byte array first then copy it.
-            try {
-                return new String(readRawBytesSlowPath(size), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                throw JavaUtils.sneakyThrow(e);
-            }
         }
+        if (size == 0) {
+            return "";
+        }
+        if (size <= limit) {
+            refillBuffer(size);
+            String result = new String(buffer, position, size, Utils.CHARSET);
+            position += size;
+            return result;
+        }
+        // Slow path: Build a byte array first then copy it.
+        return new String(readRawBytesSlowPath(size), Utils.CHARSET);
+
     }
 
     @Override
@@ -86,35 +85,39 @@ class StreamReader extends CodedReader {
         // See implementation notes for readRawVarint64
         fastpath:
         {
-            int pos = position;
+            int tempPos = position;
 
-            if (limit == pos) {
+            if (limit == tempPos) {
                 break fastpath;
             }
 
             final byte[] buffer = this.buffer;
             int x;
-            if ((x = buffer[pos++]) >= 0) {
-                position = pos;
+            if ((x = buffer[tempPos++]) >= 0) {
+                position = tempPos;
                 return x;
-            } else if (limit - pos < 9) {
+            } else if (limit - tempPos < 9) {
                 break fastpath;
-            } else if ((x ^= (buffer[pos++] << 7)) < 0L) {
-                x ^= (~0L << 7);
-            } else if ((x ^= (buffer[pos++] << 14)) >= 0L) {
-                x ^= (~0L << 7) ^ (~0L << 14);
-            } else if ((x ^= (buffer[pos++] << 21)) < 0L) {
-                x ^= (~0L << 7) ^ (~0L << 14) ^ (~0L << 21);
+            } else if ((x ^= (buffer[tempPos++] << 7)) < 0) {
+                x ^= (~0 << 7);
+            } else if ((x ^= (buffer[tempPos++] << 14)) >= 0) {
+                x ^= (~0 << 7) ^ (~0L << 14);
+            } else if ((x ^= (buffer[tempPos++] << 21)) < 0) {
+                x ^= (~0 << 7) ^ (~0 << 14) ^ (~0 << 21);
             } else {
-                int y = buffer[pos++];
+                int y = buffer[tempPos++];
                 x ^= y << 28;
-                x ^= (~0L << 7) ^ (~0L << 14) ^ (~0L << 21) ^ (~0L << 28);
-                if (y < 0 && buffer[pos++] < 0 && buffer[pos++] < 0 && buffer[pos++] < 0
-                        && buffer[pos++] < 0 && buffer[pos++] < 0) {
+                x ^= (~0 << 7) ^ (~0 << 14) ^ (~0L << 21) ^ (~0 << 28);
+                if (y < 0
+                        && buffer[tempPos++] < 0
+                        && buffer[tempPos++] < 0
+                        && buffer[tempPos++] < 0
+                        && buffer[tempPos++] < 0
+                        && buffer[tempPos++] < 0) {
                     break fastpath; // Will throw malformedVarint()
                 }
             }
-            position = pos;
+            position = tempPos;
             return x;
         }
         return (int) readRawVarint64SlowPath();
@@ -135,47 +138,59 @@ class StreamReader extends CodedReader {
         // accumulated bits with one xor. We depend on javac to constant fold.
         fastpath:
         {
-            int pos = position;
+            int tempPos = position;
 
-            if (limit == pos) {
+            if (limit == tempPos) {
                 break fastpath;
             }
 
             final byte[] buffer = this.buffer;
             long x;
             int y;
-            if ((y = buffer[pos++]) >= 0) {
-                position = pos;
+            if ((y = buffer[tempPos++]) >= 0) {
+                position = tempPos;
                 return y;
-            } else if (limit - pos < 9) {
+            } else if (limit - tempPos < 9) {
                 break fastpath;
-            } else if ((x = y ^ (buffer[pos++] << 7)) < 0L) {
-                x ^= (~0L << 7);
-            } else if ((x ^= (buffer[pos++] << 14)) >= 0L) {
-                x ^= (~0L << 7) ^ (~0L << 14);
-            } else if ((x ^= (buffer[pos++] << 21)) < 0L) {
-                x ^= (~0L << 7) ^ (~0L << 14) ^ (~0L << 21);
-            } else if ((x ^= ((long) buffer[pos++] << 28)) >= 0L) {
+            } else if ((x = y ^ (buffer[tempPos++] << 7)) < 0) {
+                x ^= (~0 << 7);
+            } else if ((x ^= (buffer[tempPos++] << 14)) >= 0) {
+                x ^= (~0 << 7) ^ (~0 << 14);
+            } else if ((x ^= (buffer[tempPos++] << 21)) < 0) {
+                x ^= (~0 << 7) ^ (~0 << 14) ^ (~0 << 21);
+            } else if ((x ^= ((long) buffer[tempPos++] << 28)) >= 0L) {
                 x ^= (~0L << 7) ^ (~0L << 14) ^ (~0L << 21) ^ (~0L << 28);
-            } else if ((x ^= ((long) buffer[pos++] << 35)) < 0L) {
+            } else if ((x ^= ((long) buffer[tempPos++] << 35)) < 0L) {
                 x ^= (~0L << 7) ^ (~0L << 14) ^ (~0L << 21) ^ (~0L << 28) ^ (~0L << 35);
-            } else if ((x ^= ((long) buffer[pos++] << 42)) >= 0L) {
-                x ^= (~0L << 7) ^ (~0L << 14) ^ (~0L << 21) ^ (~0L << 28) ^ (~0L << 35)
-                        ^ (~0L << 42);
-            } else if ((x ^= ((long) buffer[pos++] << 49)) < 0L) {
-                x ^= (~0L << 7) ^ (~0L << 14) ^ (~0L << 21) ^ (~0L << 28) ^ (~0L << 35)
-                        ^ (~0L << 42) ^ (~0L << 49);
+            } else if ((x ^= ((long) buffer[tempPos++] << 42)) >= 0L) {
+                x ^= (~0L << 7) ^ (~0L << 14) ^ (~0L << 21) ^ (~0L << 28) ^ (~0L << 35) ^ (~0L << 42);
+            } else if ((x ^= ((long) buffer[tempPos++] << 49)) < 0L) {
+                x ^=
+                        (~0L << 7)
+                                ^ (~0L << 14)
+                                ^ (~0L << 21)
+                                ^ (~0L << 28)
+                                ^ (~0L << 35)
+                                ^ (~0L << 42)
+                                ^ (~0L << 49);
             } else {
-                x ^= ((long) buffer[pos++] << 56);
-                x ^= (~0L << 7) ^ (~0L << 14) ^ (~0L << 21) ^ (~0L << 28) ^ (~0L << 35)
-                        ^ (~0L << 42) ^ (~0L << 49) ^ (~0L << 56);
+                x ^= ((long) buffer[tempPos++] << 56);
+                x ^=
+                        (~0L << 7)
+                                ^ (~0L << 14)
+                                ^ (~0L << 21)
+                                ^ (~0L << 28)
+                                ^ (~0L << 35)
+                                ^ (~0L << 42)
+                                ^ (~0L << 49)
+                                ^ (~0L << 56);
                 if (x < 0L) {
-                    if (buffer[pos++] < 0L) {
+                    if (buffer[tempPos++] < 0L) {
                         break fastpath; // Will throw malformedVarint()
                     }
                 }
             }
-            position = pos;
+            position = tempPos;
             return x;
         }
         return readRawVarint64SlowPath();
@@ -183,54 +198,55 @@ class StreamReader extends CodedReader {
 
     @Override
     short readRawLittleEndian16() {
-        int pos = position;
+        int tempPos = position;
 
-        // hand-inlined ensureAvailable(4);
-        if (limit - pos < 2) {
-            refillBuffer(2);
-            pos = position;
+        if (limit - tempPos < FIXED_16_SIZE) {
+            refillBuffer(FIXED_16_SIZE);
+            tempPos = position;
         }
 
         final byte[] buffer = this.buffer;
-        position = pos + 2;
-        return (short) (((buffer[pos] & 0xff)) | ((buffer[pos + 1] & 0xff) << 8));
+        position = tempPos + FIXED_16_SIZE;
+        return (short) (((buffer[tempPos] & 0xff))
+                | ((buffer[tempPos + 1] & 0xff) << 8));
     }
 
     @Override
     int readRawLittleEndian32() {
-        int pos = position;
+        int tempPos = position;
 
-        // hand-inlined ensureAvailable(4);
-        if (limit - pos < 4) {
-            refillBuffer(4);
-            pos = position;
+        if (limit - tempPos < FIXED_32_SIZE) {
+            refillBuffer(FIXED_32_SIZE);
+            tempPos = position;
         }
 
         final byte[] buffer = this.buffer;
-        position = pos + 4;
-        return (((buffer[pos] & 0xff)) | ((buffer[pos + 1] & 0xff) << 8)
-                | ((buffer[pos + 2] & 0xff) << 16) | ((buffer[pos + 3] & 0xff) << 24));
+        position = tempPos + FIXED_32_SIZE;
+        return (((buffer[tempPos] & 0xff))
+                | ((buffer[tempPos + 1] & 0xff) << 8)
+                | ((buffer[tempPos + 2] & 0xff) << 16)
+                | ((buffer[tempPos + 3] & 0xff) << 24));
     }
 
     @Override
     long readRawLittleEndian64() {
-        int pos = position;
+        int tempPos = position;
 
-        // hand-inlined ensureAvailable(8);
-        if (limit - pos < 8) {
-            refillBuffer(8);
-            pos = position;
+        if (limit - tempPos < FIXED_64_SIZE) {
+            refillBuffer(FIXED_64_SIZE);
+            tempPos = position;
         }
 
         final byte[] buffer = this.buffer;
-        position = pos + 8;
-        return ((((long) buffer[pos] & 0xffL)) | (((long) buffer[pos + 1] & 0xffL) << 8)
-                | (((long) buffer[pos + 2] & 0xffL) << 16)
-                | (((long) buffer[pos + 3] & 0xffL) << 24)
-                | (((long) buffer[pos + 4] & 0xffL) << 32)
-                | (((long) buffer[pos + 5] & 0xffL) << 40)
-                | (((long) buffer[pos + 6] & 0xffL) << 48)
-                | (((long) buffer[pos + 7] & 0xffL) << 56));
+        position = tempPos + FIXED_64_SIZE;
+        return (((buffer[tempPos] & 0xffL))
+                | ((buffer[tempPos + 1] & 0xffL) << 8)
+                | ((buffer[tempPos + 2] & 0xffL) << 16)
+                | ((buffer[tempPos + 3] & 0xffL) << 24)
+                | ((buffer[tempPos + 4] & 0xffL) << 32)
+                | ((buffer[tempPos + 5] & 0xffL) << 40)
+                | ((buffer[tempPos + 6] & 0xffL) << 48)
+                | ((buffer[tempPos + 7] & 0xffL) << 56));
     }
 
     @Override
@@ -243,30 +259,22 @@ class StreamReader extends CodedReader {
 
     @Override
     void readRawBytes(byte[] value, int offset, int len) {
-        if (len <= (limit - position) && len > 0) {
-            // Fast path: We already have the bytes in a contiguous buffer, so
-            // just copy directly from it.
-            System.arraycopy(buffer, position, value, offset, len);
-            position += len;
+        final int tempPos = position;
+        if (len <= (limit - tempPos) && len > 0) {
+            position = tempPos + len;
+            System.arraycopy(buffer, tempPos, value, offset, len);
         } else {
-            // Slow path: Build a byte array first then copy it.
             readRawBytesSlowPath(value, offset, len);
         }
     }
 
     @Override
     void skipRawVarint() {
-        if (limit - position >= 10) {
-            final byte[] buffer = this.buffer;
-            int pos = position;
-            for (int i = 0; i < 10; i++) {
-                if (buffer[pos++] >= 0) {
-                    position = pos;
-                    return;
-                }
-            }
+        if (limit - position >= MAX_VARINT_SIZE) {
+            skipRawVarintFastPath();
+        } else {
+            skipRawVarintSlowPath();
         }
-        skipRawVarintSlowPath();
     }
 
     @Override
@@ -286,7 +294,7 @@ class StreamReader extends CodedReader {
      * reading more bytes from the input if necessary to make it so. Caller must
      * ensure that the requested space is less than BUFFER_SIZE.
      *
-     * @throws InvalidProtocolBufferException The end of the stream or the current limit was reached.
+     * @throws SerializationException The end of the stream or the current limit was reached.
      */
     private void ensureAvailable(int n) {
         if (limit - position < n) {
@@ -299,7 +307,7 @@ class StreamReader extends CodedReader {
      * available in the buffer. Caller must ensure that the requested space is
      * not yet available, and that the requested space is less than BUFFER_SIZE.
      *
-     * @throws InvalidProtocolBufferException The end of the stream or the current limit was reached.
+     * @throws SerializationException The end of the stream or the current limit was reached.
      */
     private void refillBuffer(int n) {
         if (!tryRefillBuffer(n)) {
@@ -321,12 +329,12 @@ class StreamReader extends CodedReader {
                     "refillBuffer() called when " + n + " bytes were already available in buffer");
         }
 
-        int pos = position;
-        if (pos > 0) {
-            if (limit > pos) { // 去掉position之前的，也就是读取过的数据
-                System.arraycopy(buffer, pos, buffer, 0, limit - pos);
+        int tempPos = position;
+        if (tempPos > 0) {
+            if (limit > tempPos) { // 去掉position之前的，也就是读取过的数据
+                System.arraycopy(buffer, tempPos, buffer, 0, limit - tempPos);
             }
-            limit -= pos;
+            limit -= tempPos;
             position = 0;
         }
 
@@ -347,168 +355,166 @@ class StreamReader extends CodedReader {
         return false;
     }
 
-    /**
-     * Exactly like readRawBytes, but caller must have already checked the fast
-     * path: (size <= (bufferSize - pos) && size > 0)
-     */
     private byte[] readRawBytesSlowPath(int size) {
-        if (size <= 0) {
-            if (size == 0) {
-                return Utils.EMPTY_BYTES;
-            } else {
-                throw new SerializationException("Negative size: " + size);
-            }
+        if (size == 0) {
+            return Utils.EMPTY_BYTES;
+        }
+        if (size < 0) {
+            throw SerializationException.negativeSize(size);
         }
 
-        if (size < buffer.length) {
-            // Reading more bytes than are in the buffer, but not an excessive
-            // number
-            // of bytes. We can safely allocate the resulting array ahead of
-            // time.
+        final int originalBufferPos = position;
+        final int bufferedBytes = limit - position;
 
-            // First copy what we have.
+        // Mark the current buffer consumed.
+        position = 0;
+        limit = 0;
+
+        // Determine the number of bytes we need to read from the input stream.
+        int sizeLeft = size - bufferedBytes;
+        int inputAvailable;
+        try {
+            inputAvailable = input.available();
+        } catch (IOException e) {
+            throw JavaUtils.sneakyThrow(e);
+        }
+        if (sizeLeft < DEFAULT_BUFFER_SIZE || sizeLeft <= inputAvailable) {
+            // Either the bytes we need are known to be available, or the required buffer is
+            // within an allowed threshold - go ahead and allocate the buffer now.
             final byte[] bytes = new byte[size];
-            int pos = limit - position;
-            System.arraycopy(buffer, position, bytes, 0, pos);
-            position = limit;
 
-            // We want to refill the buffer and then copy from the buffer into
-            // our
-            // byte array rather than reading directly into our byte array
-            // because
-            // the input may be unbuffered.
-            ensureAvailable(size - pos);
-            System.arraycopy(buffer, 0, bytes, pos, size - pos);
-            position = size - pos;
+            // Copy all of the buffered bytes to the result buffer.
+            System.arraycopy(buffer, originalBufferPos, bytes, 0, bufferedBytes);
 
-            return bytes;
-        } else {
-            // The size is very large. For security reasons, we can't allocate
-            // the
-            // entire byte array yet. The size comes directly from the input, so
-            // a
-            // maliciously-crafted message could provide a bogus very large size
-            // in
-            // order to trick the app into allocating a lot of memory. We avoid
-            // this
-            // by allocating and reading only a small chunk at a time, so that
-            // the
-            // malicious message must actually *be* extremely large to cause
-            // problems. Meanwhile, we limit the allowed size of a message
-            // elsewhere.
-
-            // Remember the buffer markers since we'll have to copy the bytes
-            // out of
-            // it later.
-            final int originalBufferPos = position;
-            final int originalBufferSize = limit;
-
-            position = 0;
-            limit = 0;
-
-            // Read all the rest of the bytes we need.
-            int sizeLeft = size - (originalBufferSize - originalBufferPos);
-            final List<byte[]> chunks = new ArrayList<byte[]>();
-
-            while (sizeLeft > 0) {
-                final byte[] chunk = new byte[Math.min(sizeLeft, DEFAULT_BUFFER_SIZE)];
-                int pos = 0;
-                while (pos < chunk.length) {
-                    int n;
-                    try {
-                        n = (input == null) ? -1 : input.read(chunk, pos, chunk.length - pos);
-                    } catch (IOException e) {
-                        throw JavaUtils.sneakyThrow(e);
-                    }
-                    if (n == -1) {
-                        throw SerializationException.truncatedMessage();
-                    }
-                    pos += n;
+            // Fill the remaining bytes from the input stream.
+            int tempPos = bufferedBytes;
+            while (tempPos < bytes.length) {
+                int n;
+                try {
+                    n = input.read(bytes, tempPos, size - tempPos);
+                } catch (IOException e) {
+                    throw JavaUtils.sneakyThrow(e);
                 }
-                sizeLeft -= chunk.length;
-                chunks.add(chunk);
+                if (n == -1) {
+                    throw SerializationException.truncatedMessage();
+                }
+                tempPos += n;
             }
 
-            // OK, got everything. Now concatenate it all into one buffer.
-            final byte[] bytes = new byte[size];
-
-            // Start by copying the leftover bytes from this.buffer.
-            int pos = originalBufferSize - originalBufferPos;
-            System.arraycopy(buffer, originalBufferPos, bytes, 0, pos);
-
-            // And now all the chunks.
-            for (final byte[] chunk : chunks) {
-                System.arraycopy(chunk, 0, bytes, pos, chunk.length);
-                pos += chunk.length;
-            }
-
-            // Done.
             return bytes;
         }
+
+        // The size is very large.  For security reasons, we can't allocate the
+        // entire byte array yet.  The size comes directly from the input, so a
+        // maliciously-crafted message could provide a bogus very large size in
+        // order to trick the app into allocating a lot of memory.  We avoid this
+        // by allocating and reading only a small chunk at a time, so that the
+        // malicious message must actually *be* extremely large to cause
+        // problems.  Meanwhile, we limit the allowed size of a message elsewhere.
+        final List<byte[]> chunks = new ArrayList<byte[]>();
+
+        while (sizeLeft > 0) {
+            final byte[] chunk = new byte[Math.min(sizeLeft, DEFAULT_BUFFER_SIZE)];
+            int tempPos = 0;
+            while (tempPos < chunk.length) {
+                final int n;
+                try {
+                    n = input.read(chunk, tempPos, chunk.length - tempPos);
+                } catch (IOException e) {
+                    throw JavaUtils.sneakyThrow(e);
+                }
+                if (n == -1) {
+                    throw SerializationException.truncatedMessage();
+                }
+                tempPos += n;
+            }
+            sizeLeft -= chunk.length;
+            chunks.add(chunk);
+        }
+
+        // OK, got everything.  Now concatenate it all into one buffer.
+        final byte[] bytes = new byte[size];
+
+        // Start by copying the leftover bytes from this.buffer.
+        System.arraycopy(buffer, originalBufferPos, bytes, 0, bufferedBytes);
+
+        // And now all the chunks.
+        int tempPos = bufferedBytes;
+        for (final byte[] chunk : chunks) {
+            System.arraycopy(chunk, 0, bytes, tempPos, chunk.length);
+            tempPos += chunk.length;
+        }
+
+        // Done.
+        return bytes;
     }
 
     private void readRawBytesSlowPath(byte[] value, int offset, int len) {
-        if (len <= 0) {
-            if (len == 0) {
-                return;
-            } else {
-                throw SerializationException.negativeSize(len);
-            }
+        final int size = len;
+        if (size == 0) {
+            return;
+        }
+        if (size < 0) {
+            throw SerializationException.negativeSize(size);
         }
 
-        if (len < buffer.length) {
-            // Reading more bytes than are in the buffer, but not an excessive
-            // number
-            // of bytes. We can safely allocate the resulting array ahead of
-            // time.
+        final int originalBufferPos = position;
+        final int bufferedBytes = limit - position;
 
-            // First copy what we have.
-            int pos = limit - position;
-            System.arraycopy(buffer, position, value, offset, pos);
-            position = limit;
+        // Mark the current buffer consumed.
+        position = 0;
+        limit = 0;
 
-            // We want to refill the buffer and then copy from the buffer into
-            // our
-            // byte array rather than reading directly into our byte array
-            // because
-            // the input may be unbuffered.
-            ensureAvailable(len - pos);
-            System.arraycopy(buffer, 0, value, pos, len - pos);
-            position = len - pos;
-        } else {
-            // The size is very large. For security reasons, we can't allocate
-            // the
-            // entire byte array yet. The size comes directly from the input, so
-            // a
-            // maliciously-crafted message could provide a bogus very large size
-            // in
-            // order to trick the app into allocating a lot of memory. We avoid
-            // this
-            // by allocating and reading only a small chunk at a time, so that
-            // the
-            // malicious message must actually *be* extremely large to cause
-            // problems. Meanwhile, we limit the allowed size of a message
-            // elsewhere.
+        // Determine the number of bytes we need to read from the input stream.
+        int sizeLeft = size - bufferedBytes;
+        int inputAvailable;
+        try {
+            inputAvailable = input.available();
+        } catch (IOException e) {
+            throw JavaUtils.sneakyThrow(e);
+        }
+        if (sizeLeft < DEFAULT_BUFFER_SIZE || sizeLeft <= inputAvailable) {
+            // Either the bytes we need are known to be available, or the required buffer is
+            // within an allowed threshold - go ahead and allocate the buffer now.
 
-            // Remember the buffer markers since we'll have to copy the bytes
-            // out of
-            // it later.
-            final int originalBufferPos = position;
-            final int originalBufferSize = limit;
+            // Copy all of the buffered bytes to the result buffer.
+            System.arraycopy(buffer, originalBufferPos, value, offset, bufferedBytes);
 
-            position = 0;
-            limit = 0;
+            // Fill the remaining bytes from the input stream.
+            int tempPos = offset + bufferedBytes;
+            while (tempPos < size) {
+                int n;
+                try {
+                    n = input.read(value, tempPos, size - tempPos);
+                } catch (IOException e) {
+                    throw JavaUtils.sneakyThrow(e);
+                }
+                if (n == -1) {
+                    throw SerializationException.truncatedMessage();
+                }
+                tempPos += n;
+            }
+            return;
+        }
 
-            // Start by copying the leftover bytes from this.buffer.
-            int pos = originalBufferSize - originalBufferPos;
-            System.arraycopy(buffer, originalBufferPos, value, offset, pos);
+        // Start by copying the leftover bytes from this.buffer.
+        System.arraycopy(buffer, originalBufferPos, value, offset, bufferedBytes);
 
+        int tempPos = offset + bufferedBytes;
+        while (tempPos < size) {
+            final int n;
             try {
-                input.read(value, offset + pos, len - pos);
+                n = input.read(value, tempPos, size - tempPos);
             } catch (IOException e) {
                 throw JavaUtils.sneakyThrow(e);
             }
+            if (n == -1) {
+                throw SerializationException.truncatedMessage();
+            }
+            tempPos += n;
         }
+
+        // Done.
     }
 
     /**
@@ -524,7 +530,16 @@ class StreamReader extends CodedReader {
                 return result;
             }
         }
-        throw new SerializationException("Reader encountered a malformed varint.");
+        throw SerializationException.malformedVarint();
+    }
+
+    private void skipRawVarintFastPath() {
+        for (int i = 0; i < MAX_VARINT_SIZE; i++) {
+            if (buffer[position++] >= 0) {
+                return;
+            }
+        }
+        throw SerializationException.malformedVarint();
     }
 
     /**
@@ -533,7 +548,7 @@ class StreamReader extends CodedReader {
      * @throws SerializationException The end of the stream or the current limit was reached.
      */
     private void skipRawVarintSlowPath() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < MAX_VARINT_SIZE; i++) {
             if (readRawByte() >= 0) {
                 return;
             }
@@ -551,7 +566,7 @@ class StreamReader extends CodedReader {
         }
 
         // Skipping more bytes than are in the buffer. First skip what we have.
-        int pos = limit - position;
+        int tempPos = limit - position;
         position = limit;
 
         // Keep refilling the buffer until we get to the point we wanted to skip
@@ -559,13 +574,13 @@ class StreamReader extends CodedReader {
         // This has the side effect of ensuring the limits are updated
         // correctly.
         refillBuffer(1);
-        while (size - pos > limit) {
-            pos += limit; // 全部跳过
+        while (size - tempPos > limit) {
+            tempPos += limit; // 全部跳过
             position = limit;
             refillBuffer(1);
         }
 
-        position = size - pos;
+        position = size - tempPos;
     }
 
 }

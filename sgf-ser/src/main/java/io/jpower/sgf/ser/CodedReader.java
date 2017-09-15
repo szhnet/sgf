@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 
 import io.jpower.sgf.utils.JavaUtils;
 
+import static io.jpower.sgf.ser.WireFormat.MAX_VARINT_SIZE;
+
 /**
  * 用来进行解码
  * <p>
@@ -109,11 +111,7 @@ abstract class CodedReader {
         }
 
         byte[] bytes = readBytes(size);
-        try {
-            return new String(bytes, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw JavaUtils.sneakyThrow(e);
-        }
+        return new String(bytes, Utils.CHARSET);
     }
 
     byte[] readBytes(int size) {
@@ -216,7 +214,7 @@ abstract class CodedReader {
     }
 
     void skipRawVarint() {
-        for (int i = 0; i < 10; i++) { // varint最多10个字节
+        for (int i = 0; i < MAX_VARINT_SIZE; i++) {
             if (readRawByte() >= 0) {
                 return;
             }

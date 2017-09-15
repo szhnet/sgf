@@ -3,6 +3,8 @@ package io.jpower.sgf.ser;
 import static java.util.Locale.ENGLISH;
 
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import io.jpower.sgf.utils.JavaUtils;
 
@@ -10,6 +12,8 @@ import io.jpower.sgf.utils.JavaUtils;
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
 class Utils {
+
+    static final Charset CHARSET = StandardCharsets.UTF_8;
 
     static final Object[] EMPTY_OBJS = new Object[0];
 

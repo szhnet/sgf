@@ -35,12 +35,7 @@ class ByteArrayReader extends CodedReader {
     String readString(int size) {
         checkSize(size);
 
-        final String result;
-        try {
-            result = new String(buf, pos, size, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw JavaUtils.sneakyThrow(e);
-        }
+        final String result = new String(buf, pos, size, Utils.CHARSET);
         pos += size;
 
         return result;

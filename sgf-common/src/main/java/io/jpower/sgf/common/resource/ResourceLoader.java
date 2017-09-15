@@ -1,74 +1,78 @@
-package io.jpower.sgf.common.config;
+package io.jpower.sgf.common.resource;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.net.URL;
-
-import javax.annotation.PostConstruct;
-
+import com.fasterxml.jackson.core.JsonParser.Feature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jpower.sgf.utils.JavaUtils;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.stream.InputNode;
 import org.simpleframework.xml.stream.NodeBuilder;
 
-import com.fasterxml.jackson.core.JsonParser.Feature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jpower.sgf.utils.JavaUtils;
+import javax.annotation.PostConstruct;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
- * 用来加载配置文件
+ * 用来加载ziy资源文件
  * <p>
  * 可以从文件系统路径加载或者从classpath加载
  *
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public class ConfigLoader {
+public class ResourceLoader {
 
-    private static final int CONFIG_TYPE_XML = 1;
+    private static final int RES_TYPE_XML = 1;
 
-    private static final int CONFIG_TYPE_JSON = 2;
+    private static final int RES_TYPE_JSON = 2;
 
     /**
-     * 获得配置文件的File
+     * 获得资源文件的File
      *
      * @param filePath
      * @return 不能存在返回null
      */
-    public static File getConfigFile(String filePath) {
-        File cfgFile = new File(filePath);
+    public static Path getConfigFile(String filePath) {
+        Path resFile = Paths.get(filePath);
 
-        if (!cfgFile.exists()) {
+        if (Files.notExists(resFile)) {
             URL url = Thread.currentThread().getContextClassLoader().getResource(filePath);
             if (url == null) {
                 return null;
             }
-            cfgFile = new File(url.getPath());
-            if (!cfgFile.exists()) {
+            try {
+                resFile = Paths.get(url.toURI());
+            } catch (URISyntaxException e) {
+                throw JavaUtils.sneakyThrow(e);
+            }
+            if (Files.notExists(resFile)) {
                 return null;
             }
         }
-        return cfgFile;
+        return resFile;
     }
 
     /**
-     * 获得配置文件的InputStream
+     * 获得资源文件的InputStream
      *
      * @param filePath
      * @return 不存在返回null
      */
-    public static InputStream getConfigInputStream(String filePath) {
+    public static InputStream getResourceInputStream(String filePath) {
         InputStream in = null;
-        File cfgFile = new File(filePath);
+        Path resFile = Paths.get(filePath);
 
         try {
-            if (!cfgFile.exists()) {
+            if (Files.notExists(resFile)) {
                 in = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
             } else {
-                in = new FileInputStream(cfgFile);
+                in = Files.newInputStream(resFile);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -78,15 +82,15 @@ public class ConfigLoader {
     }
 
     /**
-     * 判断配置文件是否存在
+     * 判断资源文件是否存在
      *
      * @param filePath
      * @return
      */
-    public static boolean hasConfig(String filePath) {
-        File cfgFile = new File(filePath);
+    public static boolean hasResource(String filePath) {
+        Path resFile = Paths.get(filePath);
 
-        if (!cfgFile.exists()) {
+        if (Files.notExists(resFile)) {
             InputStream in = null;
             try {
                 in = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
@@ -104,55 +108,55 @@ public class ConfigLoader {
     }
 
     /**
-     * 加载xml格式的配置
+     * 加载xml格式的资源
      *
      * @param clazz
      * @param filePath
      * @return
      */
-    public static <T> T loadConfigXml(Class<T> clazz, String filePath) {
-        return loadConfig(clazz, filePath, CONFIG_TYPE_XML);
+    public static <T> T loadXmlResource(Class<T> clazz, String filePath) {
+        return loadResource(clazz, filePath, RES_TYPE_XML);
     }
 
     /**
-     * 加载json格式的配置
+     * 加载json格式的资源
      *
      * @param clazz
      * @param filePath
      * @return
      */
-    public static <T> T loadConfigJson(Class<T> clazz, String filePath) {
-        return loadConfig(clazz, filePath, CONFIG_TYPE_JSON);
+    public static <T> T loadJsonResource(Class<T> clazz, String filePath) {
+        return loadResource(clazz, filePath, RES_TYPE_JSON);
     }
 
-    private static <T> T loadConfig(Class<T> clazz, String filePath, int configType) {
+    private static <T> T loadResource(Class<T> clazz, String filePath, int resType) {
         InputStream in = null;
-        File cfgFile = new File(filePath);
+        Path resFile = Paths.get(filePath);
 
         try {
-            if (!cfgFile.exists()) {
+            if (Files.notExists(resFile)) {
                 in = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
                 if (in == null) {
                     throw new IllegalArgumentException("Resource not found: " + filePath);
                 }
             } else {
-                in = new FileInputStream(cfgFile);
+                in = Files.newInputStream(resFile);
             }
 
-            T config = null;
-            switch (configType) {
-                case CONFIG_TYPE_XML:
-                    config = parseXml(clazz, in);
+            T res = null;
+            switch (resType) {
+                case RES_TYPE_XML:
+                    res = parseXml(clazz, in);
                     break;
-                case CONFIG_TYPE_JSON:
-                    config = parseJson(clazz, in);
+                case RES_TYPE_JSON:
+                    res = parseJson(clazz, in);
                     break;
                 default:
-                    throw new IllegalArgumentException("type mismatch: " + configType);
+                    throw new IllegalArgumentException("type mismatch: " + resType);
             }
-            invokePostConstruct(config);
+            invokePostConstruct(res);
 
-            return config;
+            return res;
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {

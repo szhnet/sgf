@@ -9,9 +9,10 @@
 
     <artifactId>sgf-common</artifactId>
 
-    <name>Simple Game Framework Common</name>
-    <description>Simple Game Framework Common</description>
-
+    <name>sgf-common</name>
+    <description>
+        sgf-common
+    </description>
 
     <dependencies>
         <dependency>
