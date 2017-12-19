@@ -20,7 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * 用来加载ziy资源文件
+ * 用来加载资源文件
  * <p>
  * 可以从文件系统路径加载或者从classpath加载
  *
@@ -38,7 +38,7 @@ public class ResourceLoader {
      * @param filePath
      * @return 不能存在返回null
      */
-    public static Path getConfigFile(String filePath) {
+    public static Path getResourceFile(String filePath) {
         Path resFile = Paths.get(filePath);
 
         if (Files.notExists(resFile)) {

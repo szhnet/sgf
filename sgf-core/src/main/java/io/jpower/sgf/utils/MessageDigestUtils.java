@@ -1,14 +1,13 @@
 package io.jpower.sgf.utils;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * 消息摘要工具
@@ -23,7 +22,11 @@ public class MessageDigestUtils {
 
     public static final String ALGORITHM_SHA1 = "SHA-1";
 
+    public static final String ALGORITHM_SHA256 = "SHA-256";
+
     public static final String ALGORITHM_HMACSHA1 = "HmacSHA1";
+
+    public static final String ALGORITHM_HMACSHA256 = "HmacSHA256";
 
     private static final char[] DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
             'b', 'c', 'd', 'e', 'f'};
@@ -54,6 +57,20 @@ public class MessageDigestUtils {
 
     public static String sha1(InputStream dataIn) {
         return doStream(ALGORITHM_SHA1, dataIn);
+    }
+
+    public static String sha256(byte[] data) {
+        return doBytes(ALGORITHM_SHA256, data);
+    }
+
+    public static String sha256(String str) {
+        byte[] data;
+        data = str.getBytes(CHARSET);
+        return doBytes(ALGORITHM_SHA256, data);
+    }
+
+    public static String sha256(InputStream dataIn) {
+        return doStream(ALGORITHM_SHA256, dataIn);
     }
 
     private static String doBytes(String algorithm, byte[] data) {
@@ -111,6 +128,20 @@ public class MessageDigestUtils {
         return doStreamHmac(ALGORITHM_HMACSHA1, dataIn, key);
     }
 
+    public static String hmacSha256(byte[] data, String key) {
+        return doBytesHmac(ALGORITHM_HMACSHA256, data, key);
+    }
+
+    public static String hmacSha256(String str, String key) {
+        byte[] data;
+        data = str.getBytes(CHARSET);
+        return doBytesHmac(ALGORITHM_HMACSHA256, data, key);
+    }
+
+    public static String hmacSha256(InputStream dataIn, String key) {
+        return doStreamHmac(ALGORITHM_HMACSHA256, dataIn, key);
+    }
+
     private static String doBytesHmac(String algorithm, byte[] data, String key) {
         Mac mac = null;
         try {
@@ -148,9 +179,17 @@ public class MessageDigestUtils {
     public static void main(String[] args) {
         String m = MessageDigestUtils.md5("abc呵呵");
         System.out.println(m);
+
         m = MessageDigestUtils.sha1("abc呵呵");
         System.out.println(m);
+
+        m = MessageDigestUtils.sha256("abc呵呵");
+        System.out.println(m);
+
         m = MessageDigestUtils.hmacSha1("abc呵呵", "jalskjf0)(U)(&)&)*(");
+        System.out.println(m);
+
+        m = MessageDigestUtils.hmacSha256("abc呵呵", "jalskjf0)(U)(&)&)*(");
         System.out.println(m);
     }
 
