@@ -19,7 +19,11 @@ public class EnumUtils {
 
     private static final int MAX_INDEX = 9999;
 
-    private static final ConcurrentMap<Class<? extends Enum<?>>, EnumHolder> ENUM_TAG_CACHE = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Class<? extends IntEnum>, IntEnumHolder> INT_ENUM_CACHE = new
+            ConcurrentHashMap<>();
+
+    private static final ConcurrentMap<Class<? extends Enum<?>>, TagAnnoEnumHolder> TAG_ANNO_ENUM_CACHE = new
+            ConcurrentHashMap<>();
 
     private static Class<?> getEnumClass(Object e) {
         if (e instanceof Enum) {
@@ -141,96 +145,168 @@ public class EnumUtils {
                 "No enum constant " + enumType.getCanonicalName() + "." + name);
     }
 
-    /**
-     * 根据指定的value找到对应的IntEnum的枚举
-     *
-     * @param enumType
-     * @param value
-     * @param <T>
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public static <T extends IntEnum> T valueOfIntEnum(Class<T> enumType, int value) {
-        Method findByIdMethod = null;
-        try {
-            findByIdMethod = enumType.getMethod("findById", int.class);
-        } catch (Exception e) {
-            throw JavaUtils.sneakyThrow(e);
+    public static int idOf(Enum<?> enumValue) {
+        if (enumValue instanceof IntEnum) {
+            return idOfIntEnum(enumValue);
+        } else {
+            return idOfTagAnnoEnum(enumValue);
         }
-        T rst;
-        try {
-            rst = (T) findByIdMethod.invoke(null, value);
-        } catch (Exception e) {
-            throw JavaUtils.sneakyThrow(e);
-        }
-        return rst;
     }
 
-    /**
-     * 根据枚举返回枚举的tag值
-     * <p>
-     * 需要用{@link Tag}标记枚举字段
-     *
-     * @param enumValue
-     * @return
-     */
-    public static int tag(Enum<?> enumValue) {
+    private static int idOfIntEnum(Enum<?> enumValue) {
+        IntEnum intEnum = (IntEnum) enumValue;
+        return intEnum.getId();
+    }
+
+    private static int idOfTagAnnoEnum(Enum<?> enumValue) {
         Class<? extends Enum<?>> enumType = enumValue.getDeclaringClass();
 
-        EnumHolder holder = ENUM_TAG_CACHE.get(enumType);
+        TagAnnoEnumHolder holder = TAG_ANNO_ENUM_CACHE.get(enumType);
         if (holder == null) {
-            holder = toEnumHolder(enumType);
-            EnumHolder existsHolder = ENUM_TAG_CACHE.putIfAbsent(enumType, holder);
+            holder = createTagAnnoEnumHolder(enumType);
+            TagAnnoEnumHolder existsHolder = TAG_ANNO_ENUM_CACHE.putIfAbsent(enumType, holder);
             if (existsHolder != null) {
                 holder = existsHolder;
             }
         }
 
-        Integer tag = holder.getEnumToTag().get(enumValue);
-        if (tag == null) {
-            throw new IllegalStateException("The enum is not mapped to tag. Type=" + enumType + "enum=" + enumValue);
+        Integer id = holder.getEnumToId().get(enumValue);
+        if (id == null) {
+            throw new IllegalStateException("The enum is not mapped to id. Type=" + enumType + "enum=" + enumValue);
         }
-        return tag;
+        return id;
     }
 
     /**
-     * 根据tag值，返回对应的枚举值
-     * <P>需要用{@link Tag}标记枚举字段
+     * 根据id值，返回对应的枚举值
+     * <P>需要用{@link Tag}标记枚举字段或者实现{@link IntEnum}接口
      *
      * @param enumType
-     * @param tag
+     * @param id
      * @param <E>
      * @return
      */
-    @SuppressWarnings("unchecked")
-    public static <E extends Enum<E>> E valueOf(Class<E> enumType, int tag) {
-        EnumHolder holder = ENUM_TAG_CACHE.get(enumType);
-        if (holder == null) {
-            holder = toEnumHolder(enumType);
-            EnumHolder existsHolder = ENUM_TAG_CACHE.putIfAbsent(enumType, holder);
-            if (existsHolder != null) {
-                holder = existsHolder;
-            }
-        }
-        Object tagToEnum = holder.getTagToEnum();
-        if (tagToEnum instanceof IntMap) {
-            IntMap<E> enumMap = (IntMap<E>) tagToEnum;
-            return enumMap.get(tag);
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static <E extends Enum> E valueOf(Class<E> enumType, int id) {
+        if (IntEnum.class.isAssignableFrom(enumType)) {
+            return (E) valueOfIntEnum((Class<? extends IntEnum>) enumType, id);
+        } else if (enumType.isEnum()) {
+            return (E) valueOfTagAnnoEnum(enumType, id);
         } else {
-            E[] enumArray = (E[]) tagToEnum;
-            if (tag < 0 || tag >= enumArray.length) {
-                return null;
-            }
-            return enumArray[tag];
+            throw new IllegalArgumentException("The enumType is not IntEnum or Enum. enumType=" + enumType);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private static EnumHolder toEnumHolder(Class<? extends Enum<?>> enumType) {
+    private static <E extends IntEnum> E valueOfIntEnum(Class<E> enumType, int id) {
+        IntEnumHolder holder = INT_ENUM_CACHE.get(enumType);
+        if (holder == null) {
+            holder = createIntEnumHolder(enumType);
+            IntEnumHolder existsHolder = INT_ENUM_CACHE.putIfAbsent(enumType, holder);
+            if (existsHolder != null) {
+                holder = existsHolder;
+            }
+        }
+        Method findByIdMethod = holder.getFindByIdMethod();
+        if (findByIdMethod != null) {
+            E rst;
+            try {
+                rst = (E) findByIdMethod.invoke(null, id);
+            } catch (Exception e) {
+                throw JavaUtils.sneakyThrow(e);
+            }
+            return rst;
+        } else {
+            Object idToEnum = holder.getIdToEnum();
+            if (idToEnum instanceof IntMap) {
+                IntMap<E> enumMap = (IntMap<E>) idToEnum;
+                return enumMap.get(id);
+            } else {
+                E[] enumArray = (E[]) idToEnum;
+                if (id < 0 || id >= enumArray.length) {
+                    return null;
+                }
+                return enumArray[id];
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <E extends Enum<E>> E valueOfTagAnnoEnum(Class<E> enumType, int id) {
+        TagAnnoEnumHolder holder = TAG_ANNO_ENUM_CACHE.get(enumType);
+        if (holder == null) {
+            holder = createTagAnnoEnumHolder(enumType);
+            TagAnnoEnumHolder existsHolder = TAG_ANNO_ENUM_CACHE.putIfAbsent(enumType, holder);
+            if (existsHolder != null) {
+                holder = existsHolder;
+            }
+        }
+        Object idToEnum = holder.getIdToEnum();
+        if (idToEnum instanceof IntMap) {
+            IntMap<E> enumMap = (IntMap<E>) idToEnum;
+            return enumMap.get(id);
+        } else {
+            E[] enumArray = (E[]) idToEnum;
+            if (id < 0 || id >= enumArray.length) {
+                return null;
+            }
+            return enumArray[id];
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static IntEnumHolder createIntEnumHolder(Class<? extends IntEnum> enumType) {
+        Method findByIdMethod = null;
+        try {
+            findByIdMethod = enumType.getMethod("findById", int.class);
+        } catch (NoSuchMethodException e) {
+            // no findById method
+        }
+
+        IntEnumHolder holder;
+        if (findByIdMethod != null) {
+            holder = new IntEnumHolder(enumType, findByIdMethod);
+        } else if (enumType.isEnum()) {
+            Class<? extends Enum<?>> et = (Class<? extends Enum<?>>) enumType;
+            IntMap<Enum<?>> idToEnumMap = new IntHashMap<>();
+            int maxId = 0;
+            for (Enum<?> enumConst : et.getEnumConstants()) {
+                IntEnum intEnumConst = (IntEnum) enumConst;
+
+                int id = intEnumConst.getId();
+                if (id < 0) {
+                    throw new IndexOutOfBoundsException("Enum id cannot be negative: Type="
+                            + enumType + ", id=" + id);
+                }
+                if (id > maxId) {
+                    maxId = id;
+                }
+                if (idToEnumMap.containsKey(id)) {
+                    throw new IllegalStateException(
+                            "Enum has duplicate id: Type=" + enumType + ", id=" + id);
+                }
+
+                idToEnumMap.put(id, enumConst);
+            }
+
+            if (maxId > MAX_INDEX) {
+                holder = new IntEnumHolder(enumType, idToEnumMap);
+            } else {
+                holder = new IntEnumHolder(enumType, toArray(et, idToEnumMap, maxId));
+            }
+        } else {
+            throw new IllegalArgumentException("The enumType is not Enum. enumType=" + enumType);
+        }
+
+        return holder;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static TagAnnoEnumHolder createTagAnnoEnumHolder(Class<? extends Enum<?>> enumType) {
         IntMap<Enum<?>> tagToEnumMap = new IntHashMap<>();
         Map<Enum<?>, Integer> enumToTagMap = new HashMap<>();
         Field[] declaredFields = enumType.getDeclaredFields();
-        int maxTag = 0;
+        int maxId = 0;
         for (Field f : declaredFields) {
             f.setAccessible(true);
             if (f.getDeclaringClass() != enumType) {
@@ -241,17 +317,17 @@ public class EnumUtils {
                 continue;
             }
 
-            int tag = tagAnno.value();
-            if (tag < 0) {
-                throw new IndexOutOfBoundsException("Enum index cannot be negative: Type="
-                        + enumType + ", tag=" + tag);
+            int id = tagAnno.value();
+            if (id < 0) {
+                throw new IndexOutOfBoundsException("Enum id cannot be negative: Type="
+                        + enumType + ", id=" + id);
             }
-            if (tag > maxTag) {
-                maxTag = tag;
+            if (id > maxId) {
+                maxId = id;
             }
-            if (tagToEnumMap.containsKey(tag)) {
+            if (tagToEnumMap.containsKey(id)) {
                 throw new IllegalStateException(
-                        "Enum has duplicate id: Type=" + enumType + ", tag=" + tag);
+                        "Enum has duplicate id: Type=" + enumType + ", id=" + id);
             }
 
             Enum<?> fv;
@@ -260,62 +336,95 @@ public class EnumUtils {
             } catch (IllegalAccessException e) {
                 throw JavaUtils.sneakyThrow(e);
             }
-            tagToEnumMap.put(tag, fv);
-            enumToTagMap.put(fv, tag);
+            tagToEnumMap.put(id, fv);
+            enumToTagMap.put(fv, id);
         }
 
-        EnumHolder holder;
-        if (maxTag > MAX_INDEX) {
-            holder = new EnumHolder(enumType, enumToTagMap, tagToEnumMap);
+        TagAnnoEnumHolder holder;
+        if (maxId > MAX_INDEX) {
+            holder = new TagAnnoEnumHolder(enumType, enumToTagMap, tagToEnumMap);
         } else {
-            holder = new EnumHolder(enumType, enumToTagMap, toArray(enumType, tagToEnumMap, maxTag));
+            holder = new TagAnnoEnumHolder(enumType, enumToTagMap, toArray(enumType, tagToEnumMap, maxId));
         }
         return holder;
     }
 
     @SuppressWarnings("rawtypes")
     private static Enum[] toArray(Class<? extends Enum<?>> enumType, IntMap<Enum<?>> enumMap, int
-            maxTag) {
-        @SuppressWarnings("unchecked")
-        Enum[] enumArray = (Enum[]) Array.newInstance(enumType, maxTag + 1);
+            maxId) {
+        Enum[] enumArray = (Enum[]) Array.newInstance(enumType, maxId + 1);
         for (IntMap.Entry<Enum<?>> en : enumMap.entrySet()) {
-            int tag = en.getKey();
+            int id = en.getKey();
             Enum<?> ev = en.getValue();
 
-            Enum<?> existsEv = enumArray[tag];
+            Enum<?> existsEv = enumArray[id];
             if (existsEv != null) {
                 throw new IllegalStateException(
-                        "Enum has duplicate tag: Type=" + enumType + ", tag=" + tag);
+                        "Enum has duplicate id: Type=" + enumType + ", id=" + id);
             }
-            enumArray[tag] = ev;
+            enumArray[id] = ev;
         }
         return enumArray;
     }
 
-    private static class EnumHolder {
+    private static class IntEnumHolder {
+
+        private final Class<? extends IntEnum> clazz;
+
+        private final Method findByIdMethod;
+
+        private final Object idToEnum;
+
+        private IntEnumHolder(Class<? extends IntEnum> clazz, Method findByIdMethod) {
+            this.clazz = clazz;
+            this.findByIdMethod = findByIdMethod;
+            this.idToEnum = null;
+        }
+
+        private IntEnumHolder(Class<? extends IntEnum> clazz, Object tagToEnum) {
+            this.clazz = clazz;
+            this.findByIdMethod = null;
+            this.idToEnum = tagToEnum;
+        }
+
+        Class<? extends IntEnum> getClazz() {
+            return clazz;
+        }
+
+        Method getFindByIdMethod() {
+            return findByIdMethod;
+        }
+
+        Object getIdToEnum() {
+            return idToEnum;
+        }
+
+    }
+
+    private static class TagAnnoEnumHolder {
 
         private final Class<? extends Enum<?>> clazz;
 
-        private final Map<Enum<?>, Integer> enumToTag;
+        private final Map<Enum<?>, Integer> enumToId;
 
-        private final Object tagToEnum;
+        private final Object idToEnum;
 
-        private EnumHolder(Class<? extends Enum<?>> clazz, Map<Enum<?>, Integer> enumToTag, Object tagToEnum) {
+        private TagAnnoEnumHolder(Class<? extends Enum<?>> clazz, Map<Enum<?>, Integer> enumToId, Object idToEnum) {
             this.clazz = clazz;
-            this.enumToTag = enumToTag;
-            this.tagToEnum = tagToEnum;
+            this.enumToId = enumToId;
+            this.idToEnum = idToEnum;
         }
 
         Class<? extends Enum<?>> getClazz() {
             return clazz;
         }
 
-        Map<Enum<?>, Integer> getEnumToTag() {
-            return enumToTag;
+        Map<Enum<?>, Integer> getEnumToId() {
+            return enumToId;
         }
 
-        Object getTagToEnum() {
-            return tagToEnum;
+        Object getIdToEnum() {
+            return idToEnum;
         }
 
     }

@@ -1,9 +1,5 @@
 package io.jpower.sgf.ser;
 
-import java.io.UnsupportedEncodingException;
-
-import io.jpower.sgf.utils.JavaUtils;
-
 /**
  * 用来进行编码
  * <p>
@@ -28,7 +24,7 @@ abstract class CodedWriter {
     }
 
     /**
-     * Write an {@code int32} field, including tag, to the stream.
+     * Write an {@code int32} field, including idOf, to the stream.
      */
     void writeInt32(final int fieldNumber, final int value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_VARINT);
@@ -36,7 +32,7 @@ abstract class CodedWriter {
     }
 
     /**
-     * Write an {@code int64} field, including tag, to the stream.
+     * Write an {@code int64} field, including idOf, to the stream.
      */
     void writeInt64(final int fieldNumber, final long value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_VARINT);
@@ -44,7 +40,7 @@ abstract class CodedWriter {
     }
 
     /**
-     * Write an {@code sint32} field, including tag, to the stream.
+     * Write an {@code sint32} field, including idOf, to the stream.
      */
     void writeSInt32(final int fieldNumber, final int value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_VARINT);
@@ -52,7 +48,7 @@ abstract class CodedWriter {
     }
 
     /**
-     * Write an {@code sint64} field, including tag, to the stream.
+     * Write an {@code sint64} field, including idOf, to the stream.
      */
     void writeSInt64(final int fieldNumber, final long value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_VARINT);
@@ -60,7 +56,7 @@ abstract class CodedWriter {
     }
 
     /**
-     * Write a {@code fixed8} field, including tag, to the stream.
+     * Write a {@code fixed8} field, including idOf, to the stream.
      */
     void writeFixed8(final int fieldNumber, final int value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_FIXED8);
@@ -68,7 +64,7 @@ abstract class CodedWriter {
     }
 
     /**
-     * Write a {@code fixed16} field, including tag, to the stream.
+     * Write a {@code fixed16} field, including idOf, to the stream.
      */
     void writeFixed16(final int fieldNumber, final int value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_FIXED16);
@@ -76,7 +72,7 @@ abstract class CodedWriter {
     }
 
     /**
-     * Write a {@code fixed32} field, including tag, to the stream.
+     * Write a {@code fixed32} field, including idOf, to the stream.
      */
     void writeFixed32(final int fieldNumber, final int value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_FIXED32);
@@ -84,7 +80,7 @@ abstract class CodedWriter {
     }
 
     /**
-     * Write a {@code fixed64} field, including tag, to the stream.
+     * Write a {@code fixed64} field, including idOf, to the stream.
      */
     void writeFixed64(final int fieldNumber, final long value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_FIXED64);
@@ -92,7 +88,7 @@ abstract class CodedWriter {
     }
 
     /**
-     * Write a {@code float} field, including tag, to the stream.
+     * Write a {@code float} field, including idOf, to the stream.
      */
     void writeFloat(final int fieldNumber, final float value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_FIXED32);
@@ -100,7 +96,7 @@ abstract class CodedWriter {
     }
 
     /**
-     * Write a {@code double} field, including tag, to the stream.
+     * Write a {@code double} field, including idOf, to the stream.
      */
     void writeDouble(final int fieldNumber, final double value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_FIXED64);
@@ -108,7 +104,7 @@ abstract class CodedWriter {
     }
 
     /**
-     * Write a {@code bool} field, including tag, to the stream.
+     * Write a {@code bool} field, including idOf, to the stream.
      */
     void writeBool(final int fieldNumber, final boolean value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_VARINT);
@@ -116,7 +112,7 @@ abstract class CodedWriter {
     }
 
     /**
-     * Write a {@code bytes} field, including tag, to the stream.
+     * Write a {@code bytes} field, including idOf, to the stream.
      */
     void writeBytes(final int fieldNumber, final byte[] value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_BYTES);
@@ -124,7 +120,7 @@ abstract class CodedWriter {
     }
 
     /**
-     * Write a {@code string} field, including tag, to the stream.
+     * Write a {@code string} field, including idOf, to the stream.
      */
     void writeString(final int fieldNumber, final String value) {
         writeTag(fieldNumber, WireFormat.WIRETYPE_BYTES);

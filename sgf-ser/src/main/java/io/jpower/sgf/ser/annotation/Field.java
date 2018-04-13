@@ -1,12 +1,8 @@
 package io.jpower.sgf.ser.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import io.jpower.sgf.ser.IntEncodeType;
+
+import java.lang.annotation.*;
 
 /**
  * 标记可序列化的类中的一个属性

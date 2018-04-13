@@ -1,9 +1,5 @@
 package io.jpower.sgf.ser;
 
-import java.io.UnsupportedEncodingException;
-
-import io.jpower.sgf.utils.JavaUtils;
-
 /**
  * 包装了一个字节数组
  *

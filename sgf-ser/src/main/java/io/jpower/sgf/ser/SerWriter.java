@@ -2,7 +2,6 @@ package io.jpower.sgf.ser;
 
 import io.jpower.sgf.collection.*;
 import io.jpower.sgf.enumtype.EnumUtils;
-import io.jpower.sgf.enumtype.IntEnum;
 import io.jpower.sgf.utils.JavaUtils;
 
 import java.lang.reflect.Field;
@@ -91,10 +90,6 @@ class SerWriter {
 
             case BOOL:
                 writeBoolean(ctx, serField, ((Boolean) value).booleanValue());
-                break;
-
-            case INT_ENUM:
-                writeIntEnum(ctx, serField, (IntEnum) value);
                 break;
 
             case ENUM:
@@ -405,14 +400,9 @@ class SerWriter {
         writer.writeBool(serField.getNumber(), value);
     }
 
-    private void writeIntEnum(SerContext ctx, SerField serField, IntEnum value) {
-        CodedWriter writer = ctx.getWriter();
-        writeInt32(writer, serField, value.getId()); // write id
-    }
-
     private void writeEnum(SerContext ctx, SerField serField, Enum<?> value) {
         CodedWriter writer = ctx.getWriter();
-        writeInt32(writer, serField, EnumUtils.tag(value)); // write id
+        writeInt32(writer, serField, EnumUtils.idOf(value)); // write id
     }
 
     private void writeBytes(SerContext ctx, SerField serField, byte[] value) {
@@ -722,10 +712,6 @@ class SerWriter {
                 writeBoolean(ctx, type, ((Boolean) value).booleanValue());
                 break;
 
-            case INT_ENUM:
-                writeIntEnum(ctx, type, (IntEnum) value);
-                break;
-
             case ENUM:
                 writeEnum(ctx, type, (Enum<?>) value);
                 break;
@@ -828,14 +814,9 @@ class SerWriter {
         writer.writeBoolNoTag(value);
     }
 
-    private void writeIntEnum(SerContext ctx, FieldType type, IntEnum value) {
-        CodedWriter writer = ctx.getWriter();
-        writer.writeInt32NoTag(value.getId()); // write id
-    }
-
     private void writeEnum(SerContext ctx, FieldType type, Enum<?> value) {
         CodedWriter writer = ctx.getWriter();
-        writer.writeInt32NoTag(EnumUtils.tag(value)); // write id
+        writer.writeInt32NoTag(EnumUtils.idOf(value)); // write id
     }
 
 

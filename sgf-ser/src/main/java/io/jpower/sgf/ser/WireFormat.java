@@ -71,21 +71,21 @@ final class WireFormat {
     final static int MAX_FIELD_NUMBER = (1 << 28) - 1;
 
     /**
-     * Given a tag value, determines the wire type (the lower 4 bits).
+     * Given a idOf value, determines the wire type (the lower 4 bits).
      */
     static int getTagWireType(final int tag) {
         return tag & TAG_TYPE_MASK;
     }
 
     /**
-     * Given a tag value, determines the field number (the upper 28 bits).
+     * Given a idOf value, determines the field number (the upper 28 bits).
      */
     static int getTagFieldNumber(final int tag) {
         return tag >>> TAG_TYPE_BITS;
     }
 
     /**
-     * Makes a tag value given a field number and wire type.
+     * Makes a idOf value given a field number and wire type.
      */
     static int makeTag(final int fieldNumber, final int wireType) {
         return (fieldNumber << TAG_TYPE_BITS) | wireType;

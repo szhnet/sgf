@@ -5,7 +5,7 @@ import io.jpower.sgf.enumtype.Tag;
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-enum Fruit {
+public enum Fruit {
 
     @Tag(1)
     APPLE,

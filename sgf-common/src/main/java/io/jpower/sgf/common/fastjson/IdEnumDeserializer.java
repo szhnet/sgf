@@ -1,9 +1,5 @@
 package io.jpower.sgf.common.fastjson;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.parser.DefaultJSONParser;
 import com.alibaba.fastjson.parser.JSONLexer;
@@ -11,45 +7,24 @@ import com.alibaba.fastjson.parser.JSONToken;
 import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
 import io.jpower.sgf.enumtype.EnumUtils;
 import io.jpower.sgf.enumtype.IntEnum;
+import io.jpower.sgf.enumtype.Tag;
+
+import java.lang.reflect.Type;
 
 /**
- * 用来使fastjson支持{@link IntEnum}的反序列化
+ * 用来使fastjson支持{@link Tag}和{@link IntEnum}的反序列化
  *
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public class IntEnumDeserializer implements ObjectDeserializer {
+public class IdEnumDeserializer implements ObjectDeserializer {
 
-    private final Class<?> intEnumClass;
+    private final Class<?> enumClass;
 
-    private final Method findByIdMethod;
-
-    private final IntEnum[] intEnums;
-
-    public IntEnumDeserializer(Class<?> intEnumClass) {
-        if (!intEnumClass.isEnum()) {
-            throw new JSONException("The class is not Enum: " + intEnumClass);
+    public IdEnumDeserializer(Class<?> enumClass) {
+        if (!enumClass.isEnum()) {
+            throw new JSONException("The class is not Enum: " + enumClass);
         }
-        this.intEnumClass = intEnumClass;
-
-        // 优先使用findById方法
-        this.findByIdMethod = findFindByIdMethod(intEnumClass);
-
-        if (this.findByIdMethod == null) {
-            // 没有findById，就用数组
-            IntEnum[] enumConstants = (IntEnum[]) intEnumClass.getEnumConstants();
-            this.intEnums = EnumUtils.toArray(enumConstants);
-        } else {
-            this.intEnums = null;
-        }
-    }
-
-    private Method findFindByIdMethod(Class<?> c) {
-        try {
-            return c.getMethod("findById", int.class);
-        } catch (Exception ignored) {
-            // ignore
-        }
-        return null;
+        this.enumClass = enumClass;
     }
 
     @Override
@@ -80,7 +55,7 @@ public class IntEnumDeserializer implements ObjectDeserializer {
                 value = parser.parse();
             }
 
-            throw new JSONException("parse IntEnum " + findByIdMethod.getDeclaringClass().getName()
+            throw new JSONException("parse Enum " + enumClass.getName()
                     + " error, value : " + value);
         } catch (JSONException e) {
             throw e;
@@ -90,19 +65,10 @@ public class IntEnumDeserializer implements ObjectDeserializer {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T _deserialize(int id)
-            throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        T e = null;
-        if (this.findByIdMethod != null) {
-            e = (T) findByIdMethod.invoke(null, id);
-        } else {
-            if (id < 0 || id >= intEnums.length) {
-                return null;
-            }
-            e = (T) intEnums[id];
-        }
+    private <T> T _deserialize(int id) throws IllegalArgumentException {
+        T e = (T) EnumUtils.valueOf(enumClass, id);
         if (e == null) {
-            throw new JSONException("parse IntEnum " + intEnumClass
+            throw new JSONException("parse Enum " + enumClass
                     + " error, index : " + id);
         }
         return e;

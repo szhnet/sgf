@@ -5,7 +5,6 @@ import io.jpower.sgf.utils.JavaUtils;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.Objects;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>

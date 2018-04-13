@@ -1,10 +1,10 @@
 package io.jpower.sgf.ser;
 
+import io.jpower.sgf.collection.IntMap;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.List;
-
-import io.jpower.sgf.collection.IntMap;
 
 /**
  * 类的序列化相关信息

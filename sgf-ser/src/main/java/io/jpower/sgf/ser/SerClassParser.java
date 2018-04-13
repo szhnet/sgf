@@ -1,36 +1,14 @@
 package io.jpower.sgf.ser;
 
+import io.jpower.sgf.collection.*;
+import io.jpower.sgf.ser.annotation.*;
+
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
+import java.lang.reflect.*;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import io.jpower.sgf.collection.DoubleValueMap;
-import io.jpower.sgf.collection.FloatValueMap;
-import io.jpower.sgf.collection.IntHashMap;
-import io.jpower.sgf.collection.IntMap;
-import io.jpower.sgf.collection.IntSet;
-import io.jpower.sgf.collection.IntValueMap;
-import io.jpower.sgf.collection.LongMap;
-import io.jpower.sgf.collection.LongSet;
-import io.jpower.sgf.collection.LongValueMap;
-import io.jpower.sgf.enumtype.IntEnum;
-import io.jpower.sgf.ser.annotation.AfterDeserialize;
-import io.jpower.sgf.ser.annotation.AfterSerialize;
-import io.jpower.sgf.ser.annotation.BeforeDeserialize;
-import io.jpower.sgf.ser.annotation.BeforeSerialize;
-import io.jpower.sgf.ser.annotation.Serializable;
 
 /**
  * 用来分析有{@link Serializable}注解的类
@@ -269,10 +247,6 @@ class SerClassParser {
             fieldType = new FieldType(fieldClass, JavaType.BOOL, fieldClass.isPrimitive(),
                     WireFormat.WIRETYPE_VARINT);
 
-        } else if (IntEnum.class.isAssignableFrom(fieldClass)) {
-            fieldType = new FieldType(fieldClass, JavaType.INT_ENUM,
-                    serField.getIntEncodeType().getInt32WireType());
-
         } else if (Enum.class.isAssignableFrom(fieldClass)) {
             fieldType = new FieldType(fieldClass, JavaType.ENUM,
                     serField.getIntEncodeType().getInt32WireType());
@@ -404,9 +378,6 @@ class SerClassParser {
 
         } else if (fieldClass == Boolean.class) {
             fieldType = new FieldType(fieldClass, JavaType.BOOL, WireFormat.WIRETYPE_VARINT);
-
-        } else if (IntEnum.class.isAssignableFrom(fieldClass)) {
-            fieldType = new FieldType(fieldClass, JavaType.INT_ENUM, WireFormat.WIRETYPE_VARINT);
 
         } else if (Enum.class.isAssignableFrom(fieldClass)) {
             fieldType = new FieldType(fieldClass, JavaType.ENUM, WireFormat.WIRETYPE_VARINT);

@@ -1,13 +1,9 @@
 package io.jpower.sgf.common.mybatis;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
+
+import java.sql.*;
 
 /**
  * javaType: Long <-> jdbcType: Timestamp

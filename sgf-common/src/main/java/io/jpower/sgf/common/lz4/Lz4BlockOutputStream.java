@@ -1,12 +1,12 @@
 package io.jpower.sgf.common.lz4;
 
-import java.io.FilterOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Factory;
 import net.jpountz.util.SafeUtils;
+
+import java.io.FilterOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * <a href=" http://www.lz4.org">LZ4</a> OutputStream

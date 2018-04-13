@@ -1,16 +1,12 @@
 package io.jpower.sgf.ser;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import io.jpower.sgf.utils.JavaUtils;
+
+import java.io.*;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
-
-import io.jpower.sgf.utils.JavaUtils;
 
 /**
  * 提供序列化和反序列化的Facade

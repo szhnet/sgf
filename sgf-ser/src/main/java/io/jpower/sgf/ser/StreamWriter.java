@@ -1,9 +1,9 @@
 package io.jpower.sgf.ser;
 
+import io.jpower.sgf.utils.JavaUtils;
+
 import java.io.IOException;
 import java.io.OutputStream;
-
-import io.jpower.sgf.utils.JavaUtils;
 
 /**
  * 包装了一个<code>InputStream</code>

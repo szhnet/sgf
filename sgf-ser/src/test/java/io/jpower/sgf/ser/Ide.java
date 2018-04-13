@@ -6,7 +6,7 @@ import io.jpower.sgf.enumtype.IntEnum;
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-enum Ide implements IntEnum {
+public enum Ide implements IntEnum {
 
     IDEA(1),
 

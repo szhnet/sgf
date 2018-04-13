@@ -2,7 +2,6 @@ package io.jpower.sgf.ser;
 
 import io.jpower.sgf.collection.*;
 import io.jpower.sgf.enumtype.EnumUtils;
-import io.jpower.sgf.enumtype.IntEnum;
 import io.jpower.sgf.utils.JavaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,12 +10,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
-import static io.jpower.sgf.ser.WireFormat.FIXED_16_SIZE;
-import static io.jpower.sgf.ser.WireFormat.FIXED_32_SIZE;
-import static io.jpower.sgf.ser.WireFormat.FIXED_64_SIZE;
+import static io.jpower.sgf.ser.WireFormat.*;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
@@ -24,8 +19,6 @@ import static io.jpower.sgf.ser.WireFormat.FIXED_64_SIZE;
 class SerReader {
 
     private static final Logger log = LoggerFactory.getLogger(SerReader.class);
-
-    private ConcurrentMap<Class<? extends IntEnum>, Method> intEnumFindByIdMethodCache = new ConcurrentHashMap<>();
 
     <T> T read(DeserContext ctx, Class<T> clazz) {
         SerClass serClass = SerClassParser.ins().parse(clazz);
@@ -129,12 +122,6 @@ class SerReader {
                 setValue(obj, serField, readBool(ctx, serField));
                 break;
 
-            case INT_ENUM:
-                IntEnum intEnumValue = readIntEnum(ctx, serField);
-                if (intEnumValue != null) {
-                    setValue(obj, serField, intEnumValue);
-                }
-                break;
             case ENUM:
                 Enum<?> enumValue = readEnum(ctx, serField);
                 if (enumValue != null) {
@@ -479,16 +466,6 @@ class SerReader {
     private boolean readBool(DeserContext ctx, SerField serField) {
         CodedReader reader = ctx.getReader();
         return reader.readBool();
-    }
-
-    private IntEnum readIntEnum(DeserContext ctx, SerField serField) {
-        CodedReader reader = ctx.getReader();
-        FieldType fieldType = serField.getType();
-        int id = readInt32(reader, serField); // read id
-
-        @SuppressWarnings("unchecked")
-        IntEnum value = parseIntNum((Class<? extends IntEnum>) fieldType.getRawType(), id);
-        return value;
     }
 
     private Enum<?> readEnum(DeserContext ctx, SerField serField) {
@@ -985,10 +962,6 @@ class SerReader {
                 value = readBool(ctx, serField, type);
                 break;
 
-            case INT_ENUM:
-                value = readIntEnum(ctx, serField, type);
-                break;
-
             case ENUM:
                 value = readEnum(ctx, serField, type);
                 break;
@@ -1081,15 +1054,6 @@ class SerReader {
     private boolean readBool(DeserContext ctx, SerField serField, FieldType type) {
         CodedReader reader = ctx.getReader();
         return reader.readBool();
-    }
-
-    private IntEnum readIntEnum(DeserContext ctx, SerField serField, FieldType type) {
-        CodedReader reader = ctx.getReader();
-        int id = reader.readInt32(); // read id
-
-        @SuppressWarnings("unchecked")
-        IntEnum value = parseIntNum((Class<? extends IntEnum>) type.getRawType(), id);
-        return value;
     }
 
     private Enum<?> readEnum(DeserContext ctx, SerField serField, FieldType type) {
@@ -1445,39 +1409,6 @@ class SerReader {
     }
 
     /* ########## 其他 ########## */
-
-    private Method getIntEnumFindByIdMethod(Class<? extends IntEnum> clazz) {
-        Method method = intEnumFindByIdMethodCache.get(clazz);
-        if (method != null) {
-            return method;
-        }
-
-        try {
-            method = clazz.getMethod("findById", int.class);
-        } catch (NoSuchMethodException e) {
-            throw new SerializationException("Not found IntEnum findById method: " + clazz);
-        }
-
-        Method existsMethod = intEnumFindByIdMethodCache.putIfAbsent(clazz, method);
-        if (existsMethod != null) {
-            method = existsMethod;
-        }
-
-        return method;
-    }
-
-    private IntEnum parseIntNum(Class<? extends IntEnum> clazz, int id) {
-        Method method = getIntEnumFindByIdMethod(clazz);
-
-        Object value = Utils.invoke(method, null, id);
-        if (value == null) {
-            if (log.isWarnEnabled()) {
-                log.warn("Not found IntEnum. clazz={}, id={}", clazz, id);
-            }
-        }
-
-        return (IntEnum) value;
-    }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Enum<?> parseEnum(Class<? extends Enum<?>> clazz, int id) {

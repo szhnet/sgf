@@ -21,8 +21,6 @@ enum JavaType {
 
     BOOL,
 
-    INT_ENUM,
-
     ENUM,
 
     BYTES,

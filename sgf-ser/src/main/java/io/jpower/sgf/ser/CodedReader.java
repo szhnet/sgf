@@ -1,9 +1,5 @@
 package io.jpower.sgf.ser;
 
-import java.io.UnsupportedEncodingException;
-
-import io.jpower.sgf.utils.JavaUtils;
-
 import static io.jpower.sgf.ser.WireFormat.MAX_VARINT_SIZE;
 
 /**

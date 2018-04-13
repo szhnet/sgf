@@ -1,63 +1,38 @@
 package io.jpower.sgf.common.jackson;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-
 import com.alibaba.fastjson.JSONException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
 import io.jpower.sgf.enumtype.EnumUtils;
 import io.jpower.sgf.enumtype.IntEnum;
+import io.jpower.sgf.enumtype.Tag;
+
+import java.io.IOException;
 
 /**
- * 用来使jackson2支持{@link IntEnum}的反序列化
+ * 用来使jackson2支持{@link Tag}和{@link IntEnum}的反序列化
  *
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public class IntEnumDeserializer<T extends IntEnum> extends StdScalarDeserializer<T> {
+public class IdEnumDeserializer<E extends Enum<E>> extends StdScalarDeserializer<E> {
 
     /**  */
     private static final long serialVersionUID = -6191443987036212089L;
 
-    private final Method findByIdMethod;
+    public IdEnumDeserializer(Class<E> enumClass) {
+        super(enumClass);
 
-    private final T[] intEnums;
-
-    public IntEnumDeserializer(Class<T> intEnumClass) {
-        super(intEnumClass);
-
-        if (!intEnumClass.isEnum()) {
-            throw new JSONException("The class is not Enum: " + intEnumClass);
+        if (!enumClass.isEnum()) {
+            throw new JSONException("The class is not Enum: " + enumClass);
         }
-
-        // 优先使用findById方法
-        this.findByIdMethod = findFindByIdMethod(intEnumClass);
-
-        if (this.findByIdMethod == null) {
-            // 没有findById，就用数组
-            T[] enumConstants = (T[]) intEnumClass.getEnumConstants();
-            this.intEnums = EnumUtils.toArray(enumConstants);
-        } else {
-            this.intEnums = null;
-        }
-    }
-
-    private Method findFindByIdMethod(Class<?> c) {
-        try {
-            return c.getMethod("findById", int.class);
-        } catch (Exception ignored) {
-            // ignore
-        }
-        return null;
     }
 
     @Override
-    public T deserialize(JsonParser jp, DeserializationContext ctxt)
+    public E deserialize(JsonParser jp, DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
         JsonToken curr = jp.getCurrentToken();
         if (curr == JsonToken.VALUE_NUMBER_INT) {
@@ -72,35 +47,23 @@ public class IntEnumDeserializer<T extends IntEnum> extends StdScalarDeserialize
     }
 
     @SuppressWarnings("unchecked")
-    private T _deserializeInt(int id, DeserializationContext ctxt) throws JsonProcessingException {
-        T rst = null;
-        if (this.findByIdMethod != null) {
-            try {
-                rst = (T) findByIdMethod.invoke(null, id);
-            } catch (Exception e) {
-                throw JsonMappingException.from(ctxt.getParser(),
-                        "invoke findById method error, problem: " + e.getMessage(), e);
-            }
-        } else {
-            if (id >= 0 && id < intEnums.length) {
-                rst = intEnums[id];
-            }
-        }
+    private E _deserializeInt(int id, DeserializationContext ctxt) throws JsonProcessingException {
+        E rst = (E) EnumUtils.valueOf(handledType(), id);
         if (rst == null
                 && !ctxt.isEnabled(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL)) {
             throw ctxt.weirdNumberException(id, handledType(),
-                    "value not one of declared IntEnum instance numberss: " + id);
+                    "value not one of declared Enum instance numberss: " + id);
         }
         return rst;
     }
 
-    protected T _deserializeOther(JsonParser jp, DeserializationContext ctxt) throws IOException {
+    protected E _deserializeOther(JsonParser jp, DeserializationContext ctxt) throws IOException {
         JsonToken curr = jp.getCurrentToken();
         // Issue#381
         if (curr == JsonToken.START_ARRAY
                 && ctxt.isEnabled(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS)) {
             jp.nextToken();
-            final T parsed = deserialize(jp, ctxt);
+            final E parsed = deserialize(jp, ctxt);
             curr = jp.nextToken();
             if (curr != JsonToken.END_ARRAY) {
                 throw ctxt.wrongTokenException(jp, JsonToken.END_ARRAY,
