@@ -1,11 +1,11 @@
 package io.jpower.sgf.common.hotswap;
 
-import org.slf4j.Logger;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
+
+import org.slf4j.Logger;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>

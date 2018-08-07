@@ -1,12 +1,12 @@
 package io.jpower.sgf.ser;
 
-import io.jpower.sgf.utils.JavaUtils;
+import static java.util.Locale.ENGLISH;
 
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import static java.util.Locale.ENGLISH;
+import io.jpower.sgf.utils.JavaUtils;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>

@@ -1,5 +1,7 @@
 package io.jpower.sgf.common.fastjson;
 
+import java.lang.reflect.Type;
+
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.parser.DefaultJSONParser;
 import com.alibaba.fastjson.parser.JSONLexer;
@@ -9,8 +11,6 @@ import io.jpower.sgf.enumtype.EnumUtils;
 import io.jpower.sgf.enumtype.IntEnum;
 import io.jpower.sgf.enumtype.Tag;
 
-import java.lang.reflect.Type;
-
 /**
  * 用来使fastjson支持{@link Tag}和{@link IntEnum}的反序列化
  *
@@ -18,9 +18,9 @@ import java.lang.reflect.Type;
  */
 public class IdEnumDeserializer implements ObjectDeserializer {
 
-    private final Class<?> enumClass;
+    private final Class<? extends Enum<?>> enumClass;
 
-    public IdEnumDeserializer(Class<?> enumClass) {
+    public IdEnumDeserializer(Class<? extends Enum<?>> enumClass) {
         if (!enumClass.isEnum()) {
             throw new JSONException("The class is not Enum: " + enumClass);
         }

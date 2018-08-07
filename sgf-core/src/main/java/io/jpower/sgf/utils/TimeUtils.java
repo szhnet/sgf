@@ -25,12 +25,12 @@ public class TimeUtils {
     /**
      * 1秒有多少毫秒
      */
-    public static final int SECONDS_MILLIS = 1000;
+    public static final int SECOND_MILLIS = 1000;
 
     /**
      * 1分钟有多少毫秒
      */
-    public static final int MINUTE_MILLIS = 60 * SECONDS_MILLIS;
+    public static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
 
     /**
      * 1小时有多少毫秒

@@ -1,5 +1,7 @@
 package io.jpower.sgf.common.jackson;
 
+import java.io.IOException;
+
 import com.alibaba.fastjson.JSONException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,8 +12,6 @@ import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
 import io.jpower.sgf.enumtype.EnumUtils;
 import io.jpower.sgf.enumtype.IntEnum;
 import io.jpower.sgf.enumtype.Tag;
-
-import java.io.IOException;
 
 /**
  * 用来使jackson2支持{@link Tag}和{@link IntEnum}的反序列化
@@ -48,7 +48,7 @@ public class IdEnumDeserializer<E extends Enum<E>> extends StdScalarDeserializer
 
     @SuppressWarnings("unchecked")
     private E _deserializeInt(int id, DeserializationContext ctxt) throws JsonProcessingException {
-        E rst = (E) EnumUtils.valueOf(handledType(), id);
+        E rst = (E) EnumUtils.valueOf((Class<? extends Enum<?>>) handledType(), id);
         if (rst == null
                 && !ctxt.isEnabled(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL)) {
             throw ctxt.weirdNumberException(id, handledType(),

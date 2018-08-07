@@ -1,9 +1,5 @@
 package io.jpower.sgf.enumtype;
 
-import io.jpower.sgf.collection.IntHashMap;
-import io.jpower.sgf.collection.IntMap;
-import io.jpower.sgf.utils.JavaUtils;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -11,6 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import io.jpower.sgf.collection.IntHashMap;
+import io.jpower.sgf.collection.IntMap;
+import io.jpower.sgf.utils.JavaUtils;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>

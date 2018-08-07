@@ -1,14 +1,6 @@
 package io.jpower.sgf.common.resource;
 
-import com.fasterxml.jackson.core.JsonParser.Feature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jpower.sgf.utils.JavaUtils;
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-import org.simpleframework.xml.stream.InputNode;
-import org.simpleframework.xml.stream.NodeBuilder;
-
-import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,6 +10,15 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import javax.annotation.PostConstruct;
+
+import com.fasterxml.jackson.core.JsonParser.Feature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jpower.sgf.utils.JavaUtils;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+import org.simpleframework.xml.stream.InputNode;
+import org.simpleframework.xml.stream.NodeBuilder;
 
 /**
  * 用来加载资源文件
@@ -158,7 +159,7 @@ public class ResourceLoader {
 
             return res;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw JavaUtils.sneakyThrow(e);
         } finally {
             if (in != null) {
                 try {
@@ -180,9 +181,72 @@ public class ResourceLoader {
     private static <T> T parseJson(Class<T> clazz, InputStream in) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         // mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.enable(Feature.ALLOW_COMMENTS);
+        setJsonFeature(mapper);
         T o = mapper.readValue(in, clazz);
         return o;
+    }
+
+    /**
+     * 加载xml格式的资源
+     *
+     * @param clazz
+     * @param data
+     * @return
+     */
+    public static <T> T loadXmlResource(Class<T> clazz, byte[] data) {
+        return loadResource(clazz, data, RES_TYPE_XML);
+    }
+
+    /**
+     * 加载json格式的资源
+     *
+     * @param clazz
+     * @param data
+     * @return
+     */
+    public static <T> T loadJsonResource(Class<T> clazz, byte[] data) {
+        return loadResource(clazz, data, RES_TYPE_JSON);
+    }
+
+    private static <T> T loadResource(Class<T> clazz, byte[] data, int resType) {
+        T res = null;
+        try {
+            switch (resType) {
+                case RES_TYPE_XML:
+                    res = parseXml(clazz, data);
+                    break;
+                case RES_TYPE_JSON:
+                    res = parseJson(clazz, data);
+                    break;
+                default:
+                    throw new IllegalArgumentException("type mismatch: " + resType);
+            }
+            invokePostConstruct(res);
+        } catch (Exception e) {
+            throw JavaUtils.sneakyThrow(e);
+        }
+
+        return res;
+    }
+
+    private static <T> T parseXml(Class<T> clazz, byte[] data) throws Exception {
+        InputNode inputNode = NodeBuilder.read(new ByteArrayInputStream(data));
+        Serializer ser = new Persister();
+        T o = ser.read(clazz, inputNode, false);
+        return o;
+    }
+
+    private static <T> T parseJson(Class<T> clazz, byte[] data) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        setJsonFeature(mapper);
+
+        T o = mapper.readValue(data, clazz);
+        return o;
+    }
+
+    private static void setJsonFeature(ObjectMapper mapper) {
+        // mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        mapper.enable(Feature.ALLOW_COMMENTS);
     }
 
     private static void invokePostConstruct(Object obj) {

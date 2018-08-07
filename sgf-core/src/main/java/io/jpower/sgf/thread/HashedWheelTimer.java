@@ -1,15 +1,19 @@
 package io.jpower.sgf.thread;
 
-import io.jpower.sgf.utils.JavaUtils;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
+
+import io.jpower.sgf.utils.JavaUtils;
 
 /**
  * 修改自<code>org.jboss.netty.util.HashedWheelTimer</code>

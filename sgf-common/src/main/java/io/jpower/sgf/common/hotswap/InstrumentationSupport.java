@@ -1,9 +1,5 @@
 package io.jpower.sgf.common.hotswap;
 
-import io.jpower.sgf.utils.JavaUtils;
-import javassist.ClassPool;
-import javassist.CtClass;
-
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.lang.management.ManagementFactory;
@@ -17,6 +13,10 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+
+import io.jpower.sgf.utils.JavaUtils;
+import javassist.ClassPool;
+import javassist.CtClass;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>

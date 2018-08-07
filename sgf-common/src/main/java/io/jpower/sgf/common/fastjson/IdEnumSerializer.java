@@ -1,14 +1,14 @@
 package io.jpower.sgf.common.fastjson;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.ObjectSerializer;
 import com.alibaba.fastjson.serializer.SerializeWriter;
 import io.jpower.sgf.enumtype.EnumUtils;
 import io.jpower.sgf.enumtype.IntEnum;
 import io.jpower.sgf.enumtype.Tag;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
 
 /**
  * 用来使fastjson支持{@link Tag}和{@link IntEnum}的序列化

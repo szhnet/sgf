@@ -1,10 +1,10 @@
 package io.jpower.sgf.thread;
 
-import io.jpower.sgf.utils.JavaUtils;
-
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import io.jpower.sgf.utils.JavaUtils;
 
 /**
  * 用来表示一个执行失败的future

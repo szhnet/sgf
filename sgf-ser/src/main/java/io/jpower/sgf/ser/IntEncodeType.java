@@ -8,11 +8,6 @@ package io.jpower.sgf.ser;
 public enum IntEncodeType {
 
     /**
-     * default
-     */
-    DEFAULT(WireFormat.WIRETYPE_FIXED8, WireFormat.WIRETYPE_FIXED16, WireFormat.WIRETYPE_VARINT, WireFormat.WIRETYPE_VARINT),
-
-    /**
      * varint
      */
     VARINT(WireFormat.WIRETYPE_VARINT, WireFormat.WIRETYPE_VARINT, WireFormat.WIRETYPE_VARINT, WireFormat.WIRETYPE_VARINT),

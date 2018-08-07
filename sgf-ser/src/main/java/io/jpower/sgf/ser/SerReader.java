@@ -1,17 +1,41 @@
 package io.jpower.sgf.ser;
 
-import io.jpower.sgf.collection.*;
-import io.jpower.sgf.enumtype.EnumUtils;
-import io.jpower.sgf.utils.JavaUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static io.jpower.sgf.ser.WireFormat.FIXED_16_SIZE;
+import static io.jpower.sgf.ser.WireFormat.FIXED_32_SIZE;
+import static io.jpower.sgf.ser.WireFormat.FIXED_64_SIZE;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import static io.jpower.sgf.ser.WireFormat.*;
+import io.jpower.sgf.collection.DoubleValueHashMap;
+import io.jpower.sgf.collection.DoubleValueMap;
+import io.jpower.sgf.collection.FloatValueHashMap;
+import io.jpower.sgf.collection.FloatValueMap;
+import io.jpower.sgf.collection.IntHashMap;
+import io.jpower.sgf.collection.IntHashSet;
+import io.jpower.sgf.collection.IntMap;
+import io.jpower.sgf.collection.IntSet;
+import io.jpower.sgf.collection.IntValueHashMap;
+import io.jpower.sgf.collection.IntValueMap;
+import io.jpower.sgf.collection.LongHashMap;
+import io.jpower.sgf.collection.LongHashSet;
+import io.jpower.sgf.collection.LongMap;
+import io.jpower.sgf.collection.LongSet;
+import io.jpower.sgf.collection.LongValueHashMap;
+import io.jpower.sgf.collection.LongValueMap;
+import io.jpower.sgf.enumtype.EnumUtils;
+import io.jpower.sgf.utils.JavaUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
@@ -497,7 +521,6 @@ class SerReader {
         FieldType subType = fieldType.getSubTypes().get(0); // 子类型
         int subWireType = reader.readWireType(); // sub wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (subWireType == subType.getWireType()) {
             List<Object> value = createList(serField.getDeSerClazz());
@@ -526,7 +549,6 @@ class SerReader {
         FieldType subType = fieldType.getSubTypes().get(0); // 子类型
         int subWireType = reader.readWireType(); // sub wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (subWireType == subType.getWireType()) {
             Set<Object> value = createSet(serField.getDeSerClazz(), serField.getType());
@@ -553,7 +575,6 @@ class SerReader {
 
         int subWireType = reader.readWireType(); // sub wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (subWireType == WireFormat.WIRETYPE_VARINT) {
             IntSet value = createIntSet(serField.getDeSerClazz());
@@ -580,7 +601,6 @@ class SerReader {
 
         int subWireType = reader.readWireType(); // sub wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (subWireType == WireFormat.WIRETYPE_VARINT) {
             LongSet value = createLongSet(serField.getDeSerClazz());
@@ -612,7 +632,6 @@ class SerReader {
         int keyWireType = reader.readWireType(); // key wireType
         int valueWireType = reader.readWireType(); // value wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (keyWireType == keyType.getWireType() && valueWireType == valueType.getWireType()) {
             Map<Object, Object> value = createMap(serField.getDeSerClazz(), fieldType);
@@ -648,7 +667,6 @@ class SerReader {
         int keyWireType = reader.readWireType(); // key wireType
         int valueWireType = reader.readWireType(); // value wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (keyWireType == WireFormat.WIRETYPE_VARINT && valueWireType == valueType.getWireType()) {
             IntMap<Object> value = createIntMap(serField.getDeSerClazz());
@@ -684,7 +702,6 @@ class SerReader {
         int keyWireType = reader.readWireType(); // key wireType
         int valueWireType = reader.readWireType(); // value wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (keyWireType == WireFormat.WIRETYPE_VARINT && valueWireType == valueType.getWireType()) {
             LongMap<Object> value = createLongMap(serField.getDeSerClazz());
@@ -720,7 +737,6 @@ class SerReader {
         int keyWireType = reader.readWireType(); // key wireType
         int valueWireType = reader.readWireType(); // value wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (keyWireType == keyType.getWireType() && valueWireType == WireFormat.WIRETYPE_VARINT) {
             IntValueMap<Object> value = createIntValueMap(serField.getDeSerClazz());
@@ -756,7 +772,6 @@ class SerReader {
         int keyWireType = reader.readWireType(); // key wireType
         int valueWireType = reader.readWireType(); // value wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (keyWireType == keyType.getWireType() && valueWireType == WireFormat.WIRETYPE_VARINT) {
             LongValueMap<Object> value = createLongValueMap(serField.getDeSerClazz());
@@ -792,7 +807,6 @@ class SerReader {
         int keyWireType = reader.readWireType(); // key wireType
         int valueWireType = reader.readWireType(); // value wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (keyWireType == keyType.getWireType() && valueWireType == WireFormat.WIRETYPE_FIXED32) {
             FloatValueMap<Object> value = createFloatValueMap(serField.getDeSerClazz());
@@ -828,7 +842,6 @@ class SerReader {
         int keyWireType = reader.readWireType(); // key wireType
         int valueWireType = reader.readWireType(); // value wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (keyWireType == keyType.getWireType() && valueWireType == WireFormat.WIRETYPE_FIXED64) {
             DoubleValueMap<Object> value = createDoubleValueMap(serField.getDeSerClazz());
@@ -867,7 +880,6 @@ class SerReader {
                 return (byte) reader.readInt32();
             case SIGNED_VARINT:
                 return (byte) reader.readSInt32();
-            case DEFAULT:
             case FIXED:
                 return reader.readFixed8();
 
@@ -883,7 +895,6 @@ class SerReader {
                 return (short) reader.readInt32();
             case SIGNED_VARINT:
                 return (short) reader.readSInt32();
-            case DEFAULT:
             case FIXED:
                 return reader.readFixed16();
 
@@ -895,7 +906,6 @@ class SerReader {
 
     private int readInt32(CodedReader reader, SerField serField) {
         switch (serField.getIntEncodeType()) {
-            case DEFAULT:
             case VARINT:
                 return reader.readInt32();
             case SIGNED_VARINT:
@@ -911,7 +921,6 @@ class SerReader {
 
     private long readInt64(CodedReader reader, SerField serField) {
         switch (serField.getIntEncodeType()) {
-            case DEFAULT:
             case VARINT:
                 return reader.readInt64();
             case SIGNED_VARINT:
@@ -1079,7 +1088,6 @@ class SerReader {
         FieldType subType = type.getSubTypes().get(0); // 子类型
         int subWireType = reader.readWireType(); // sub wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (subWireType == subType.getWireType()) {
             List<Object> value = new ArrayList<>(size);
@@ -1107,7 +1115,6 @@ class SerReader {
         FieldType subType = type.getSubTypes().get(0); // 子类型
         int subWireType = reader.readWireType(); // sub wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (subWireType == subType.getWireType()) {
             Set<Object> value = new HashSet<>();
@@ -1134,7 +1141,6 @@ class SerReader {
 
         int subWireType = reader.readWireType(); // sub wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (subWireType == WireFormat.WIRETYPE_VARINT) {
             IntSet value = new IntHashSet();
@@ -1161,7 +1167,6 @@ class SerReader {
 
         int subWireType = reader.readWireType(); // sub wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (subWireType == WireFormat.WIRETYPE_VARINT) {
             LongSet value = new LongHashSet();
@@ -1192,7 +1197,6 @@ class SerReader {
         int keyWireType = reader.readWireType(); // key wireType
         int valueWireType = reader.readWireType(); // value wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (keyWireType == keyType.getWireType() && valueWireType == valueType.getWireType()) {
             Map<Object, Object> value = new HashMap<>();
@@ -1227,7 +1231,6 @@ class SerReader {
         int keyWireType = reader.readWireType(); // key wireType
         int valueWireType = reader.readWireType(); // value wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (keyWireType == WireFormat.WIRETYPE_VARINT && valueWireType == valueType.getWireType()) {
             IntMap<Object> value = new IntHashMap<>();
@@ -1262,7 +1265,6 @@ class SerReader {
         int keyWireType = reader.readWireType(); // key wireType
         int valueWireType = reader.readWireType(); // value wireType
         int size = reader.readInt32(); // 数量
-        checkContainerSize(ctx, size, serField);
 
         if (keyWireType == WireFormat.WIRETYPE_VARINT && valueWireType == valueType.getWireType()) {
             LongMap<Object> value = new LongHashMap<>();
@@ -1419,12 +1421,6 @@ class SerReader {
         CodedReader reader = ctx.getReader();
         int size = reader.readInt32();
 
-        int sizeLimit = ctx.getByteSizeLimit();
-        if (sizeLimit != Ser.NO_SIZE_LIMIT && size > sizeLimit) {
-            throw new SerializationException("Bytes size exceeded max allowed. size=" + size
-                    + ", limit=" + sizeLimit + ", Field=" + serField);
-        }
-
         return reader.readBytes(size);
     }
 
@@ -1432,24 +1428,7 @@ class SerReader {
         CodedReader reader = ctx.getReader();
         int size = reader.readInt32();
 
-        int sizeLimit = ctx.getByteSizeLimit();
-        if (sizeLimit != Ser.NO_SIZE_LIMIT && size > sizeLimit) {
-            throw new SerializationException("String size exceeded max allowed. size=" + size
-                    + ", limit=" + sizeLimit + ", Field=" + serField);
-        }
-
         return reader.readString(size);
-    }
-
-    private void checkContainerSize(DeserContext ctx, int size, SerField serField) {
-        if (size < 0) {
-            throw new SerializationException("Container size < 0: " + size);
-        }
-        int sizeLimit = ctx.getContainerSizeLimit();
-        if (sizeLimit != Ser.NO_SIZE_LIMIT && size > sizeLimit) {
-            throw new SerializationException("Container size exceeded max allowed. size=" + size
-                    + ", limit=" + sizeLimit + ", Field=" + serField);
-        }
     }
 
     @SuppressWarnings("unchecked")

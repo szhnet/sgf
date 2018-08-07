@@ -1,11 +1,15 @@
 package io.jpower.sgf.ser;
 
-import org.junit.Test;
-
-import java.util.*;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>

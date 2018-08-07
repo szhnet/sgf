@@ -1,9 +1,5 @@
 package io.jpower.sgf.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sun.misc.Unsafe;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
@@ -12,6 +8,10 @@ import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.misc.Unsafe;
 
 /**
  * java语言和jdk类库层面的一些便捷方法

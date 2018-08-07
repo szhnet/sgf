@@ -1,8 +1,12 @@
 package io.jpower.sgf.ser.annotation;
 
-import io.jpower.sgf.ser.IntEncodeType;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.lang.annotation.*;
+import io.jpower.sgf.ser.IntEncodeType;
 
 /**
  * 标记可序列化的类中的一个属性
@@ -32,7 +36,7 @@ public @interface Field {
      *
      * @return
      */
-    IntEncodeType intEncodeType() default IntEncodeType.DEFAULT;
+    IntEncodeType intEncodeType() default IntEncodeType.VARINT;
 
     /**
      * 用来标记字段需要调用相应的intern方法，当前只能用在String字段上。

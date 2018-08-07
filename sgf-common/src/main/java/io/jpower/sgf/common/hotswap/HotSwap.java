@@ -1,10 +1,5 @@
 package io.jpower.sgf.common.hotswap;
 
-import io.jpower.sgf.utils.JavaUtils;
-import javassist.bytecode.ClassFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -16,11 +11,21 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import io.jpower.sgf.utils.JavaUtils;
+import javassist.bytecode.ClassFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * HotSwap class file base on {@link Instrumentation}

@@ -1,10 +1,17 @@
 package io.jpower.sgf.common.hotswap;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+
 import io.jpower.sgf.thread.SingleThreadWorker;
 import io.jpower.sgf.utils.JavaUtils;
-
-import java.io.IOException;
-import java.nio.file.*;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>

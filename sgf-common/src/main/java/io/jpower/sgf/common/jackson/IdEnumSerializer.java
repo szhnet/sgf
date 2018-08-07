@@ -1,5 +1,8 @@
 package io.jpower.sgf.common.jackson;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -13,9 +16,6 @@ import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
 import io.jpower.sgf.enumtype.EnumUtils;
 import io.jpower.sgf.enumtype.IntEnum;
 import io.jpower.sgf.enumtype.Tag;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
 
 /**
  * 用来使jackson2支持{@link Tag}和{@link IntEnum}的序列化

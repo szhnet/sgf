@@ -1,12 +1,12 @@
 package io.jpower.sgf.thread;
 
-import io.jpower.sgf.utils.JavaUtils;
-
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
+
+import io.jpower.sgf.utils.JavaUtils;
 
 /**
  * future的默认实现

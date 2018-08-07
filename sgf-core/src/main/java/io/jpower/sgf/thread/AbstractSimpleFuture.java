@@ -1,9 +1,9 @@
 package io.jpower.sgf.thread;
 
+import java.util.Objects;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Objects;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>

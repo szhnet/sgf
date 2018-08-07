@@ -1,6 +1,9 @@
 package io.jpower.sgf.ser;
 
-import io.jpower.sgf.utils.JavaUtils;
+import static io.jpower.sgf.ser.WireFormat.FIXED_16_SIZE;
+import static io.jpower.sgf.ser.WireFormat.FIXED_32_SIZE;
+import static io.jpower.sgf.ser.WireFormat.FIXED_64_SIZE;
+import static io.jpower.sgf.ser.WireFormat.MAX_VARINT_SIZE;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.jpower.sgf.ser.WireFormat.*;
+import io.jpower.sgf.utils.JavaUtils;
 
 /**
  * 包装了一个<code>InputStream</code>

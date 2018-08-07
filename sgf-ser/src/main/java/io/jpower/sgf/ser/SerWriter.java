@@ -1,14 +1,23 @@
 package io.jpower.sgf.ser;
 
-import io.jpower.sgf.collection.*;
-import io.jpower.sgf.enumtype.EnumUtils;
-import io.jpower.sgf.utils.JavaUtils;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import io.jpower.sgf.collection.DoubleValueMap;
+import io.jpower.sgf.collection.FloatValueMap;
+import io.jpower.sgf.collection.IntIterator;
+import io.jpower.sgf.collection.IntMap;
+import io.jpower.sgf.collection.IntSet;
+import io.jpower.sgf.collection.IntValueMap;
+import io.jpower.sgf.collection.LongIterator;
+import io.jpower.sgf.collection.LongMap;
+import io.jpower.sgf.collection.LongSet;
+import io.jpower.sgf.collection.LongValueMap;
+import io.jpower.sgf.enumtype.EnumUtils;
+import io.jpower.sgf.utils.JavaUtils;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
@@ -416,6 +425,9 @@ class SerWriter {
     }
 
     private void writeCollection(SerContext ctx, SerField serField, Collection<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
         FieldType fieldType = serField.getType();
 
@@ -423,7 +435,7 @@ class SerWriter {
 
         FieldType subType = fieldType.getSubTypes().get(0);
         writer.writeWireType(subType.getWireType()); // 子类型
-        writer.writeInt32NoTag(value.size()); // 数量
+        writer.writeInt32NoTag(size); // 数量
 
         for (Object e : value) {
             writeSubValue(ctx, serField, subType, e);
@@ -431,13 +443,16 @@ class SerWriter {
     }
 
     private void writeIntSet(SerContext ctx, SerField serField, IntSet value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
         FieldType fieldType = serField.getType();
 
         writer.writeTag(serField.getNumber(), fieldType.getWireType());
 
         writer.writeWireType(WireFormat.WIRETYPE_VARINT); // sub wireType
-        writer.writeInt32NoTag(value.size()); // 数量
+        writer.writeInt32NoTag(size); // 数量
 
         IntIterator itr = value.iterator();
         while (itr.hasNext()) {
@@ -447,13 +462,16 @@ class SerWriter {
     }
 
     private void writeLongSet(SerContext ctx, SerField serField, LongSet value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
         FieldType fieldType = serField.getType();
 
         writer.writeTag(serField.getNumber(), fieldType.getWireType());
 
         writer.writeWireType(WireFormat.WIRETYPE_VARINT); // sub wireType
-        writer.writeInt32NoTag(value.size()); // 数量
+        writer.writeInt32NoTag(size); // 数量
 
         LongIterator itr = value.iterator();
         while (itr.hasNext()) {
@@ -463,6 +481,9 @@ class SerWriter {
     }
 
     private void writeMap(SerContext ctx, SerField serField, Map<?, ?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
         FieldType fieldType = serField.getType();
 
@@ -472,7 +493,7 @@ class SerWriter {
         FieldType valueType = fieldType.getSubTypes().get(1);
         writer.writeWireType(keyType.getWireType()); // key wireType
         writer.writeWireType(valueType.getWireType()); // value wireType
-        writer.writeInt32NoTag(value.size()); // 数量
+        writer.writeInt32NoTag(size); // 数量
 
         for (Map.Entry<?, ?> e : value.entrySet()) {
             writeSubValue(ctx, serField, keyType, e.getKey());
@@ -481,6 +502,9 @@ class SerWriter {
     }
 
     private void writeIntMap(SerContext ctx, SerField serField, IntMap<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
         FieldType fieldType = serField.getType();
 
@@ -489,7 +513,7 @@ class SerWriter {
         FieldType valueType = fieldType.getSubTypes().get(0);
         writer.writeWireType(WireFormat.WIRETYPE_VARINT); // key wireType
         writer.writeWireType(valueType.getWireType()); // value wireType
-        writer.writeInt32NoTag(value.size()); // 数量
+        writer.writeInt32NoTag(size); // 数量
 
         for (IntMap.Entry<?> e : value.entrySet()) {
             writer.writeInt32NoTag(e.getKey());
@@ -498,6 +522,9 @@ class SerWriter {
     }
 
     private void writeLongMap(SerContext ctx, SerField serField, LongMap<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
         FieldType fieldType = serField.getType();
 
@@ -506,7 +533,7 @@ class SerWriter {
         FieldType valueType = fieldType.getSubTypes().get(0);
         writer.writeWireType(WireFormat.WIRETYPE_VARINT); // key wireType
         writer.writeWireType(valueType.getWireType()); // value wireType
-        writer.writeInt32NoTag(value.size()); // 数量
+        writer.writeInt32NoTag(size); // 数量
 
         for (LongMap.Entry<?> e : value.entrySet()) {
             writer.writeInt64NoTag(e.getKey());
@@ -515,6 +542,9 @@ class SerWriter {
     }
 
     private void writeIntValueMap(SerContext ctx, SerField serField, IntValueMap<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
         FieldType fieldType = serField.getType();
 
@@ -523,7 +553,7 @@ class SerWriter {
         FieldType keyType = fieldType.getSubTypes().get(0);
         writer.writeWireType(keyType.getWireType()); // key wireType
         writer.writeWireType(WireFormat.WIRETYPE_VARINT); // value wireType
-        writer.writeInt32NoTag(value.size()); // 数量
+        writer.writeInt32NoTag(size); // 数量
 
         for (IntValueMap.Entry<?> e : value.entrySet()) {
             writeSubValue(ctx, serField, keyType, e.getKey());
@@ -532,6 +562,9 @@ class SerWriter {
     }
 
     private void writeLongValueMap(SerContext ctx, SerField serField, LongValueMap<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
         FieldType fieldType = serField.getType();
 
@@ -540,7 +573,7 @@ class SerWriter {
         FieldType keyType = fieldType.getSubTypes().get(0);
         writer.writeWireType(keyType.getWireType()); // key wireType
         writer.writeWireType(WireFormat.WIRETYPE_VARINT); // value wireType
-        writer.writeInt32NoTag(value.size()); // 数量
+        writer.writeInt32NoTag(size); // 数量
 
         for (LongValueMap.Entry<?> e : value.entrySet()) {
             writeSubValue(ctx, serField, keyType, e.getKey());
@@ -549,6 +582,9 @@ class SerWriter {
     }
 
     private void writeFloatValueMap(SerContext ctx, SerField serField, FloatValueMap<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
         FieldType fieldType = serField.getType();
 
@@ -557,7 +593,7 @@ class SerWriter {
         FieldType keyType = fieldType.getSubTypes().get(0);
         writer.writeWireType(keyType.getWireType()); // key wireType
         writer.writeWireType(WireFormat.WIRETYPE_FIXED32); // value wireType
-        writer.writeInt32NoTag(value.size()); // 数量
+        writer.writeInt32NoTag(size); // 数量
 
         for (FloatValueMap.Entry<?> e : value.entrySet()) {
             writeSubValue(ctx, serField, keyType, e.getKey());
@@ -566,6 +602,9 @@ class SerWriter {
     }
 
     private void writeDoubleValueMap(SerContext ctx, SerField serField, DoubleValueMap<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
         FieldType fieldType = serField.getType();
 
@@ -602,7 +641,6 @@ class SerWriter {
             case SIGNED_VARINT:
                 writer.writeSInt32(fieldNumber, value);
                 break;
-            case DEFAULT:
             case FIXED:
                 writer.writeFixed8(fieldNumber, value);
                 break;
@@ -622,7 +660,6 @@ class SerWriter {
             case SIGNED_VARINT:
                 writer.writeSInt32(fieldNumber, value);
                 break;
-            case DEFAULT:
             case FIXED:
                 writer.writeFixed16(fieldNumber, value);
                 break;
@@ -636,7 +673,6 @@ class SerWriter {
     private void writeInt32(CodedWriter writer, SerField serField, int value) {
         int fieldNumber = serField.getNumber();
         switch (serField.getIntEncodeType()) {
-            case DEFAULT:
             case VARINT:
                 writer.writeInt32(fieldNumber, value);
                 break;
@@ -656,7 +692,6 @@ class SerWriter {
     private void writeInt64(CodedWriter writer, SerField serField, long value) {
         int fieldNumber = serField.getNumber();
         switch (serField.getIntEncodeType()) {
-            case DEFAULT:
             case VARINT:
                 writer.writeInt64(fieldNumber, value);
                 break;
@@ -832,6 +867,9 @@ class SerWriter {
 
     private void writeCollection(SerContext ctx, SerField serField, FieldType type,
                                  Collection<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
 
         FieldType subType = type.getSubTypes().get(0);
@@ -845,6 +883,9 @@ class SerWriter {
     }
 
     private void writeIntSet(SerContext ctx, SerField serField, FieldType type, IntSet value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
 
         writer.writeWireType(WireFormat.WIRETYPE_VARINT); // sub wireType
@@ -858,6 +899,9 @@ class SerWriter {
     }
 
     private void writeLongSet(SerContext ctx, SerField serField, FieldType type, LongSet value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
 
         writer.writeWireType(WireFormat.WIRETYPE_VARINT); // sub wireType
@@ -871,6 +915,9 @@ class SerWriter {
     }
 
     private void writeMap(SerContext ctx, SerField serField, FieldType type, Map<?, ?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
 
         FieldType keyType = type.getSubTypes().get(0);
@@ -887,6 +934,9 @@ class SerWriter {
     }
 
     private void writeIntMap(SerContext ctx, SerField serField, FieldType type, IntMap<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
 
         FieldType valueType = type.getSubTypes().get(0);
@@ -902,6 +952,9 @@ class SerWriter {
     }
 
     private void writeLongMap(SerContext ctx, SerField serField, FieldType type, LongMap<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
 
         FieldType valueType = type.getSubTypes().get(0);
@@ -918,6 +971,9 @@ class SerWriter {
 
     private void writeIntValueMap(SerContext ctx, SerField serField, FieldType type,
                                   IntValueMap<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
 
         FieldType keyType = type.getSubTypes().get(0);
@@ -934,6 +990,9 @@ class SerWriter {
 
     private void writeLongValueMap(SerContext ctx, SerField serField, FieldType type,
                                    LongValueMap<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
 
         FieldType keyType = type.getSubTypes().get(0);
@@ -950,6 +1009,9 @@ class SerWriter {
 
     private void writeFloatValueMap(SerContext ctx, SerField serField, FieldType type,
                                     FloatValueMap<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
 
         FieldType keyType = type.getSubTypes().get(0);
@@ -966,6 +1028,9 @@ class SerWriter {
 
     private void writeDoubleValueMap(SerContext ctx, SerField serField, FieldType type,
                                      DoubleValueMap<?> value) {
+        int size = value.size();
+        checkContainerSize(ctx, size, serField);
+
         CodedWriter writer = ctx.getWriter();
 
         FieldType keyType = type.getSubTypes().get(0);
@@ -984,6 +1049,17 @@ class SerWriter {
         SerClass valueSerClass = SerClassParser.ins().parse(value.getClass());
 
         writeSerObject(ctx, value, valueSerClass);
+    }
+
+    private void checkContainerSize(SerContext ctx, int size, SerField serField) {
+        if (size < 0) {
+            throw new SerializationException("Container size < 0: " + size);
+        }
+        int sizeLimit = ctx.getContainerSizeLimit();
+        if (sizeLimit != Ser.NO_SIZE_LIMIT && size > sizeLimit) {
+            throw new SerializationException("Container size exceeded max allowed. size=" + size
+                    + ", limit=" + sizeLimit + ", Field=" + serField);
+        }
     }
 
 }

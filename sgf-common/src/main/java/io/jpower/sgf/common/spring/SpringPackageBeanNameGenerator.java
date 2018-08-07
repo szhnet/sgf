@@ -1,9 +1,9 @@
 package io.jpower.sgf.common.spring;
 
+import java.beans.Introspector;
+
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.AnnotationBeanNameGenerator;
-
-import java.beans.Introspector;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>

@@ -1,13 +1,13 @@
 package io.jpower.sgf.thread;
 
-import io.jpower.sgf.utils.JavaUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+
+import io.jpower.sgf.utils.JavaUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>

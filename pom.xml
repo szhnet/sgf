@@ -43,7 +43,6 @@
     </scm>
 
     <modules>
-        <module>sgf-descriptors</module>
         <module>sgf-core</module>
         <module>sgf-common</module>
         <module>sgf-ser</module>

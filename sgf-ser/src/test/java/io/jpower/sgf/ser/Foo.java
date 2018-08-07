@@ -1,10 +1,10 @@
 package io.jpower.sgf.ser;
 
-import io.jpower.sgf.ser.annotation.Field;
-import io.jpower.sgf.ser.annotation.Serializable;
-
 import java.util.List;
 import java.util.Map;
+
+import io.jpower.sgf.ser.annotation.Field;
+import io.jpower.sgf.ser.annotation.Serializable;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
