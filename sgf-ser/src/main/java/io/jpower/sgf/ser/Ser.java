@@ -36,6 +36,11 @@ public class Ser {
     private final int containerSizeLimit;
 
     /**
+     * 如果枚举不存在是否抛出异常
+     */
+    private final boolean failOnUnknowEnumValue;
+
+    /**
      * 返回默认对象实例。一般用这个就行了。如果有特殊需求也可以自己创建对象。
      *
      * @return
@@ -44,13 +49,15 @@ public class Ser {
         return INS;
     }
 
+
     public Ser() {
-        this(NO_SIZE_LIMIT, NO_SIZE_LIMIT);
+        this(NO_SIZE_LIMIT, NO_SIZE_LIMIT, false);
     }
 
-    public Ser(int totalByteSizeLimit, int containerSizeLimit) {
+    public Ser(int totalByteSizeLimit, int containerSizeLimit, boolean failOnUnknowEnumValue) {
         this.totalByteSizeLimit = totalByteSizeLimit;
         this.containerSizeLimit = containerSizeLimit;
+        this.failOnUnknowEnumValue = failOnUnknowEnumValue;
     }
 
     /**
@@ -94,7 +101,7 @@ public class Ser {
      */
     public <T> T deserialize(byte[] data, Class<T> type) {
         ByteArrayReader byteArrayReader = new ByteArrayReader(data);
-        DeserContext ctx = new DeserContext(byteArrayReader);
+        DeserContext ctx = new DeserContext(byteArrayReader, failOnUnknowEnumValue);
         return SER_READER.read(ctx, type);
     }
 
@@ -107,7 +114,7 @@ public class Ser {
      */
     public <T> T deserialize(InputStream input, Class<T> type) {
         StreamReader streamReader = new StreamReader(input);
-        DeserContext ctx = new DeserContext(streamReader);
+        DeserContext ctx = new DeserContext(streamReader, failOnUnknowEnumValue);
         return SER_READER.read(ctx, type);
     }
 

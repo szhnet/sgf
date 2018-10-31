@@ -1,12 +1,12 @@
 package io.jpower.sgf.ser;
 
 import io.jpower.sgf.enumtype.EnumUtils;
-import io.jpower.sgf.enumtype.IntEnum;
+import io.jpower.sgf.enumtype.TagEnum;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public enum Ide implements IntEnum {
+public enum Ide implements TagEnum {
 
     IDEA(1),
 
@@ -21,15 +21,15 @@ public enum Ide implements IntEnum {
     }
 
     @Override
-    public int getId() {
+    public int tag() {
         return id;
     }
 
-    public static Ide findById(int id) {
-        if (id < 0 || id >= INDEXES.length) {
+    public static Ide forTag(int tag) {
+        if (tag < 0 || tag >= INDEXES.length) {
             return null;
         }
-        return INDEXES[id];
+        return INDEXES[tag];
     }
 
 }

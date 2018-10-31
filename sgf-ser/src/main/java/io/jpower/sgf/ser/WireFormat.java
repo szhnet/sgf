@@ -20,7 +20,7 @@ final class WireFormat {
     static final int MAX_VARINT_SIZE = 10;
 
     /**
-     * byte, char, short, int, long, bool, IntEnum
+     * byte, char, short, int, long, bool, TagEnum
      */
     static final int WIRETYPE_VARINT = 0;
 

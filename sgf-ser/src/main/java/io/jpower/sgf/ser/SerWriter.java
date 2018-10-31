@@ -411,7 +411,7 @@ class SerWriter {
 
     private void writeEnum(SerContext ctx, SerField serField, Enum<?> value) {
         CodedWriter writer = ctx.getWriter();
-        writeInt32(writer, serField, EnumUtils.idOf(value)); // write id
+        writeInt32(writer, serField, EnumUtils.tagOf(value)); // write tag
     }
 
     private void writeBytes(SerContext ctx, SerField serField, byte[] value) {
@@ -851,7 +851,7 @@ class SerWriter {
 
     private void writeEnum(SerContext ctx, FieldType type, Enum<?> value) {
         CodedWriter writer = ctx.getWriter();
-        writer.writeInt32NoTag(EnumUtils.idOf(value)); // write id
+        writer.writeInt32NoTag(EnumUtils.tagOf(value)); // write tag
     }
 
 

@@ -8,19 +8,19 @@ import com.alibaba.fastjson.parser.JSONLexer;
 import com.alibaba.fastjson.parser.JSONToken;
 import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
 import io.jpower.sgf.enumtype.EnumUtils;
-import io.jpower.sgf.enumtype.IntEnum;
+import io.jpower.sgf.enumtype.TagEnum;
 import io.jpower.sgf.enumtype.Tag;
 
 /**
- * 用来使fastjson支持{@link Tag}和{@link IntEnum}的反序列化
+ * 用来使fastjson支持{@link Tag}和{@link TagEnum}的反序列化
  *
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public class IdEnumDeserializer implements ObjectDeserializer {
+public class TagEnumDeserializer implements ObjectDeserializer {
 
     private final Class<? extends Enum<?>> enumClass;
 
-    public IdEnumDeserializer(Class<? extends Enum<?>> enumClass) {
+    public TagEnumDeserializer(Class<? extends Enum<?>> enumClass) {
         if (!enumClass.isEnum()) {
             throw new JSONException("The class is not Enum: " + enumClass);
         }
@@ -33,10 +33,10 @@ public class IdEnumDeserializer implements ObjectDeserializer {
             Object value;
             final JSONLexer lexer = parser.getLexer();
             if (lexer.token() == JSONToken.LITERAL_INT) {
-                int id = lexer.intValue();
+                int tag = lexer.intValue();
                 lexer.nextToken(JSONToken.COMMA);
 
-                return _deserialize(id);
+                return _deserialize(tag);
             } else if (lexer.token() == JSONToken.LITERAL_STRING) {
                 String strVal = lexer.stringVal();
                 lexer.nextToken(JSONToken.COMMA);
@@ -65,11 +65,11 @@ public class IdEnumDeserializer implements ObjectDeserializer {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T _deserialize(int id) throws IllegalArgumentException {
-        T e = (T) EnumUtils.valueOf(enumClass, id);
+    private <T> T _deserialize(int tag) throws IllegalArgumentException {
+        T e = (T) EnumUtils.valueOf(enumClass, tag);
         if (e == null) {
             throw new JSONException("parse Enum " + enumClass
-                    + " error, index : " + id);
+                    + " error, tag : " + tag);
         }
         return e;
     }

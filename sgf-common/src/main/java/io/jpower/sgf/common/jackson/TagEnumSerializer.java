@@ -14,28 +14,28 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrappe
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonIntegerFormatVisitor;
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
 import io.jpower.sgf.enumtype.EnumUtils;
-import io.jpower.sgf.enumtype.IntEnum;
+import io.jpower.sgf.enumtype.TagEnum;
 import io.jpower.sgf.enumtype.Tag;
 
 /**
- * 用来使jackson2支持{@link Tag}和{@link IntEnum}的序列化
+ * 用来使jackson2支持{@link Tag}和{@link TagEnum}的序列化
  *
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public class IdEnumSerializer extends StdScalarSerializer<Enum<?>> {
+public class TagEnumSerializer extends StdScalarSerializer<Enum<?>> {
 
     /**  */
     private static final long serialVersionUID = -2571982673299899055L;
 
-    public IdEnumSerializer(Class<?> enumClass) {
+    public TagEnumSerializer(Class<?> enumClass) {
         super(enumClass, false);
     }
 
     @Override
-    public void serialize(Enum<?> idEnum, JsonGenerator jgen, SerializerProvider provider)
+    public void serialize(Enum<?> tagEnum, JsonGenerator jgen, SerializerProvider provider)
             throws IOException, JsonGenerationException {
-        int id = EnumUtils.idOf(idEnum);
-        jgen.writeNumber(id);
+        int tag = EnumUtils.tagOf(tagEnum);
+        jgen.writeNumber(tag);
     }
 
     @Override

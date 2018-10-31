@@ -7,12 +7,19 @@ class DeserContext {
 
     private final CodedReader reader;
 
-    DeserContext(CodedReader reader) {
+    private final boolean failOnUnknowEnumValue;
+
+    DeserContext(CodedReader reader, boolean failOnUnknowEnumValue) {
         this.reader = reader;
+        this.failOnUnknowEnumValue = failOnUnknowEnumValue;
     }
 
     CodedReader getReader() {
         return reader;
+    }
+
+    public boolean isFailOnUnknowEnumValue() {
+        return failOnUnknowEnumValue;
     }
 
 }

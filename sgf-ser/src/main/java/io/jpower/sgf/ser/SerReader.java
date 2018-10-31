@@ -495,10 +495,10 @@ class SerReader {
     private Enum<?> readEnum(DeserContext ctx, SerField serField) {
         CodedReader reader = ctx.getReader();
         FieldType fieldType = serField.getType();
-        int id = readInt32(reader, serField); // read id
+        int tag = readInt32(reader, serField); // read tag
 
         @SuppressWarnings("unchecked")
-        Enum<?> value = parseEnum((Class<? extends Enum<?>>) fieldType.getRawType(), id);
+        Enum<?> value = parseEnum(ctx, (Class<? extends Enum<?>>) fieldType.getRawType(), tag);
         return value;
     }
 
@@ -1067,10 +1067,10 @@ class SerReader {
 
     private Enum<?> readEnum(DeserContext ctx, SerField serField, FieldType type) {
         CodedReader reader = ctx.getReader();
-        int id = reader.readInt32(); // read id
+        int tag = reader.readInt32(); // read tag
 
         @SuppressWarnings("unchecked")
-        Enum<?> value = parseEnum((Class<? extends Enum<?>>) type.getRawType(), id);
+        Enum<?> value = parseEnum(ctx, (Class<? extends Enum<?>>) type.getRawType(), tag);
         return value;
     }
 
@@ -1413,8 +1413,12 @@ class SerReader {
     /* ########## 其他 ########## */
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private Enum<?> parseEnum(Class<? extends Enum<?>> clazz, int id) {
-        return EnumUtils.valueOf((Class) clazz, id);
+    private Enum<?> parseEnum(DeserContext ctx, Class<? extends Enum<?>> clazz, int tag) {
+        Enum enumValue = EnumUtils.valueOf((Class) clazz, tag);
+        if (enumValue == null && ctx.isFailOnUnknowEnumValue()) {
+            throw new SerializationException("Can not deserialize value of type " + clazz + " from tag " + tag);
+        }
+        return enumValue;
     }
 
     private byte[] readBytes0(DeserContext ctx, SerField serField) {

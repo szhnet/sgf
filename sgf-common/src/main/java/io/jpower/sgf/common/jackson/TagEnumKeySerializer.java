@@ -10,28 +10,28 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
 import io.jpower.sgf.enumtype.EnumUtils;
-import io.jpower.sgf.enumtype.IntEnum;
+import io.jpower.sgf.enumtype.TagEnum;
 import io.jpower.sgf.enumtype.Tag;
 
 /**
- * 用来使jackson2支持{@link Tag}和{@link IntEnum}作为Map的key反序列化
+ * 用来使jackson2支持{@link Tag}和{@link TagEnum}作为Map的key反序列化
  *
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public class IdEnumKeySerializer extends StdScalarSerializer<Enum<?>> {
+public class TagEnumKeySerializer extends StdScalarSerializer<Enum<?>> {
 
     /**  */
     private static final long serialVersionUID = 4436233251233107250L;
 
-    public IdEnumKeySerializer(Class<?> enumClass) {
+    public TagEnumKeySerializer(Class<?> enumClass) {
         super(enumClass, false);
     }
 
     @Override
     public void serialize(Enum<?> idEnum, JsonGenerator jgen, SerializerProvider provider)
             throws IOException, JsonGenerationException {
-        int id = EnumUtils.idOf(idEnum);
-        jgen.writeFieldName(Integer.toString(id));
+        int tag = EnumUtils.tagOf(idEnum);
+        jgen.writeFieldName(Integer.toString(tag));
     }
 
     @Override

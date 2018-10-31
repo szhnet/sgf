@@ -10,20 +10,20 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
 import io.jpower.sgf.enumtype.EnumUtils;
-import io.jpower.sgf.enumtype.IntEnum;
+import io.jpower.sgf.enumtype.TagEnum;
 import io.jpower.sgf.enumtype.Tag;
 
 /**
- * 用来使jackson2支持{@link Tag}和{@link IntEnum}的反序列化
+ * 用来使jackson2支持{@link Tag}和{@link TagEnum}的反序列化
  *
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public class IdEnumDeserializer<E extends Enum<E>> extends StdScalarDeserializer<E> {
+public class TagEnumDeserializer<E extends Enum<E>> extends StdScalarDeserializer<E> {
 
     /**  */
     private static final long serialVersionUID = -6191443987036212089L;
 
-    public IdEnumDeserializer(Class<E> enumClass) {
+    public TagEnumDeserializer(Class<E> enumClass) {
         super(enumClass);
 
         if (!enumClass.isEnum()) {
@@ -47,12 +47,12 @@ public class IdEnumDeserializer<E extends Enum<E>> extends StdScalarDeserializer
     }
 
     @SuppressWarnings("unchecked")
-    private E _deserializeInt(int id, DeserializationContext ctxt) throws JsonProcessingException {
-        E rst = (E) EnumUtils.valueOf((Class<? extends Enum<?>>) handledType(), id);
+    private E _deserializeInt(int tag, DeserializationContext ctxt) throws JsonProcessingException {
+        E rst = (E) EnumUtils.valueOf((Class<? extends Enum<?>>) handledType(), tag);
         if (rst == null
                 && !ctxt.isEnabled(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL)) {
-            throw ctxt.weirdNumberException(id, handledType(),
-                    "value not one of declared Enum instance numberss: " + id);
+            throw ctxt.weirdNumberException(tag, handledType(),
+                    "value not one of declared Enum instance numberss: " + tag);
         }
         return rst;
     }
