@@ -1,5 +1,6 @@
 package io.jpower.sgf.thread;
 
+import java.io.Closeable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -12,7 +13,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public abstract class SingleThreadWorker implements Runnable {
+public abstract class SingleThreadWorker implements Runnable, Closeable {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -43,11 +44,11 @@ public abstract class SingleThreadWorker implements Runnable {
     }
 
     protected SingleThreadWorker(int shutdownWaitTime) {
-        this(null, DEFAULT_SHUTDOWN_WAIT_TIME, null);
+        this(null, shutdownWaitTime, null);
     }
 
     protected SingleThreadWorker(ThreadFactory threadFactory) {
-        this(null, DEFAULT_SHUTDOWN_WAIT_TIME, null);
+        this(null, DEFAULT_SHUTDOWN_WAIT_TIME, threadFactory);
     }
 
     protected SingleThreadWorker(String name, int shutdownWaitTime, ThreadFactory threadFactory) {
@@ -87,6 +88,11 @@ public abstract class SingleThreadWorker implements Runnable {
         if (log.isInfoEnabled()) {
             log.info("{} is stopped", name);
         }
+    }
+
+    @Override
+    public void close() {
+        stop();
     }
 
     public boolean isWorkerThread() {

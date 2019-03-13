@@ -19,7 +19,7 @@
         <sgf.version>${project.version}</sgf.version>
         <netty.version>4.1.17.Final</netty.version>
         <spring.version>4.3.9.RELEASE</spring.version>
-        <jackson2.version>2.9.7</jackson2.version>
+        <jackson2.version>2.9.8</jackson2.version>
     </properties>
 
     <licenses>
@@ -89,6 +89,11 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-nop</artifactId>
+                <version>1.7.25</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
                 <version>1.7.25</version>
             </dependency>
             <dependency>

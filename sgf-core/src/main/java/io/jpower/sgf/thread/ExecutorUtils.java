@@ -11,12 +11,12 @@ public class ExecutorUtils {
     private ExecutorUtils() {
     }
 
-    public static void terminate(int awaitTime, TimeUnit timeunit, ExecutorService exec) {
-        terminate(awaitTime, timeunit, true, exec);
+    public static boolean terminate(int awaitTime, TimeUnit timeunit, ExecutorService exec) {
+        return terminate(awaitTime, timeunit, true, exec);
     }
 
-    public static void terminate(int awaitTime, TimeUnit timeunit, boolean shutdownNow,
-                                 ExecutorService exec) {
+    public static boolean terminate(int awaitTime, TimeUnit timeunit, boolean shutdownNow,
+                                    ExecutorService exec) {
         if (shutdownNow) {
             exec.shutdownNow();
         } else {
@@ -43,14 +43,16 @@ public class ExecutorUtils {
         if (interrupted) {
             Thread.currentThread().interrupt();
         }
+
+        return terminated;
     }
 
-    public static void terminate(int awaitTime, TimeUnit timeunit, ExecutorService... execs) {
-        terminate(awaitTime, timeunit, true, execs);
+    public static boolean terminate(int awaitTime, TimeUnit timeunit, ExecutorService... execs) {
+        return terminate(awaitTime, timeunit, true, execs);
     }
 
-    public static void terminate(int awaitTime, TimeUnit timeunit, boolean shutdownNow,
-                                 ExecutorService... execs) {
+    public static boolean terminate(int awaitTime, TimeUnit timeunit, boolean shutdownNow,
+                                    ExecutorService... execs) {
         for (ExecutorService exec : execs) {
             if (shutdownNow) {
                 exec.shutdownNow();
@@ -61,6 +63,7 @@ public class ExecutorUtils {
 
         long awaitNano = timeunit.toNanos(awaitTime);
         long lastTime = System.nanoTime();
+        boolean allTerminated = true;
         boolean interrupted = false;
         for (ExecutorService exec : execs) {
             boolean terminated = false;
@@ -76,11 +79,17 @@ public class ExecutorUtils {
                 awaitNano = awaitNano - (now - lastTime);
                 lastTime = now;
             }
+            if (!terminated) {
+                allTerminated = false;
+                break; // 这种情况awaitNano应该已经<=0了
+            }
         }
 
         if (interrupted) {
             Thread.currentThread().interrupt();
         }
+
+        return allTerminated;
     }
 
 }

@@ -12,15 +12,15 @@ import org.slf4j.Logger;
  */
 class HotSwapHelper {
 
-    static void checkDir(Path swapClassDir, String dirDesc, Logger log) throws IOException {
-        Objects.requireNonNull(swapClassDir, dirDesc);
-        if (Files.notExists(swapClassDir)) {
-            Files.createDirectories(swapClassDir);
+    static void checkDir(Path dirPath, String dirDesc, Logger log) throws IOException {
+        Objects.requireNonNull(dirPath, dirDesc);
+        if (Files.notExists(dirPath)) {
+            Files.createDirectories(dirPath);
             if (log.isDebugEnabled()) {
-                log.debug("Create {}={}", dirDesc, swapClassDir);
+                log.debug("Create {}={}", dirDesc, dirPath);
             }
         }
-        if (!Files.isDirectory(swapClassDir)) {
+        if (!Files.isDirectory(dirPath)) {
             throw new IllegalStateException(dirDesc + " is not directory");
         }
     }

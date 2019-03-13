@@ -9,6 +9,7 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.concurrent.TimeUnit;
 
 import io.jpower.sgf.thread.SingleThreadWorker;
 import io.jpower.sgf.utils.JavaUtils;
@@ -92,8 +93,14 @@ public class HotSwapWorker extends SingleThreadWorker {
             WatchKey key = swapClassDir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
             if (key.isValid()) {
                 registed = true;
+            } else {
+                throw new IllegalStateException("Key is invalid. dir=" + swapClassDir);
             }
         } catch (IOException e) {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException ignored) {
+            }
             throw JavaUtils.sneakyThrow(e);
         }
     }

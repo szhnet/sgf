@@ -1,5 +1,6 @@
 package io.jpower.sgf.thread;
 
+import java.io.Closeable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public abstract class SingleThreadTaskWorker<T> implements Runnable {
+public abstract class SingleThreadTaskWorker<T> implements Runnable, Closeable {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -91,6 +92,11 @@ public abstract class SingleThreadTaskWorker<T> implements Runnable {
         if (log.isInfoEnabled()) {
             log.info("{} is stopped", name);
         }
+    }
+
+    @Override
+    public void close() {
+        stop();
     }
 
     public boolean isWorkerThread() {

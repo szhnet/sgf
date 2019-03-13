@@ -1,5 +1,6 @@
 package io.jpower.sgf.thread;
 
+import java.io.Closeable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,7 +19,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
  */
-public abstract class AsyncQueuedWorker<T> implements Runnable {
+public abstract class AsyncQueuedWorker<T> implements Runnable, Closeable {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -126,6 +127,11 @@ public abstract class AsyncQueuedWorker<T> implements Runnable {
         }
     }
 
+    @Override
+    public void close() {
+        stop();
+    }
+
     public void add(T task) {
         if (maxQueueSize > 0) {
             int curSize = taskQueueSize.get();
@@ -159,7 +165,8 @@ public abstract class AsyncQueuedWorker<T> implements Runnable {
 
                 int handleCount = -1;
                 int queueSize = taskQueueSize.get();
-                while (queueSize < handleQueueSize && waitTime > 0 && active) { // 当队列数量符合条件；到达等待时间；被关闭（用来将关闭前剩余的日志发送）时尝试处理任务
+                while (queueSize < handleQueueSize && waitTime > 0 && active) { //
+                    // 当队列数量符合条件；到达等待时间；被关闭（用来将关闭前剩余的日志发送）时尝试处理任务
                     LockSupport.parkNanos(waitTime);
 
                     active = isActive();

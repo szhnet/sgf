@@ -15,6 +15,7 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
 import io.jpower.sgf.utils.JavaUtils;
+import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 
@@ -27,21 +28,6 @@ public class InstrumentationSupport {
      * instrumentation
      */
     private static volatile Instrumentation instrumentation;
-
-    /**
-     * Instrumentation permain
-     */
-    public static void premain(String agentArgs, Instrumentation inst) {
-        instrumentation = inst;
-    }
-
-    /**
-     * Instrumentation agentmain
-     */
-    public static void agentmain(String agentArgs, Instrumentation inst) {
-        // The method is called by Attach Listener Thread
-        instrumentation = inst;
-    }
 
     public static Instrumentation instrumentation() {
         if (instrumentation == null) {
@@ -80,11 +66,22 @@ public class InstrumentationSupport {
                     detach.invoke(vm);
                 }
             }
+            getInstrumentationFromAgent(); // 从agent获得instrumentation
         } catch (Exception e) {
             throw JavaUtils.sneakyThrow(e);
         } finally {
             delete(agentJarFile);
         }
+    }
+
+    private static void getInstrumentationFromAgent() throws Exception {
+        // agent类会由system classloader加载
+        ClassLoader agentClassLoader = ClassLoader.getSystemClassLoader();
+        Class<?> agentClass = Class.forName("io.jpower.sgf.common.hotswap.InstrumentationAgent", false,
+                agentClassLoader);
+        Method instrumentationMethod = agentClass.getMethod("instrumentation");
+        instrumentation = (Instrumentation) instrumentationMethod.invoke(null);
+
     }
 
     private static void delete(Path f) {
@@ -99,7 +96,8 @@ public class InstrumentationSupport {
     private static Path createAgentJarFile() throws Exception {
         Path jarFile = Files.createTempFile("agent", ".jar");
 
-        String className = InstrumentationSupport.class.getName();
+        Class<?> agentClass = InstrumentationAgent.class;
+        String className = agentClass.getName();
 
         Manifest manifest = new Manifest();
         Attributes mainAttributes = manifest.getMainAttributes();
@@ -115,7 +113,7 @@ public class InstrumentationSupport {
 
             // dump the class bytecode into the entry
             ClassPool pool = new ClassPool();
-            pool.appendSystemPath();
+            pool.appendClassPath(new ClassClassPath(agentClass));
             CtClass ctClass = pool.get(className);
             jos.write(ctClass.toBytecode());
             jos.closeEntry();

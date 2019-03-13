@@ -50,7 +50,7 @@ public class HotSwap {
      * @param newClassFilePath the path to the file to store new class files
      */
     public HotSwap(Path newClassFilePath) {
-        this(Thread.currentThread().getContextClassLoader(), newClassFilePath);
+        this(HotSwap.class.getClassLoader(), newClassFilePath);
     }
 
     /**
