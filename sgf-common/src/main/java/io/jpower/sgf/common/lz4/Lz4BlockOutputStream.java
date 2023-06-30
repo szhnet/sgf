@@ -67,7 +67,7 @@ public class Lz4BlockOutputStream extends FilterOutputStream {
     }
 
     public Lz4BlockOutputStream(OutputStream out) {
-        this(out, 1 << 64); // 64KB
+        this(out, 1 << 16); // 64KB
     }
 
     private void ensureNotFinished() {
