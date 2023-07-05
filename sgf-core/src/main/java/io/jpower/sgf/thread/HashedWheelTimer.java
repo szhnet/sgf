@@ -352,7 +352,7 @@ public class HashedWheelTimer {
     }
 
     private long triggerTime(long delay, TimeUnit unit) {
-        return unit.toNanos(delay) + now();
+        return unit.toNanos((delay < 0) ? 0 : delay) + now();
     }
 
     protected void createdFuture(TimerTask task, SimpleFuture<Void> future) {
